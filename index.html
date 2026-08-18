@@ -1,0 +1,3523 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Club Country Village by La Chesnaie</title>
+<meta name="description" content="Achetez, louez ou installez votre mobil-home ou chalet. Le club résidentiel nature signé La Chesnaie.">
+
+<!-- Supabase client -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+<!-- Fonts: Quicksand — rond, chaleureux, très lisible, cohérent avec
+     une interface pastel pensée pour être simple d'accès -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================================
+   CLUB COUNTRY VILLAGE — design tokens (v5, direction "pastel &
+   simplicité folle")
+   Principe directeur : chaque écran doit se comprendre en un
+   coup d'œil. Grands boutons, une seule couleur d'accent claire,
+   beaucoup d'espace, arrondis généreux, texte grand et lisible,
+   très peu de bordures/ombres dures. Palette pastel douce
+   dérivée du vert sauge et de l'ambre du brief, mais très
+   éclaircie pour rester légère et accueillante.
+   =========================================================== */
+
+:root{
+  /* Neutres légèrement verdis pour s'accorder au kaki */
+  --ink-900:#22251c;
+  --ink-800:#33372a;
+  --ink-700:#464b3b;
+  --ink-500:#6d7264;
+  --ink-300:#b9bfae;
+  --line:#e4e7dc;
+
+  --bg:#fbfcf8;
+  --bg-card:#ffffff;
+
+  /* Vert kaki — couleur principale, sobre et contemporaine */
+  --khaki-700:#3c452c;
+  --khaki-600:#5a6b3f;
+  --khaki-500:#7d8f5c;
+  --khaki-200:#d3dcc2;
+  --khaki-100:#e7ecdd;
+  --khaki-50:#f4f7ee;
+
+  /* Kaki intermédiaire — seconde teinte du dégradé. Volontairement assez
+     soutenue pour que le texte blanc posé dessus reste lisible (contraste
+     vérifié), tout en gardant un rendu clair et moderne. */
+  --sand-600:#5f7342;
+  --sand-500:#697d46;
+  --sand-200:#dde5cc;
+  --sand-100:#eef2e5;
+
+  /* Dégradé principal kaki clair → kaki profond, signature du site */
+  --gradient-primary: linear-gradient(135deg, var(--sand-500), var(--khaki-600));
+  --gradient-primary-hover: linear-gradient(135deg, var(--sand-600), var(--khaki-700));
+  --gradient-soft: linear-gradient(135deg, var(--sand-100), var(--khaki-100));
+
+  /* Terracotta doux dédié au cœur des favoris, seule touche chaude du site */
+  --pink-500:#c1613f;
+
+  /* Arrondis resserrés : rendu plus net et plus actuel que les grosses bulles */
+  --radius-xl:20px;
+  --radius-lg:14px;
+  --radius-md:10px;
+  --radius-sm:8px;
+  --radius-pill:999px;
+
+  /* Ombres plus discrètes et plus franches */
+  --shadow-soft:0 1px 3px rgba(34,37,28,.07);
+  --shadow-card:0 4px 16px rgba(34,37,28,.10);
+  --shadow-pop:0 14px 40px rgba(34,37,28,.18);
+
+  --font-display:'Quicksand', 'Nunito', sans-serif;
+  --font-body:'Nunito', system-ui, sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:var(--font-body);
+  background:var(--bg);
+  color:var(--ink-900);
+  -webkit-font-smoothing:antialiased;
+  font-size:16px;
+}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+.muted{color:var(--ink-500)}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+
+/* ============ HEADER — simple, aéré, un seul repère visuel ============ */
+.site-header{
+  position:sticky; top:0; z-index:40;
+  background:var(--bg);
+  border-bottom:2px solid var(--khaki-100);
+}
+.header-inner{
+  max-width:1200px; margin:0 auto;
+  display:flex; align-items:center; gap:14px;
+  padding:18px 24px;
+}
+.brand{display:flex; align-items:center; gap:10px; flex:1 1 0; min-width:0}
+.brand-mark{color:var(--khaki-600); display:flex; flex-shrink:0}
+.brand-text{display:flex; flex-direction:column; line-height:1.05; min-width:0}
+.brand-text strong{
+  font-family:var(--font-display);
+  font-weight:700; font-size:1.35rem; color:var(--khaki-700);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.brand-text em{font-style:normal; font-size:.68rem; letter-spacing:.02em; color:var(--ink-500); font-weight:600; white-space:nowrap}
+
+.main-nav{
+  display:flex; gap:4px; align-items:center; flex-shrink:0;
+}
+.main-nav a{
+  font-size:1rem; font-weight:700; color:var(--ink-700); white-space:nowrap;
+  padding:12px 18px; border-radius:var(--radius-pill); transition:background .15s;
+}
+.main-nav a:hover{background:var(--khaki-50)}
+.main-nav a.active-nav{background:var(--gradient-primary); color:#fff}
+
+.header-actions{display:flex; align-items:center; justify-content:flex-end; gap:10px; flex:1 1 0; min-width:0}
+.btn-icon{
+  width:44px; height:44px; border-radius:50%; border:none;
+  background:transparent; display:flex; align-items:center; justify-content:center; color:var(--ink-700);
+  transition:background .15s;
+}
+.btn-icon:hover{background:var(--khaki-50)}
+.nav-toggle{display:none}
+
+.mobile-nav-panel{display:none}
+
+/* ============ BUTTONS — grands, une seule hiérarchie claire ============ */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  padding:15px 24px; border-radius:var(--radius-pill); border:none; font-weight:700; font-size:1rem;
+  transition:background .15s ease, transform .08s ease, box-shadow .15s ease;
+  min-height:48px;
+}
+.btn:active{transform:scale(.97)}
+.btn-block{width:100%}
+.btn-sm{padding:11px 18px; font-size:.92rem; min-height:40px}
+.btn-primary{background:var(--gradient-primary); color:#fff; box-shadow:var(--shadow-soft)}
+.btn-primary:hover{background:var(--khaki-700)}
+.btn-secondary{background:var(--khaki-100); color:var(--khaki-700)}
+.btn-secondary:hover{background:var(--khaki-200)}
+.btn-outline{background:#fff; border:2px solid var(--khaki-200); color:var(--khaki-700)}
+.btn-outline:hover{background:var(--khaki-50); border-color:var(--khaki-500)}
+.btn-ghost{background:transparent; color:var(--ink-700)}
+.btn-ghost:hover{background:var(--khaki-50)}
+.btn-cta{
+  background:var(--gradient-primary-hover);
+  color:#fff; box-shadow:0 4px 16px rgba(90,107,63,.30);
+  font-size:1.05rem; padding:17px 26px; font-weight:800;
+}
+.btn-cta:hover{filter:brightness(1.06)}
+.btn-publish-quick{padding:11px 18px 11px 14px; font-size:.9rem; white-space:nowrap; min-height:40px}
+.link-btn{background:none; border:none; color:var(--khaki-700); font-weight:700; font-size:.9rem; padding:0; text-decoration:underline}
+
+/* ============ LAYOUT ============ */
+.app-root{max-width:1200px; margin:0 auto; padding:32px 24px 100px}
+.page-title{
+  font-family:var(--font-display);
+  font-weight:700; font-size:1.9rem; color:var(--ink-900); margin:0 0 6px;
+}
+.section-title-sm{
+  font-family:var(--font-display);
+  font-weight:700; font-size:1.2rem; color:var(--ink-900); margin:0 0 14px;
+}
+.simple-layout{max-width:820px; margin:0 auto}
+
+/* ============ PARK HERO — photo de couverture pleine largeur ============
+   Casse le conteneur centré pour occuper toute la largeur du viewport,
+   façon page d'établissement (hôtel/booking) : grande image, titre et
+   adresse en surimpression sur un dégradé sombre en bas de l'image. */
+.park-hero{
+  position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
+  aspect-ratio:16/7; overflow:hidden; margin-top:-32px; margin-bottom:0;
+  background:var(--khaki-50);
+}
+.park-hero img, .park-hero video{width:100%; height:100%; object-fit:cover; display:block}
+.park-hero::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(20,15,5,.72) 0%, rgba(20,15,5,.15) 55%, rgba(20,15,5,0) 80%);
+}
+.park-hero-overlay{
+  position:absolute; left:0; right:0; bottom:0; z-index:2;
+  padding:32px 24px; max-width:1200px; margin:0 auto; width:100%; box-sizing:border-box;
+}
+.park-hero-overlay h1{
+  margin:0 0 6px; font-family:var(--font-display); font-size:2.1rem; font-weight:700; color:#fff;
+  text-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+.park-hero-overlay p{margin:0; font-size:1rem; font-weight:700; color:#fff; opacity:.95}
+
+/* Titre/adresse de secours quand aucune photo n'existe encore */
+.park-hero-fallback{margin-top:24px}
+.park-hero[hidden] + .simple-layout .park-hero-fallback{display:block}
+.simple-layout .park-hero-fallback{display:none}
+
+.park-hero-thumbs{display:flex; gap:10px; margin:16px 0 22px; flex-wrap:wrap}
+.park-hero-thumbs img, .park-hero-thumbs video{
+  width:84px; height:64px; object-fit:cover; border-radius:var(--radius-md); cursor:pointer;
+  border:3px solid transparent; opacity:.65; transition:opacity .12s, border-color .12s;
+}
+.park-hero-thumbs img.active, .park-hero-thumbs video.active{border-color:var(--khaki-600); opacity:1}
+.park-hero-thumbs img:hover, .park-hero-thumbs video:hover{opacity:1}
+
+/* Chips d'équipements — icône ronde + libellé, esprit "camping moderne" */
+.park-spec-chips{display:flex; flex-wrap:wrap; gap:10px; margin:0 0 22px}
+.park-spec-chip{
+  display:flex; align-items:center; gap:9px; background:var(--khaki-50); border:1px solid var(--khaki-100);
+  border-radius:var(--radius-pill); padding:9px 16px 9px 9px; font-size:.86rem; font-weight:700; color:var(--ink-800);
+}
+.park-spec-chip .chip-icon{
+  width:30px; height:30px; border-radius:50%; background:var(--gradient-primary); color:#fff;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.park-spec-chip .chip-icon svg{width:16px; height:16px}
+
+.park-profile-desc{color:var(--ink-700); line-height:1.7; font-size:1rem; margin:0 0 24px}
+.park-profile-actions{display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-top:24px}
+.simple-layout.narrow{max-width:640px}
+
+@media (max-width:640px){
+  .park-hero{aspect-ratio:4/3; margin-top:-24px}
+  .park-hero-overlay{padding:22px 16px}
+  .park-hero-overlay h1{font-size:1.5rem}
+}
+
+/* ============ TOAST ============ */
+.toast{
+  position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--ink-900); color:#fff; padding:14px 24px; border-radius:var(--radius-pill);
+  font-size:.92rem; font-weight:700; opacity:0; pointer-events:none; z-index:100;
+  transition:opacity .25s, transform .25s;
+  box-shadow:var(--shadow-pop);
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+
+/* ============ AUTH — grand, clair, une seule action à la fois ============ */
+.auth-panel{
+  max-width:420px; margin:48px auto; background:var(--bg-card); border-radius:var(--radius-xl);
+  padding:36px; box-shadow:var(--shadow-card); border:2px solid var(--khaki-100);
+}
+.stack-form{display:flex; flex-direction:column; gap:16px; margin-top:20px}
+.stack-form label{display:flex; flex-direction:column; gap:7px; font-size:.92rem; font-weight:700; color:var(--ink-700)}
+.stack-form input, .stack-form textarea, .stack-form select{
+  padding:14px 16px; border-radius:var(--radius-md); border:2px solid var(--line); font-size:1rem;
+  background:var(--bg); color:var(--ink-900); transition:border-color .12s;
+}
+.stack-form input:focus, .stack-form textarea:focus, .stack-form select:focus{
+  outline:none; border-color:var(--khaki-500); background:#fff;
+}
+.switch-line{margin-top:20px; font-size:.92rem; text-align:center; color:var(--ink-500)}
+.switch-line a{color:var(--khaki-700); font-weight:700}
+
+/* Messages d'authentification : persistants (contrairement aux toasts
+   fugaces), pour que l'utilisateur puisse lire et corriger tranquillement. */
+.auth-msg{
+  margin:16px 0 0; padding:13px 15px; border-radius:var(--radius-md);
+  font-size:.88rem; line-height:1.5; font-weight:600;
+}
+.auth-msg.is-error{background:#fdeceb; border:1px solid #e8b4ae; color:#8c2f22}
+.auth-msg.is-success{background:var(--khaki-50); border:1px solid var(--khaki-200); color:var(--khaki-700)}
+.auth-msg.is-info{background:#eef4fb; border:1px solid #b9d3ec; color:#1f4d78}
+.auth-msg strong{display:block; margin-bottom:3px}
+.auth-msg .auth-msg-hint{display:block; margin-top:6px; font-weight:500; opacity:.9}
+.field-error{border-color:#d9534f !important}
+
+.user-chip{
+  display:flex; align-items:center; gap:10px; padding:6px 14px 6px 6px; border-radius:var(--radius-pill);
+  background:#fff; border:2px solid var(--khaki-100); font-size:.9rem; font-weight:700; color:var(--ink-700);
+}
+.user-chip .avatar{
+  width:32px; height:32px; border-radius:50%; background:var(--gradient-primary); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-size:.78rem; font-weight:800;
+}
+.user-chip.is-admin .avatar{background:var(--gradient-primary); color:#fff}
+.dropdown-wrap{position:relative}
+.dropdown-menu{
+  position:absolute; right:0; top:calc(100% + 10px); background:#fff; border:2px solid var(--khaki-100);
+  border-radius:var(--radius-lg); box-shadow:var(--shadow-pop); min-width:210px; padding:8px; z-index:50;
+  display:none;
+}
+.dropdown-menu.open{display:block}
+.dropdown-menu button, .dropdown-menu a{
+  display:block; width:100%; text-align:left; padding:13px 14px; border:none; background:none;
+  border-radius:var(--radius-sm); font-size:.94rem; font-weight:700; color:var(--ink-700);
+}
+.dropdown-menu button:hover, .dropdown-menu a:hover{background:var(--khaki-50)}
+
+/* ============ WELCOME HERO — disposition façon Leboncoin ============ */
+.welcome-hero{
+  max-width:700px; margin:0 auto; padding:44px 24px 8px; text-align:center;
+}
+.welcome-title{
+  font-family:var(--font-display); font-weight:700; font-size:1.7rem; color:var(--ink-900); margin:0 0 10px;
+}
+.welcome-sub{
+  color:var(--ink-700); font-size:1rem; line-height:1.55; margin:0 0 24px;
+}
+.welcome-actions{
+  display:flex; justify-content:center; gap:14px; flex-wrap:wrap;
+}
+
+/* ============ SEARCH BAR — un seul champ, simplifié à l'extrême ============ */
+.search-hero{
+  max-width:1200px; margin:0 auto; padding:24px 24px 4px;
+}
+.search-bar{
+  display:flex; align-items:stretch; background:#fff; border:2px solid var(--khaki-200);
+  border-radius:var(--radius-pill); box-shadow:var(--shadow-soft); max-width:640px; margin:0 auto;
+  transition:box-shadow .2s;
+}
+.search-bar:hover{box-shadow:var(--shadow-card)}
+.search-field{
+  flex:1; padding:14px 22px; display:flex; flex-direction:column; gap:2px; border-radius:var(--radius-pill);
+  cursor:pointer; transition:background .15s; min-width:0;
+}
+.search-field:hover{background:var(--khaki-50)}
+.search-field .sf-label{font-size:.72rem; font-weight:700; color:var(--ink-900)}
+.search-field .sf-value{font-size:.88rem; color:var(--ink-500); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.search-field input{border:none; background:none; font-size:.92rem; color:var(--ink-900); width:100%; padding:0; outline:none; font-weight:600}
+.search-field input::placeholder{color:var(--ink-500); font-weight:400}
+.search-divider{width:2px; background:var(--khaki-100); margin:10px 0}
+.search-submit{
+  display:flex; align-items:center; justify-content:center; margin:6px 6px 6px 0;
+}
+.search-submit button{
+  width:52px; height:52px; border-radius:50%; border:none; background:var(--gradient-primary); color:#fff;
+  display:flex; align-items:center; justify-content:center; transition:filter .15s;
+}
+.search-submit button:hover{filter:brightness(1.08)}
+
+/* Catégories : grandes icônes rondes, très simples à toucher */
+.category-rail{
+  display:flex; gap:22px; overflow-x:auto; padding:26px 0 20px;
+  scrollbar-width:none; justify-content:center; flex-wrap:wrap;
+}
+.category-rail::-webkit-scrollbar{display:none}
+.category-pill{
+  display:flex; flex-direction:column; align-items:center; gap:9px; color:var(--ink-700); font-size:.82rem;
+  font-weight:700; cursor:pointer; transition:transform .12s; flex-shrink:0;
+}
+.category-pill:hover{transform:translateY(-2px)}
+.category-pill .cat-icon{
+  font-size:1.5rem; line-height:1; width:56px; height:56px; border-radius:50%;
+  background:var(--khaki-50); display:flex; align-items:center; justify-content:center;
+  transition:background .15s;
+}
+.category-pill.active .cat-icon{background:var(--gradient-primary); color:#fff}
+.category-pill.active{color:var(--khaki-700)}
+
+/* ============ CATALOGUE — filtres simplifiés, priorité aux résultats ============
+   Les filtres restent cachés tant qu'aucune recherche n'a été faite : la page
+   d'accueil ne montre que les photos, la barre de recherche et les catégories.
+   Le panneau de filtres n'apparaît qu'après une recherche (ou un clic manuel
+   sur "Filtres"), pour ne jamais surcharger le premier écran. */
+.catalogue-layout{display:grid; grid-template-columns:1fr; gap:28px; align-items:start; margin-top:20px}
+.catalogue-layout.filters-open{grid-template-columns:260px 1fr}
+.filters-panel{
+  display:none;
+  background:var(--bg-card); border:2px solid var(--khaki-100); border-radius:var(--radius-lg);
+  padding:22px; position:sticky; top:100px; max-height:calc(100vh - 120px); overflow-y:auto;
+}
+.catalogue-layout.filters-open .filters-panel{display:block}
+.results-head-right{display:flex; align-items:center; gap:14px}
+#btn-toggle-filters.is-active{background:var(--khaki-600); border-color:var(--khaki-600); color:#fff}
+.filters-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+.filter-group{margin:18px 0}
+.filter-label{display:block; font-size:.76rem; font-weight:800; color:var(--ink-500); text-transform:uppercase; letter-spacing:.03em; margin-bottom:10px}
+.mini-label{display:block; font-size:.84rem; font-weight:700; color:var(--ink-700); margin-top:10px}
+.mini-label input{width:100%; margin-top:6px}
+
+.segmented{display:flex; flex-wrap:wrap; gap:7px}
+.segmented button{
+  padding:9px 15px; border-radius:var(--radius-pill); border:2px solid var(--line); background:#fff;
+  font-size:.84rem; font-weight:700; color:var(--ink-700); transition:all .12s;
+}
+.segmented button.active{background:var(--khaki-600); border-color:var(--khaki-600); color:#fff}
+.segmented button:hover:not(.active){border-color:var(--khaki-400,var(--khaki-500))}
+
+.input-sm{
+  padding:11px 14px; border-radius:var(--radius-md); border:2px solid var(--line); font-size:.9rem; width:100%;
+}
+.input-sm:focus{outline:none; border-color:var(--khaki-500)}
+.range-row{display:flex; align-items:center; gap:9px; color:var(--ink-500)}
+
+.filter-accordion{border-top:2px solid var(--khaki-50); padding:15px 0}
+.filter-accordion summary{
+  font-size:.9rem; font-weight:700; color:var(--ink-900); cursor:pointer; list-style:none;
+}
+.filter-accordion summary::-webkit-details-marker{display:none}
+.filter-accordion summary::before{content:"+ "; color:var(--khaki-600); font-weight:800}
+.filter-accordion[open] summary::before{content:"– "}
+
+.chip-group{display:flex; flex-wrap:wrap; gap:7px; margin-top:11px}
+.chip-group button{
+  padding:7px 14px; border-radius:var(--radius-pill); border:2px solid var(--line); background:#fff; font-size:.82rem; font-weight:700;
+}
+.chip-group button.active{background:var(--khaki-100); border-color:var(--khaki-600); color:var(--khaki-700)}
+
+.checkbox-list{display:flex; flex-direction:column; gap:10px; margin-top:11px; font-size:.88rem; color:var(--ink-700)}
+.checkbox-list label, .checkbox-inline{display:flex; align-items:center; gap:10px; font-weight:600}
+.checkbox-inline{margin-top:11px; font-size:.88rem}
+.checkbox-list input, .checkbox-inline input{accent-color:var(--khaki-600); width:19px; height:19px}
+
+.results-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:6px}
+.results-count{color:var(--ink-500); font-size:.94rem; font-weight:600}
+
+.grid-listings{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:26px 22px;
+}
+
+/* ============ LISTING CARD — simple, chaleureuse, tout en pastel ============ */
+.listing-card{
+  background:var(--bg-card); border-radius:var(--radius-lg); overflow:hidden; border:2px solid var(--khaki-50);
+  box-shadow:var(--shadow-soft); transition:transform .15s ease, box-shadow .15s ease;
+  cursor:pointer; display:flex; flex-direction:column;
+}
+.listing-card:hover{transform:translateY(-3px); box-shadow:var(--shadow-card)}
+.card-media{position:relative; aspect-ratio:16/9; background:var(--khaki-50); overflow:hidden}
+.card-media img{width:100%; height:100%; object-fit:cover; display:block}
+.card-badge{
+  position:absolute; left:12px; top:12px; background:#fff; color:var(--khaki-700); font-size:.72rem; font-weight:800;
+  padding:6px 13px; border-radius:var(--radius-pill); box-shadow:var(--shadow-soft);
+}
+.card-badge.badge-club{background:var(--gradient-primary); color:#fff}
+.fav-toggle{
+  position:absolute; right:10px; top:10px; width:38px; height:38px; border-radius:50%; border:none;
+  background:#fff; color:var(--ink-500); display:flex; align-items:center; justify-content:center;
+  transition:transform .12s; box-shadow:var(--shadow-soft);
+}
+.fav-toggle svg{fill:none; stroke:currentColor; stroke-width:2}
+.fav-toggle:hover{transform:scale(1.1)}
+.fav-toggle.is-fav{color:var(--pink-500)}
+.fav-toggle.is-fav svg{fill:var(--pink-500); stroke:var(--pink-500)}
+
+.card-body{padding:16px; display:flex; flex-direction:column; gap:5px; flex:1}
+.card-title-row{display:flex; align-items:baseline; justify-content:space-between; gap:8px}
+.card-title{font-size:.98rem; font-weight:700; margin:0; color:var(--ink-900); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.card-rating{font-size:.78rem; font-weight:700; color:var(--khaki-600); flex-shrink:0; background:var(--khaki-50); padding:3px 9px; border-radius:var(--radius-pill)}
+.card-meta{font-size:.86rem; color:var(--ink-500); margin:0}
+.card-price{font-weight:800; font-size:1.05rem; color:var(--ink-900); margin-top:4px; font-family:var(--font-display)}
+.card-price .price-suffix{font-weight:600; color:var(--ink-500); font-size:.8em}
+
+.empty-state{
+  grid-column:1/-1; text-align:center; padding:70px 20px; color:var(--ink-500);
+}
+.empty-state h3{font-family:var(--font-display); color:var(--ink-900); font-size:1.4rem; font-weight:700}
+
+/* ============ DETAIL ============ */
+.back-link{display:inline-flex; align-items:center; gap:6px; margin-bottom:20px; font-weight:700; color:var(--khaki-700); font-size:.94rem}
+.detail-grid{display:grid; grid-template-columns:1.3fr 1fr; gap:36px; align-items:start}
+.detail-media-main{
+  aspect-ratio:16/9; border-radius:var(--radius-xl); overflow:hidden; background:var(--khaki-50); box-shadow:var(--shadow-card);
+}
+.detail-media-main img{width:100%; height:100%; object-fit:cover}
+.detail-thumbs{display:flex; gap:10px; margin-top:12px}
+.detail-thumbs img{width:74px; height:56px; object-fit:cover; border-radius:var(--radius-md); cursor:pointer; border:3px solid transparent; opacity:.65; transition:opacity .12s, border-color .12s}
+.detail-thumbs img.active{border-color:var(--khaki-600); opacity:1}
+.detail-thumbs img:hover{opacity:1}
+
+.detail-badge{
+  display:inline-block; background:var(--khaki-100); color:var(--khaki-700); font-weight:800; font-size:.76rem;
+  padding:7px 15px; border-radius:var(--radius-pill); margin-bottom:14px;
+}
+.detail-title{font-family:var(--font-display); font-size:1.7rem; font-weight:700; color:var(--ink-900); margin:0 0 8px}
+.detail-price{font-family:var(--font-display); font-size:1.5rem; font-weight:700; color:var(--khaki-700); margin:0 0 4px}
+.detail-location{color:var(--ink-500); margin:0 0 22px; font-size:.94rem; font-weight:600}
+
+.detail-specs{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:24px}
+.spec-item{background:var(--khaki-50); border-radius:var(--radius-md); padding:13px 15px}
+.spec-item .spec-label{font-size:.7rem; text-transform:uppercase; letter-spacing:.03em; color:var(--khaki-600); font-weight:700; display:block}
+.spec-item .spec-value{font-size:1rem; font-weight:800; color:var(--ink-900)}
+
+.detail-equip{display:flex; flex-wrap:wrap; gap:9px; margin-bottom:26px}
+.detail-equip span{
+  background:#fff; border:2px solid var(--khaki-100); color:var(--ink-700); font-size:.84rem;
+  font-weight:700; padding:8px 15px; border-radius:var(--radius-pill);
+}
+.detail-desc{margin-bottom:26px; padding-bottom:26px; border-bottom:2px solid var(--khaki-50)}
+.detail-desc p{color:var(--ink-700); line-height:1.7; font-size:.98rem}
+
+.detail-transport{background:var(--khaki-50); padding:20px; border-radius:var(--radius-lg); margin-bottom:26px}
+.transport-form{display:flex; gap:10px; margin-top:10px}
+.transport-form input{flex:1; padding:12px 16px; border-radius:var(--radius-md); border:2px solid var(--line); background:#fff}
+.transport-result{margin-top:12px; font-weight:700; color:var(--khaki-700); font-size:.92rem}
+
+.detail-actions{display:flex; flex-direction:column; gap:12px}
+
+/* ============ MODAL ============ */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(43,51,47,.4);
+  display:flex; align-items:center; justify-content:center; z-index:80; padding:20px;
+}
+.modal-box{
+  background:#fff; border-radius:var(--radius-xl); padding:32px; max-width:440px; width:100%;
+  box-shadow:var(--shadow-pop); position:relative; max-height:90vh; overflow-y:auto;
+}
+.modal-close{
+  position:absolute; right:18px; top:18px; background:var(--khaki-50); border:none; font-size:1rem; color:var(--ink-700);
+  width:36px; height:36px; border-radius:50%;
+}
+.modal-close:hover{background:var(--khaki-100)}
+
+/* ============ MESSAGES ============ */
+.messages-list{display:flex; flex-direction:column; gap:14px; margin-top:18px}
+.message-item{
+  background:var(--bg-card); border:2px solid var(--khaki-50); border-radius:var(--radius-lg); padding:18px;
+  display:flex; flex-direction:column; gap:5px; box-shadow:var(--shadow-soft);
+}
+.message-item .msg-top{display:flex; justify-content:space-between; font-size:.82rem; color:var(--ink-500)}
+.message-item .msg-status{
+  font-weight:800; font-size:.7rem; text-transform:uppercase; padding:5px 12px; border-radius:var(--radius-pill); background:var(--khaki-100); color:var(--khaki-700);
+}
+.message-item .msg-status.status-nouveau{background:var(--sand-100); color:var(--sand-600)}
+.message-item strong{color:var(--ink-900); font-size:.96rem}
+
+/* ============ ADMIN ============ */
+.admin-layout{max-width:1000px; margin:0 auto}
+.admin-tabs{display:flex; gap:8px; margin-bottom:26px; flex-wrap:wrap}
+.admin-tab{
+  padding:12px 20px; border-radius:var(--radius-pill); border:2px solid var(--khaki-100); background:#fff; font-weight:700; font-size:.9rem; color:var(--ink-700);
+}
+.admin-tab.active{background:var(--khaki-600); border-color:var(--khaki-600); color:#fff}
+.admin-panel{background:var(--bg-card); border:2px solid var(--khaki-100); border-radius:var(--radius-xl); padding:26px; box-shadow:var(--shadow-soft)}
+
+.admin-listings-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:18px}
+.admin-table{display:flex; flex-direction:column; gap:12px}
+.admin-row{
+  display:grid; grid-template-columns:60px 1fr auto auto auto; gap:16px; align-items:center;
+  padding:12px; border:2px solid var(--khaki-50); border-radius:var(--radius-lg);
+}
+.admin-row img{width:60px; height:46px; object-fit:cover; border-radius:var(--radius-md); background:var(--khaki-50)}
+.admin-row .row-title{font-weight:700; font-size:.92rem}
+.admin-row .row-sub{font-size:.8rem; color:var(--ink-500)}
+.admin-row .row-status{font-size:.72rem; font-weight:800; padding:5px 13px; border-radius:var(--radius-pill); background:var(--khaki-100); color:var(--khaki-700); white-space:nowrap}
+.admin-row .row-status.masque{background:var(--khaki-50); color:var(--ink-500)}
+.admin-row-actions{display:flex; gap:8px}
+.admin-row-actions button{
+  height:38px; padding:0 15px; border-radius:var(--radius-pill); border:2px solid var(--khaki-100); background:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:.82rem; font-weight:700; color:var(--ink-700); white-space:nowrap;
+}
+.admin-row-actions button:hover{border-color:var(--khaki-500)}
+.admin-row-actions button[data-action="delete"]:hover{border-color:var(--sand-600); color:var(--sand-600)}
+
+/* ============ WIZARD ============ */
+.wizard{max-width:620px; margin:0 auto; background:var(--bg-card); border-radius:var(--radius-xl); padding:34px; box-shadow:var(--shadow-card); border:2px solid var(--khaki-100)}
+.wizard-progress{display:flex; align-items:center; gap:16px; margin-bottom:28px; flex-wrap:wrap}
+.wizard-step{display:flex; align-items:center; gap:9px; font-size:.86rem; font-weight:700; color:var(--ink-300)}
+.wizard-step span{
+  width:30px; height:30px; border-radius:50%; background:var(--khaki-50); color:var(--ink-500); display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:800;
+}
+.wizard-step.active{color:var(--ink-900)}
+.wizard-step.active span{background:var(--khaki-600); color:#fff}
+.wizard-timer{margin-left:auto; font-size:.86rem; font-weight:800; color:var(--ink-700); background:var(--khaki-50); padding:7px 15px; border-radius:var(--radius-pill)}
+
+.wizard-panel{display:none}
+.wizard-panel.active{display:block; animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:translateY(0)}}
+
+.wizard-panel label{display:block; font-size:.88rem; font-weight:700; color:var(--ink-700); margin:16px 0 7px}
+.wizard-panel input, .wizard-panel select, .wizard-panel textarea{
+  width:100%; padding:13px 15px; border-radius:var(--radius-md); border:2px solid var(--line); font-size:.96rem;
+}
+.wizard-panel input:focus, .wizard-panel select:focus, .wizard-panel textarea:focus{
+  outline:none; border-color:var(--khaki-500);
+}
+.form-row-2{display:grid; grid-template-columns:1fr 1fr; gap:15px}
+.form-row-4{display:grid; grid-template-columns:repeat(4,1fr); gap:11px}
+.form-row-4 label{font-size:.76rem}
+
+.autofill-hint{color:var(--khaki-700); font-size:.86rem; font-weight:700; margin:9px 0 0}
+
+.ai-status{
+  margin-top:12px; padding:12px 16px; border-radius:var(--radius-md); font-size:.88rem; font-weight:600;
+  background:var(--khaki-50); color:var(--khaki-700);
+}
+.ai-status.is-error{background:var(--sand-100); color:#3c452c}
+.ai-status.is-loading{display:flex; align-items:center; gap:9px}
+.ai-status.is-loading::before{
+  content:""; width:14px; height:14px; border-radius:50%;
+  border:2px solid var(--khaki-200); border-top-color:var(--khaki-600);
+  animation:aiSpin .7s linear infinite; flex-shrink:0;
+}
+@keyframes aiSpin{to{transform:rotate(360deg)}}
+
+.ai-variant-picker{
+  margin-top:12px; display:flex; flex-direction:column; gap:10px;
+}
+.ai-variant-card{
+  border:2px solid var(--khaki-200); border-radius:var(--radius-md); padding:14px 16px;
+  background:#fff; cursor:pointer; transition:border-color .12s, background .12s;
+}
+.ai-variant-card:hover{border-color:var(--khaki-600); background:var(--khaki-50)}
+.ai-variant-card strong{display:block; font-size:.92rem; color:var(--ink-900); margin-bottom:4px}
+.ai-variant-card span{font-size:.82rem; color:var(--ink-500)}
+
+
+.chip-toggle-group{display:flex; flex-wrap:wrap; gap:9px; margin-top:11px}
+.chip-toggle-group button{
+  padding:10px 16px; border-radius:var(--radius-pill); border:2px solid var(--line); background:#fff; font-size:.88rem; font-weight:700; color:var(--ink-700);
+}
+.chip-toggle-group button.active{background:var(--khaki-600); border-color:var(--khaki-600); color:#fff}
+
+.wizard-nav{display:flex; gap:12px; margin-top:30px}
+.wizard-nav .btn{flex:1}
+
+.photo-upload-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:14px}
+.photo-slot{
+  aspect-ratio:4/3; border:3px dashed var(--khaki-200); border-radius:var(--radius-lg); display:flex; align-items:center; justify-content:center;
+  font-size:.88rem; font-weight:700; color:var(--ink-500); cursor:pointer; position:relative; overflow:hidden; text-align:center; padding:8px;
+  background:var(--khaki-50); transition:border-color .12s;
+}
+.photo-slot:hover{border-color:var(--khaki-500)}
+.photo-slot input{position:absolute; inset:0; opacity:0; cursor:pointer}
+.photo-slot.filled{border-style:solid; border-color:var(--khaki-600); color:var(--khaki-700)}
+.photo-slot img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+.photo-slot-remove{
+  display:none; position:absolute; top:6px; right:6px; z-index:2;
+  width:26px; height:26px; border-radius:50%; border:none; background:rgba(0,0,0,.55); color:#fff;
+  font-size:.8rem; align-items:center; justify-content:center; cursor:pointer;
+}
+.photo-slot.filled .photo-slot-remove{display:flex}
+.photo-slot-remove:hover{background:rgba(0,0,0,.75)}
+
+#situation-park-extra{background:var(--khaki-50); border-radius:var(--radius-lg); padding:18px 20px; margin-top:16px}
+#situation-park-extra .filter-label{margin-top:0}
+
+/* ============ FOOTER ============ */
+.site-footer{
+  border-top:2px solid var(--khaki-100); background:var(--khaki-50); margin-top:64px;
+}
+.footer-inner{max-width:1200px; margin:0 auto; padding:44px 24px 24px}
+.footer-columns{display:grid; grid-template-columns:repeat(3,1fr); gap:32px; padding-bottom:32px}
+.footer-col h4{font-family:var(--font-display); font-size:1rem; font-weight:700; color:var(--ink-900); margin:0 0 16px}
+.footer-col ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:13px}
+.footer-col a{font-size:.9rem; color:var(--ink-700); font-weight:600}
+.footer-col a:hover{color:var(--khaki-700)}
+.footer-bottom{
+  border-top:2px solid var(--khaki-200); padding-top:20px; display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:12px; font-size:.86rem; color:var(--ink-700); font-weight:600;
+}
+.footer-bottom-left{display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.footer-bottom-right{display:flex; align-items:center; gap:16px; font-weight:700}
+
+/* ============ BOTTOM NAV — barre fixe façon Leboncoin ============ */
+.bottom-nav{
+  position:fixed; bottom:0; left:0; right:0; z-index:60;
+  display:flex; align-items:flex-start; background:#fff; border-top:1px solid var(--line);
+  box-shadow:0 -2px 12px rgba(0,0,0,.06); padding-top:6px;
+}
+.bottom-nav-item{
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  padding:9px 4px 10px; color:var(--ink-500); font-size:.68rem; font-weight:700; text-align:center;
+}
+.bottom-nav-item svg{stroke:currentColor}
+.bottom-nav-item.active-nav{color:var(--khaki-600)}
+.bottom-nav-item.active-nav svg{stroke:var(--khaki-600)}
+
+/* Bouton "+ Publier" central (admin uniquement) — badge rond en dégradé
+   légèrement surélevé pour ressortir, sans décaler les autres items :
+   il occupe exactement la même largeur flex qu'eux. */
+.bottom-nav-publish .publish-badge{
+  width:44px; height:44px; border-radius:50%; background:var(--gradient-primary); color:#fff;
+  display:flex; align-items:center; justify-content:center; margin-top:-16px;
+  box-shadow:0 4px 14px rgba(90,107,63,.32); border:3px solid #fff;
+  transition:transform .14s ease, box-shadow .14s ease;
+}
+.bottom-nav-publish:active .publish-badge{transform:scale(.93)}
+.bottom-nav-publish:hover .publish-badge{transform:translateY(-2px); box-shadow:0 7px 18px rgba(90,107,63,.42)}
+.bottom-nav-publish{color:var(--ink-800); gap:2px}
+.bottom-nav-publish.active-nav{color:var(--khaki-700)}
+.bottom-nav-publish.active-nav .publish-badge{box-shadow:0 0 0 3px var(--khaki-100), 0 4px 14px rgba(90,107,63,.32)}
+
+/* Espace en bas de page pour ne pas passer sous la barre fixe */
+.app-root{padding-bottom:90px}
+.site-footer{padding-bottom:70px}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:960px){
+  .catalogue-layout{grid-template-columns:1fr}
+  .catalogue-layout.filters-open{grid-template-columns:1fr}
+  .filters-panel{position:static; max-height:none}
+  .detail-grid{grid-template-columns:1fr}
+  .main-nav{display:none}
+  .nav-toggle{display:flex}
+  .footer-columns{grid-template-columns:1fr 1fr}
+
+  .mobile-nav-panel{
+    display:none; flex-direction:column; gap:2px; padding:10px 20px 20px;
+    border-top:2px solid var(--khaki-100); background:var(--bg);
+  }
+  .site-header.mobile-menu-open .mobile-nav-panel{display:flex}
+  .mobile-nav-panel a{
+    padding:14px 12px; border-radius:var(--radius-md); font-size:1rem; font-weight:700; color:var(--ink-700);
+  }
+  .mobile-nav-panel a:hover, .mobile-nav-panel a.active-nav{background:var(--khaki-50)}
+}
+@media (max-width:640px){
+  .header-inner{padding:14px 18px}
+  .app-root{padding:24px 16px 80px}
+  .search-hero{padding:20px 16px 4px}
+  .welcome-hero{padding:32px 16px 4px}
+  .welcome-title{font-size:1.4rem}
+  .form-row-4{grid-template-columns:repeat(2,1fr)}
+  .photo-upload-grid{grid-template-columns:1fr 1fr}
+  .footer-columns{grid-template-columns:1fr}
+  .footer-inner{padding:36px 20px 20px}
+  .btn-publish-quick span{display:none}
+  .btn-publish-quick{padding:9px; border-radius:50%; width:40px; height:40px}
+
+  /* 5 items dans la barre du bas : on resserre légèrement les libellés
+     pour que tout reste lisible sans débordement sur petits écrans. */
+  .bottom-nav-item{font-size:.62rem; padding:9px 2px 10px; gap:2px}
+  .bottom-nav-item svg{width:20px; height:20px}
+  .bottom-nav-publish .publish-badge{width:40px; height:40px; margin-top:-14px}
+  .bottom-nav-publish .publish-badge svg{width:20px; height:20px}
+}
+
+:focus-visible{outline:3px solid var(--sand-500); outline-offset:2px}
+</style>
+
+</head>
+<body>
+
+<!-- ============ TOAST ============ -->
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ HEADER ============ -->
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#/catalogue" class="brand" data-nav="catalogue">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
+          <defs>
+            <linearGradient id="logoGradient" x1="10" y1="10" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stop-color="#a3b77c"/>
+              <stop offset="1" stop-color="#5a6b3f"/>
+            </linearGradient>
+          </defs>
+          <!-- P : hampe + boucle haute, façon logo gravé sur bois -->
+          <path d="M46,90 L46,14 C46,14 82,10 84,32 C86,54 58,54 46,46"
+                stroke="url(#logoGradient)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- C : petite boucle de croisement + grand tracé enveloppant -->
+          <path d="M58,44 C64,40 66,32 58,30 C51,28 48,36 54,42 C40,36 22,42 18,56 C14,70 26,84 42,86 C52,87 60,82 64,74"
+                stroke="url(#logoGradient)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <strong>Club Country Village</strong>
+        <em>by La Chesnaie</em>
+      </span>
+    </a>
+
+```
+<nav class="main-nav" aria-label="Navigation principale">
+  <a href="#/catalogue" data-nav="catalogue">Catalogue</a>
+  <a href="#/catalogue?transaction=Location" data-nav="location">Louer</a>
+  <a href="#/parc" data-nav="parc">Le camping</a>
+  <a href="#/favoris" data-nav="favoris">Favoris</a>
+  <a href="#/messages" data-nav="messages">Messages</a>
+</nav>
+
+<div class="header-actions">
+  <div id="auth-area"></div>
+</div>
+<button class="btn-icon nav-toggle" id="nav-toggle" aria-label="Menu" aria-expanded="false">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+</button>
+```
+
+  </div>
+  <nav class="mobile-nav-panel" aria-label="Navigation mobile">
+    <a href="#/catalogue" data-nav="catalogue">Catalogue</a>
+    <a href="#/catalogue?transaction=Location" data-nav="location">Louer</a>
+    <a href="#/parc" data-nav="parc">Le camping</a>
+    <a href="#/favoris" data-nav="favoris">Favoris</a>
+    <a href="#/messages" data-nav="messages">Messages</a>
+  </nav>
+</header>
+
+<!-- ============ APP ROOT ============ -->
+
+<main id="app" class="app-root"></main>
+
+<!-- ============ FOOTER (réplique Airbnb) ============ -->
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-columns">
+      <div class="footer-col">
+        <h4>Assistance</h4>
+        <ul>
+          <li><a href="#/messages">Centre d'aide</a></li>
+          <li><a href="#/catalogue">Options de visite</a></li>
+          <li><a href="#/catalogue">Sécurité &amp; confiance</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Le Club</h4>
+        <ul>
+          <li><a href="#/parc">Le Parc de la Chesnaie</a></li>
+          <li><a href="#/catalogue?transaction=Location">Louer un bien</a></li>
+          <li><a href="#/catalogue">Vendre ou déposer une annonce</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>La Chesnaie</h4>
+        <ul>
+          <li><a href="https://chesnaie.eu" target="_blank" rel="noopener">Site du camping</a></li>
+          <li><a href="#/login">Espace membre</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <span>© 2026 Club Country Village by La Chesnaie</span>
+      </div>
+      <div class="footer-bottom-right">
+        <span>Français (FR)</span>
+        <span>€ EUR</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ BARRE DE NAVIGATION FIXE (façon Leboncoin) ============
+     Le contenu est construit dynamiquement en JavaScript à partir du
+     rôle réel de l'utilisateur (voir renderBottomNav). Le bouton
+     "+ Publier" n'est donc pas simplement masqué pour un client : il
+     n'est jamais ajouté au document. -->
+
+<nav class="bottom-nav" id="bottom-nav" aria-label="Navigation rapide"></nav>
+
+<!-- ============ TEMPLATES ============ -->
+
+<template id="tpl-login">
+  <div class="auth-panel">
+    <h2 class="section-title-sm">Connexion</h2>
+    <p class="muted">Connectez-vous pour retrouver vos favoris et vos demandes.</p>
+    <div class="auth-msg" id="login-msg" hidden></div>
+    <form id="form-login" class="stack-form" novalidate>
+      <label>Adresse e-mail
+        <input type="email" name="email" autocomplete="email" placeholder="vous@exemple.fr">
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" autocomplete="current-password" placeholder="••••••••">
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+    </form>
+    <p class="switch-line">Pas encore de compte ? <a href="#" id="link-to-signup">Créer un compte</a></p>
+  </div>
+</template>
+
+<template id="tpl-signup">
+  <div class="auth-panel">
+    <h2 class="section-title-sm">Créer un compte</h2>
+    <p class="muted">Rejoignez le Club pour suivre vos demandes et sauvegarder vos coups de cœur.</p>
+    <div class="auth-msg" id="signup-msg" hidden></div>
+    <form id="form-signup" class="stack-form" novalidate>
+      <label>Nom et prénom
+        <input type="text" name="full_name" autocomplete="name" placeholder="Jean Dupont">
+      </label>
+      <label>Adresse e-mail
+        <input type="email" name="email" autocomplete="email" placeholder="vous@exemple.fr">
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" autocomplete="new-password" placeholder="8 caractères minimum">
+      </label>
+      <label>Confirmation du mot de passe
+        <input type="password" name="password_confirm" autocomplete="new-password" placeholder="Retapez le mot de passe">
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Créer mon compte</button>
+    </form>
+    <p class="switch-line">Déjà membre ? <a href="#" id="link-to-login">Se connecter</a></p>
+  </div>
+</template>
+
+<template id="tpl-catalogue">
+  <div class="welcome-hero">
+    <h1 class="welcome-title">Bienvenue sur Club Country Village</h1>
+    <p class="welcome-sub">Trouvez votre mobil-home ou chalet parmi nos annonces, ou découvrez le Parc de la Chesnaie.</p>
+    <div class="welcome-actions">
+      <button class="btn btn-cta" id="btn-welcome-search">Rechercher</button>
+      <a class="btn btn-outline" href="#/parc">Profil du camping</a>
+    </div>
+  </div>
+
+  <div class="search-hero">
+    <div class="search-bar" id="search-bar">
+      <div class="search-field" id="sf-location">
+        <span class="sf-label">Que cherchez-vous ?</span>
+        <input type="text" id="quick-search-location" placeholder="Une marque, un modèle, un mot-clé…">
+      </div>
+      <div class="search-submit">
+        <button id="btn-quick-search" aria-label="Rechercher">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+      </div>
+    </div>
+
+```
+<div class="category-rail" id="category-rail">
+  <div class="category-pill" data-cat-type=""><span class="cat-icon">✺</span>Tous les biens</div>
+  <div class="category-pill" data-cat-type="Mobil-home"><span class="cat-icon">⌂</span>Mobil-homes</div>
+  <div class="category-pill" data-cat-type="Chalet"><span class="cat-icon">▲</span>Chalets</div>
+  <div class="category-pill" data-cat-type="Parcelle"><span class="cat-icon">⬚</span>Parcelles</div>
+  <div class="category-pill" data-cat-club="1"><span class="cat-icon">★</span>Sélection Club</div>
+</div>
+```
+
+  </div>
+
+  <div class="catalogue-layout">
+    <aside class="filters-panel" id="filters-panel">
+      <div class="filters-head">
+        <h2 class="section-title-sm">Filtrer</h2>
+        <button class="link-btn" id="btn-reset-filters">Réinitialiser</button>
+      </div>
+
+```
+  <div class="filter-group">
+    <span class="filter-label">Projet</span>
+    <div class="segmented" data-filter="transaction">
+      <button data-value="">Tous</button>
+      <button data-value="Vente">Acheter</button>
+      <button data-value="Location">Louer</button>
+      <button data-value="Parcelle">Emplacement</button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Situation</span>
+    <div class="segmented" data-filter="situation">
+      <button data-value="">Tous</button>
+      <button data-value="sur_parcelle">Sur parcelle</button>
+      <button data-value="hors_parcelle">Hors parcelle</button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Localisation</span>
+    <input type="text" id="filter-location" class="input-sm" placeholder="Ville, marque…">
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Budget (€)</span>
+    <div class="range-row">
+      <input type="number" id="filter-budget-min" class="input-sm" placeholder="Min">
+      <span>—</span>
+      <input type="number" id="filter-budget-max" class="input-sm" placeholder="Max">
+    </div>
+  </div>
+
+  <details class="filter-accordion" open>
+    <summary>Marque &amp; modèle</summary>
+    <div class="chip-group" id="filter-brands"></div>
+  </details>
+
+  <details class="filter-accordion">
+    <summary>Année</summary>
+    <div class="range-row">
+      <input type="number" id="filter-year-min" class="input-sm" placeholder="Min">
+      <span>—</span>
+      <input type="number" id="filter-year-max" class="input-sm" placeholder="Max">
+    </div>
+  </details>
+
+  <details class="filter-accordion">
+    <summary>Dimensions &amp; surface</summary>
+    <label class="mini-label">Surface min (m²)
+      <input type="number" id="filter-surface-min" class="input-sm">
+    </label>
+  </details>
+
+  <details class="filter-accordion">
+    <summary>Agencement</summary>
+    <div class="filter-group">
+      <span class="filter-label">Chambres</span>
+      <div class="segmented" data-filter="chambres">
+        <button data-value="">Toutes</button>
+        <button data-value="1">1</button>
+        <button data-value="2">2</button>
+        <button data-value="3">3</button>
+        <button data-value="4">4+</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Couchages</span>
+      <div class="segmented" data-filter="couchages">
+        <button data-value="">Tous</button>
+        <button data-value="2">2</button>
+        <button data-value="4">4</button>
+        <button data-value="6">6</button>
+        <button data-value="8">8+</button>
+      </div>
+    </div>
+  </details>
+
+  <details class="filter-accordion">
+    <summary>Équipements</summary>
+    <div class="checkbox-list" id="filter-equipements">
+      <label><input type="checkbox" value="climatisation_reversible"> Climatisation réversible</label>
+      <label><input type="checkbox" value="terrasse_couverte"> Terrasse couverte</label>
+      <label><input type="checkbox" value="terrasse_semi_couverte"> Terrasse semi-couverte</label>
+      <label><input type="checkbox" value="lave_vaisselle"> Lave-vaisselle</label>
+      <label><input type="checkbox" value="lave_linge"> Lave-linge</label>
+      <label><input type="checkbox" value="isolation_4_saisons"> Isolation 4 saisons</label>
+      <label><input type="checkbox" value="double_vitrage"> Double vitrage</label>
+    </div>
+  </details>
+
+  <details class="filter-accordion">
+    <summary>Conditions camping</summary>
+    <div class="filter-group">
+      <span class="filter-label">Période d'ouverture</span>
+      <div class="segmented" data-filter="periode">
+        <button data-value="">Toutes</button>
+        <button data-value="6">6 mois</button>
+        <button data-value="9">9 mois</button>
+        <button data-value="12">Annuel</button>
+      </div>
+    </div>
+    <label class="mini-label">Loyer max de parcelle (€/an)
+      <input type="number" id="filter-loyer-max" class="input-sm">
+    </label>
+    <label class="checkbox-inline"><input type="checkbox" id="filter-souslocation"> Sous-location autorisée</label>
+    <label class="checkbox-inline"><input type="checkbox" id="filter-sansdroit"> Sans droit d'entrée</label>
+  </details>
+</aside>
+
+<section class="results-panel">
+  <div class="results-head">
+    <h1 class="page-title">Le catalogue du Club</h1>
+    <div class="results-head-right">
+      <p class="results-count" id="results-count"></p>
+      <button class="btn btn-outline btn-sm" id="btn-toggle-filters">Filtres</button>
+    </div>
+  </div>
+  <div class="grid-listings" id="grid-listings" aria-live="polite"></div>
+</section>
+```
+
+  </div>
+</template>
+
+<template id="tpl-listing-card">
+  <article class="listing-card">
+    <div class="card-media">
+      <img loading="lazy">
+      <button class="fav-toggle" aria-label="Ajouter aux favoris">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
+      </button>
+      <span class="card-badge"></span>
+    </div>
+    <div class="card-body">
+      <div class="card-title-row">
+        <h3 class="card-title"></h3>
+        <span class="card-rating"></span>
+      </div>
+      <p class="card-meta"></p>
+      <div class="card-price"></div>
+    </div>
+  </article>
+</template>
+
+<template id="tpl-listing-detail">
+  <div class="detail-layout">
+    <a href="#/catalogue" class="back-link">← Retour au catalogue</a>
+    <div class="detail-grid">
+      <div class="detail-media">
+        <div class="detail-media-main"><img id="detail-main-img"></div>
+        <div class="detail-thumbs" id="detail-thumbs"></div>
+      </div>
+      <div class="detail-info">
+        <span class="detail-badge" id="detail-badge"></span>
+        <h1 class="detail-title" id="detail-title"></h1>
+        <p class="detail-price" id="detail-price"></p>
+        <p class="detail-location" id="detail-location"></p>
+
+```
+    <div class="detail-specs" id="detail-specs"></div>
+
+    <div class="detail-equip" id="detail-equip"></div>
+
+    <div class="detail-desc">
+      <h2 class="section-title-sm">Description</h2>
+      <p id="detail-description"></p>
+    </div>
+
+    <div class="detail-transport" id="detail-transport-block" hidden>
+      <h2 class="section-title-sm">Simulateur de transport</h2>
+      <div class="transport-form">
+        <input type="text" id="transport-cp" placeholder="Votre code postal">
+        <button class="btn btn-secondary" id="btn-transport-calc">Estimer</button>
+      </div>
+      <p class="transport-result" id="transport-result"></p>
+    </div>
+
+    <div class="detail-actions">
+      <button class="btn btn-primary btn-block" id="btn-contact-owner">Demander une visite / des infos</button>
+      <button class="btn btn-outline btn-block" id="btn-fav-detail">Ajouter aux favoris</button>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</template>
+
+<template id="tpl-contact-modal">
+  <div class="modal-overlay" id="contact-modal">
+    <div class="modal-box">
+      <button class="modal-close" id="btn-close-contact" aria-label="Fermer">✕</button>
+      <h2 class="section-title-sm">Envoyer une demande</h2>
+      <form id="form-contact" class="stack-form">
+        <label>Votre nom
+          <input type="text" name="name" required>
+        </label>
+        <label>Email
+          <input type="email" name="email" required>
+        </label>
+        <label>Téléphone
+          <input type="tel" name="phone">
+        </label>
+        <label>Message
+          <textarea name="message" rows="4" placeholder="Je souhaite organiser une visite…"></textarea>
+        </label>
+        <div class="segmented" data-filter="request_type">
+          <button type="button" data-value="visite" class="active">Demande de visite</button>
+          <button type="button" data-value="estimation">Demande d'estimation</button>
+          <button type="button" data-value="info">Demande d'infos</button>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Envoyer la demande</button>
+      </form>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-favoris">
+  <div class="simple-layout">
+    <h1 class="page-title">Vos favoris</h1>
+    <div class="grid-listings" id="grid-favoris"></div>
+  </div>
+</template>
+
+<template id="tpl-messages">
+  <div class="simple-layout narrow">
+    <h1 class="page-title">Vos demandes</h1>
+    <div class="messages-list" id="messages-list"></div>
+  </div>
+</template>
+
+<template id="tpl-park-profile">
+  <div class="park-hero" id="park-hero" hidden>
+    <img id="park-hero-img" alt="">
+    <video id="park-hero-video" muted loop autoplay playsinline hidden></video>
+    <div class="park-hero-overlay">
+      <h1 id="park-hero-name">Le camping</h1>
+      <p id="park-hero-address"></p>
+    </div>
+  </div>
+
+  <div class="simple-layout park-profile">
+    <div class="park-hero-fallback" id="park-hero-fallback">
+      <h1 class="page-title" id="park-profile-name">Le camping</h1>
+      <p class="park-profile-address" id="park-profile-address"></p>
+    </div>
+
+```
+<div class="park-hero-thumbs" id="park-profile-thumbs"></div>
+
+<p class="park-profile-desc" id="park-profile-desc"></p>
+
+<div class="park-spec-chips" id="park-profile-specs"></div>
+
+<div class="detail-equip" id="park-profile-conditions"></div>
+
+<p style="margin:0 0 24px">
+  <a class="link-btn" href="https://chesnaie.eu" target="_blank" rel="noopener">Voir le site officiel du camping →</a>
+</p>
+
+<div class="park-profile-actions">
+  <a class="btn btn-outline" href="#/catalogue">← Accueil</a>
+  <a class="btn btn-primary" id="park-profile-see-listings" href="#/catalogue?situation=sur_parcelle">Voir les biens sur ce camping</a>
+</div>
+```
+
+  </div>
+</template>
+
+<!-- ============ ADMIN TEMPLATES ============ -->
+
+<template id="tpl-admin-dashboard">
+  <div class="admin-layout">
+    <nav class="admin-tabs">
+      <button class="admin-tab active" data-tab="listings">Annonces</button>
+      <button class="admin-tab" data-tab="new">+ Nouvelle annonce</button>
+      <button class="admin-tab" data-tab="parks">Le Parc</button>
+      <button class="admin-tab" data-tab="inbox">Messages reçus</button>
+    </nav>
+    <div class="admin-panel" id="admin-panel"></div>
+  </div>
+</template>
+
+<template id="tpl-admin-listings">
+  <div class="admin-listings-head">
+    <h2 class="section-title-sm">Stock d'annonces</h2>
+    <p class="muted" id="admin-listings-count"></p>
+  </div>
+  <div class="admin-table" id="admin-listings-table"></div>
+</template>
+
+<template id="tpl-admin-parks">
+  <div class="admin-listings-head">
+    <h2 class="section-title-sm">Le Parc de la Chesnaie</h2>
+  </div>
+  <p class="muted" style="margin:-8px 0 20px">Le site est réservé au Parc de la Chesnaie — un seul domaine. Modifie ses informations ci-dessous, elles s'appliquent à toutes les annonces "sur parcelle".</p>
+  <form id="form-park" class="stack-form">
+    <label>Nom du domaine
+      <input type="text" name="name" required>
+    </label>
+    <label>Description (visible par les clients)
+      <textarea name="description" rows="4" placeholder="Présente le camping en quelques phrases : ambiance, équipements, environnement…"></textarea>
+    </label>
+
+```
+<span class="filter-label" style="display:block; margin-top:6px">Photos du camping</span>
+<div class="photo-upload-grid" id="park-photo-grid">
+  <label class="photo-slot" data-slot="1">
+    <input type="file" accept="image/*" data-park-photo-input="1">
+    <span>Photo principale</span>
+    <button type="button" class="photo-slot-remove" data-remove-slot="1" title="Supprimer cette photo">✕</button>
+  </label>
+  <label class="photo-slot" data-slot="2">
+    <input type="file" accept="image/*" data-park-photo-input="2">
+    <span>Photo 2</span>
+    <button type="button" class="photo-slot-remove" data-remove-slot="2" title="Supprimer cette photo">✕</button>
+  </label>
+  <label class="photo-slot" data-slot="3">
+    <input type="file" accept="image/*" data-park-photo-input="3">
+    <span>Photo 3</span>
+    <button type="button" class="photo-slot-remove" data-remove-slot="3" title="Supprimer cette photo">✕</button>
+  </label>
+  <label class="photo-slot" data-slot="4">
+    <input type="file" accept="image/*" data-park-photo-input="4">
+    <span>Photo 4</span>
+    <button type="button" class="photo-slot-remove" data-remove-slot="4" title="Supprimer cette photo">✕</button>
+  </label>
+</div>
+
+<span class="filter-label" style="display:block; margin-top:18px">Vidéo de couverture (en boucle, optionnelle)</span>
+<p class="muted" style="font-size:.82rem; margin:2px 0 10px">Remplace la photo principale par une courte vidéo qui tourne en boucle en haut de la page "Le camping" — idéal pour une vidéo aérienne ou d'ambiance de quelques secondes.</p>
+<label class="photo-slot" data-slot="video" style="aspect-ratio:16/6">
+  <input type="file" accept="video/*" id="park-video-input">
+  <span>Vidéo de couverture</span>
+  <button type="button" class="photo-slot-remove" id="btn-remove-park-video" title="Supprimer cette vidéo">✕</button>
+</label>
+
+<label>Ville
+  <input type="text" name="city" required>
+</label>
+<label>Code postal
+  <input type="text" name="postal_code">
+</label>
+<label>Département
+  <input type="text" name="department">
+</label>
+<label>Région
+  <input type="text" name="region">
+</label>
+<label>Loyer annuel indicatif (€)
+  <input type="number" name="default_rent">
+</label>
+<label>Période d'ouverture (mois)
+  <select name="open_months">
+    <option value="6">6 mois</option>
+    <option value="9">9 mois</option>
+    <option value="12">Annuel</option>
+  </select>
+</label>
+<label class="checkbox-inline"><input type="checkbox" name="sublet_allowed"> Sous-location autorisée</label>
+<label class="checkbox-inline"><input type="checkbox" name="no_entry_fee"> Sans droit d'entrée</label>
+<button type="submit" class="btn btn-primary btn-block">Enregistrer</button>
+```
+
+  </form>
+</template>
+
+<template id="tpl-admin-inbox">
+  <h2 class="section-title-sm">Messages reçus</h2>
+  <div class="messages-list" id="admin-inbox-list"></div>
+</template>
+
+<!-- ============ ADMIN: TUNNEL "EXPRESS < 3 MIN" ============ -->
+
+<template id="tpl-admin-new-listing">
+  <div class="wizard">
+    <div class="wizard-progress">
+      <div class="wizard-step active" data-step="1"><span>1</span>Identité</div>
+      <div class="wizard-step" data-step="2"><span>2</span>Situation</div>
+      <div class="wizard-step" data-step="3"><span>3</span>Prix &amp; photos</div>
+      <div class="wizard-timer" id="wizard-timer">0:00</div>
+    </div>
+
+```
+<!-- STEP 1 -->
+<section class="wizard-panel active" data-panel="1">
+  <h2 class="section-title-sm">Identité du bien</h2>
+
+  <div class="filter-group">
+    <span class="filter-label">Type de bien</span>
+    <div class="segmented" data-field="type_bien">
+      <button data-value="Mobil-home" class="active">Mobil-home</button>
+      <button data-value="Chalet">Chalet</button>
+      <button data-value="Parcelle">Parcelle</button>
+    </div>
+  </div>
+
+  <div class="filter-group">
+    <span class="filter-label">Type de transaction</span>
+    <div class="segmented" data-field="transaction">
+      <button data-value="Vente" class="active">Vente</button>
+      <button data-value="Location">Location</button>
+    </div>
+  </div>
+
+  <div class="form-row-2">
+    <label>Marque
+      <input type="text" list="brand-list" id="w-brand" placeholder="IRM, O'Hara, Rapidhome…">
+      <datalist id="brand-list"></datalist>
+    </label>
+    <label>Modèle
+      <input type="text" list="model-list" id="w-model" placeholder="Sélectionnez la marque d'abord">
+      <datalist id="model-list"></datalist>
+    </label>
+  </div>
+
+  <button type="button" class="btn btn-secondary btn-block" id="btn-ai-lookup">✨ Compléter avec l'IA</button>
+  <div id="ai-lookup-status" class="ai-status" hidden></div>
+  <div id="ai-variant-picker" class="ai-variant-picker" hidden></div>
+
+  <div class="form-row-2">
+    <label>Année
+      <input type="number" id="w-year" min="1980" max="2027" placeholder="2024">
+    </label>
+    <div>
+      <span class="filter-label">État</span>
+      <div class="segmented" data-field="etat">
+        <button data-value="Neuf">Neuf</button>
+        <button data-value="Très bon état" class="active">Très bon état</button>
+        <button data-value="État correct">État correct</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="autofill-hint" id="autofill-hint" hidden>✓ Champs pré-remplis depuis la fiche modèle</p>
+
+  <div class="form-row-4">
+    <label>Surface (m²)<input type="number" id="w-surface"></label>
+    <label>Longueur (m)<input type="number" step="0.1" id="w-longueur"></label>
+    <label>Largeur (m)<input type="number" step="0.1" id="w-largeur"></label>
+    <label>Chambres<input type="number" id="w-chambres"></label>
+  </div>
+  <div class="form-row-2">
+    <label>Couchages<input type="number" id="w-couchages"></label>
+    <label>Salles d'eau<input type="number" id="w-sdb"></label>
+  </div>
+  <div class="form-row-2">
+    <label>Nombre de pièces<input type="number" id="w-pieces"></label>
+  </div>
+  <label>Plan d'aménagement
+    <textarea id="w-plan" rows="2" placeholder="Ex. séjour/cuisine ouverts à l'avant, 2 chambres à l'arrière…"></textarea>
+  </label>
+
+  <div class="wizard-nav">
+    <button class="btn btn-primary" id="btn-step1-next">Continuer →</button>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="wizard-panel" data-panel="2">
+  <h2 class="section-title-sm">Situation</h2>
+  <div class="segmented" data-field="situation">
+    <button data-value="sur_parcelle" class="active">Sur parcelle (en camping)</button>
+    <button data-value="hors_parcelle">Hors parcelle (à déplacer)</button>
+  </div>
+
+  <div id="situation-sur-parcelle">
+    <p class="autofill-hint" id="fixed-park-label" style="margin-top:0"></p>
+    <label>Loyer annuel (€)
+      <input type="number" id="w-rent">
+    </label>
+  </div>
+
+  <div id="situation-hors-parcelle" hidden>
+    <div class="form-row-2">
+      <label>Ville
+        <input type="text" id="w-city">
+      </label>
+      <label>Code postal
+        <input type="text" id="w-cp">
+      </label>
+    </div>
+  </div>
+
+  <div id="situation-park-extra">
+    <span class="filter-label" style="margin-top:16px; display:block;">Conditions spécifiques à cette annonce</span>
+    <div class="form-row-2">
+      <div>
+        <span class="filter-label">Période d'ouverture</span>
+        <div class="segmented" data-field="periode_override">
+          <button data-value="" class="active">Selon domaine</button>
+          <button data-value="6">6 mois</button>
+          <button data-value="9">9 mois</button>
+          <button data-value="12">Annuel</button>
+        </div>
+      </div>
+    </div>
+    <label class="checkbox-inline"><input type="checkbox" id="w-souslocation"> Sous-location autorisée</label>
+    <label class="checkbox-inline"><input type="checkbox" id="w-sansdroit"> Sans droit d'entrée</label>
+  </div>
+
+  <h2 class="section-title-sm">Équipements</h2>
+  <div class="chip-toggle-group" id="w-equipements">
+    <button type="button" data-value="climatisation_reversible">Climatisation réversible</button>
+    <button type="button" data-value="terrasse_couverte">Terrasse couverte</button>
+    <button type="button" data-value="terrasse_semi_couverte">Terrasse semi-couverte</button>
+    <button type="button" data-value="lave_vaisselle">Lave-vaisselle</button>
+    <button type="button" data-value="lave_linge">Lave-linge</button>
+    <button type="button" data-value="isolation_4_saisons">Isolation 4 saisons</button>
+    <button type="button" data-value="double_vitrage">Double vitrage</button>
+  </div>
+
+  <div class="wizard-nav">
+    <button class="btn btn-ghost" id="btn-step2-back">← Retour</button>
+    <button class="btn btn-primary" id="btn-step2-next">Continuer →</button>
+  </div>
+</section>
+
+<!-- STEP 3 -->
+<section class="wizard-panel" data-panel="3">
+  <h2 class="section-title-sm">Prix, visuels &amp; publication</h2>
+
+  <label>Référence interne (optionnel)
+    <input type="text" id="w-reference" placeholder="Ex. IRM-2024-032">
+  </label>
+
+  <label>Prix net (€)
+    <input type="number" id="w-price">
+  </label>
+
+  <div class="photo-upload-grid">
+    <label class="photo-slot" data-slot="exterieur">
+      <input type="file" accept="image/*" data-slot-input="exterieur">
+      <span>Extérieur *</span>
+    </label>
+    <label class="photo-slot" data-slot="salon">
+      <input type="file" accept="image/*" data-slot-input="salon">
+      <span>Salon *</span>
+    </label>
+    <label class="photo-slot" data-slot="cuisine">
+      <input type="file" accept="image/*" data-slot-input="cuisine">
+      <span>Cuisine *</span>
+    </label>
+    <label class="photo-slot" data-slot="video">
+      <input type="file" accept="video/mp4" data-slot-input="video">
+      <span>Vidéo (optionnel)</span>
+    </label>
+  </div>
+
+  <h2 class="section-title-sm">Description générée automatiquement</h2>
+  <textarea id="w-description" rows="4"></textarea>
+  <button type="button" class="link-btn" id="btn-regen-desc">Régénérer la description</button>
+
+  <div class="wizard-nav">
+    <button class="btn btn-ghost" id="btn-step3-back">← Retour</button>
+    <button class="btn btn-cta btn-block" id="btn-publish">Publier l’annonce</button>
+  </div>
+</section>
+```
+
+  </div>
+</template>
+
+<script>
+// ===========================================================
+// CONFIGURATION SUPABASE
+// ===========================================================
+// 1. Va sur https://supabase.com, crée un projet (gratuit).
+// 2. Dans Project Settings > API, copie "Project URL" et "anon public key".
+// 3. Colle-les ci-dessous.
+// 4. Exécute le script SQL fourni dans schema.sql (SQL Editor de Supabase)
+//    pour créer toutes les tables nécessaires.
+// ===========================================================
+
+const SUPABASE_URL = "https://fmnlbkkyjxhqdqijwmej.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_OYvaAiG3FPKDDYmW63AojA_yXyzESvT";
+
+// Pour information : le rôle administrateur est attribué côté base de
+// données (colonne is_admin de la table profiles), automatiquement à
+// l'inscription de cette adresse — voir setup-complet.sql.
+// Le site ne se fie jamais à l'email pour accorder des droits.
+const ADMIN_EMAIL = "contact@chesnaie.eu";
+
+// Marques & modèles pré-remplis (auto-complétion étape 1 du tunnel)
+// Chaque modèle définit les valeurs qui pré-remplissent automatiquement
+// surface / longueur / largeur / chambres / couchages.
+const BRAND_CATALOG = {
+  "IRM": {
+    "Riviera": { surface: 32, longueur: 9.5, largeur: 4, chambres: 2, couchages: 6 },
+    "Cesbron": { surface: 34, longueur: 10, largeur: 4, chambres: 2, couchages: 6 },
+    "Super Titania": { surface: 38, longueur: 11.2, largeur: 4, chambres: 3, couchages: 8 }
+  },
+  "O'Hara": {
+    "864": { surface: 36, longueur: 10.9, largeur: 4, chambres: 3, couchages: 6 },
+    "Vision": { surface: 40, longueur: 12, largeur: 4, chambres: 3, couchages: 8 }
+  },
+  "Rapidhome": {
+    "Rubis": { surface: 29, longueur: 8.5, largeur: 4, chambres: 2, couchages: 4 },
+    "Emeraude": { surface: 33, longueur: 9.9, largeur: 4, chambres: 2, couchages: 6 }
+  },
+  "Louisiane": {
+    "Origine": { surface: 31, longueur: 9.2, largeur: 4, chambres: 2, couchages: 6 },
+    "Sitka": { surface: 37, longueur: 11, largeur: 4, chambres: 3, couchages: 6 }
+  },
+  "Willerby": {
+    "Avonmore": { surface: 39, longueur: 11.4, largeur: 4, chambres: 3, couchages: 6 },
+    "Brockenhurst": { surface: 42, longueur: 12.2, largeur: 4.2, chambres: 3, couchages: 8 }
+  },
+  "Trigano": {
+    "Loggia": { surface: 30, longueur: 9, largeur: 4, chambres: 2, couchages: 6 },
+    "Malibu": { surface: 35, longueur: 10.5, largeur: 4, chambres: 2, couchages: 6 }
+  },
+  "Rideau": {
+    "Odalys": { surface: 28, longueur: 8, largeur: 4, chambres: 2, couchages: 4 },
+    "Vacanciales": { surface: 33, longueur: 9.6, largeur: 4, chambres: 2, couchages: 6 }
+  }
+};
+
+
+// ===========================================================
+// CLUB COUNTRY VILLAGE — Application
+// ===========================================================
+
+// Le CDN Supabase peut échouer à charger (pas de réseau, adblocker,
+// proxy d'entreprise, ouverture du fichier en local sans connexion...).
+// Si `window.supabase` n'existe pas, TOUT le reste du script plantait
+// immédiatement (ReferenceError) et aucun bouton de la page ne
+// répondait, même ceux qui n'ont rien à voir avec la base de données
+// (navigation, filtres, menus...). On protège ce point d'entrée pour
+// que l'interface reste utilisable en mode dégradé dans tous les cas.
+let sb;
+let supabaseUnavailable = false;
+
+function makeOfflineClient() {
+  const fail = async () => ({ data: null, error: new Error("Supabase indisponible : vérifie ta connexion ou la configuration de config.js") });
+  const failList = async () => ({ data: [], error: new Error("Supabase indisponible") });
+  const chain = {
+    select: () => chain, order: failList, eq: () => ({ single: fail }),
+    insert: () => ({ select: () => ({ single: fail }) }),
+    update: () => ({ eq: fail }),
+    delete: () => ({ eq: fail })
+  };
+  return {
+    auth: {
+      getSession: async () => ({ data: { session: null }, error: null }),
+      onAuthStateChange: () => {},
+      signOut: async () => ({ error: null }),
+      signInWithPassword: fail,
+      signUp: fail
+    },
+    from: () => chain,
+    storage: { from: () => ({ upload: fail, getPublicUrl: () => ({ data: { publicUrl: "" } }) }) }
+  };
+}
+
+try {
+  if (typeof supabase === "undefined" || !supabase.createClient) {
+    throw new Error("Le script Supabase (CDN) ne s'est pas chargé");
+  }
+  const { createClient } = supabase;
+  sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (err) {
+  console.error("Supabase indisponible, passage en mode dégradé :", err);
+  supabaseUnavailable = true;
+  sb = makeOfflineClient();
+}
+
+const state = {
+  user: null,       // { id, email, full_name, is_admin }
+  listings: [],
+  parks: [],
+  favorites: new Set(),
+  filters: {
+    transaction: "", situation: "", location: "", budgetMin: null, budgetMax: null,
+    brands: new Set(), yearMin: null, yearMax: null, surfaceMin: null,
+    chambres: "", couchages: "", equipements: new Set(),
+    periode: "", loyerMax: null, sousLocation: false, sansDroit: false,
+    typeBien: ""
+  },
+  wizard: { step: 1, photos: {}, startedAt: null, timerHandle: null }
+};
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const app = $("#app");
+
+// ===========================================================
+// TOAST
+// ===========================================================
+let toastTimeout;
+function toast(msg) {
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => el.classList.remove("show"), 5200);
+}
+
+// Extrait un message lisible depuis n'importe quelle forme d'erreur.
+// Certaines erreurs (échecs réseau bruts, objets non standards renvoyés
+// par un environnement d'aperçu sandboxé, etc.) n'ont pas de `.message`
+// exploitable et affichaient littéralement "[object Object]" — cette
+// fonction couvre ces cas pour toujours donner une indication utile.
+function errMsg(err) {
+  if (!err) return "Erreur inconnue";
+  if (typeof err === "string") return err;
+  if (err.message && typeof err.message === "string") return err.message;
+  if (err.error_description) return err.error_description;
+  if (err.error) return typeof err.error === "string" ? err.error : errMsg(err.error);
+  try {
+    const json = JSON.stringify(err);
+    if (json && json !== "{}") return json;
+  } catch (_) { /* ignore */ }
+  return "Impossible de contacter le serveur (vérifie ta connexion et la configuration Supabase dans le fichier)";
+}
+
+// ===========================================================
+// ASSISTANT IA (Supabase Edge Function "ai-assist")
+// ===========================================================
+// Appelle la fonction serveur qui elle-même appelle l'IA — la clé API
+// n'est jamais présente dans ce fichier, uniquement côté serveur.
+async function callAIAssist(mode, payload) {
+  const { data, error } = await sb.functions.invoke("swift-worker", {
+    body: { mode, ...payload }
+  });
+  if (error) throw new Error(errMsg(error));
+  if (data?.error) throw new Error(data.error);
+  return data;
+}
+
+// ===========================================================
+// ROUTER
+// ===========================================================
+function parseHash() {
+  const raw = location.hash.replace(/^#\/?/, "");
+  const [path, query] = raw.split("?");
+  const params = new URLSearchParams(query || "");
+  return { path: path || "catalogue", params };
+}
+
+async function router() {
+  const { path, params } = parseHash();
+  // La barre est reconstruite d'abord (le rôle peut avoir changé),
+  // puis on surligne l'onglet courant sur les éléments à jour.
+  renderBottomNav();
+  highlightNav(path);
+
+  if (path === "catalogue") return renderCatalogue(params);
+  if (path === "login") return renderLogin();
+  if (path === "signup") return renderSignup();
+  if (path.startsWith("listing/")) return renderListingDetail(path.split("/")[1]);
+  if (path === "favoris") return renderFavoris();
+  if (path === "messages") return renderMessages();
+  if (path === "parc") return renderParkProfile();
+  if (path === "admin") return renderAdmin(params);
+  return renderCatalogue(params);
+}
+window.addEventListener("hashchange", router);
+
+function navigate(path) { location.hash = "#/" + path; }
+
+// Intercepteur global : prend le contrôle de tout lien interne
+// (href commençant par "#/") avant que le navigateur — ou un
+// environnement d'aperçu qui traiterait les clics sur <a> comme des
+// navigations externes — ne gère le clic lui-même. On empêche le
+// comportement par défaut et on pilote la navigation nous-mêmes via
+// le routeur JS, ce qui est plus robuste quel que soit le contexte
+// d'exécution du fichier.
+document.addEventListener("click", (e) => {
+  const link = e.target.closest('a[href^="#/"]');
+  if (!link) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const target = link.getAttribute("href").slice(1); // enlève le premier "#"
+  if (location.hash === "#" + target) {
+    router(); // même route : forcer un nouveau rendu
+  } else {
+    location.hash = target;
+  }
+}, true);
+
+function highlightNav(path) {
+  $$(".main-nav a, .mobile-nav-panel a, .bottom-nav a").forEach(a => a.classList.remove("active-nav"));
+
+  // Le catalogue s'appelle "catalogue" dans le menu du haut et "accueil"
+  // dans la barre du bas ; la page admin correspond au bouton "+ Publier".
+  const keys = path.startsWith("catalogue")
+    ? ["catalogue", "accueil"]
+    : (path === "admin" ? ["publier"] : [path]);
+
+  keys.forEach(key => {
+    $$(`.main-nav a[data-nav="${key}"], .mobile-nav-panel a[data-nav="${key}"], .bottom-nav a[data-nav="${key}"]`)
+      .forEach(a => a.classList.add("active-nav"));
+  });
+}
+
+// ===========================================================
+// AUTH
+// ===========================================================
+async function initAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) await loadProfile(session.user);
+  renderAuthArea();
+
+  sb.auth.onAuthStateChange(async (_event, session) => {
+    if (session) await loadProfile(session.user);
+    else state.user = null;
+    renderAuthArea();
+    router();
+  });
+}
+
+async function loadProfile(authUser) {
+  const { data, error } = await sb.from("profiles").select("*").eq("id", authUser.id).single();
+
+  // Sécurité "fail-closed" : si le profil ne peut pas être lu (erreur
+  // réseau, ligne absente, règle RLS…), on considère l'utilisateur comme
+  // un client sans droits — jamais comme admin. Sans ça, un ancien état
+  // admin resté en mémoire pourrait rester actif pour la personne
+  // suivante qui se connecte.
+  if (error || !data) {
+    if (error) console.error(error);
+    state.user = {
+      id: authUser.id, email: authUser.email,
+      full_name: "", is_admin: false, profileFound: false
+    };
+    return;
+  }
+
+  state.user = {
+    id: authUser.id, email: authUser.email,
+    full_name: data.full_name || "", is_admin: data.is_admin === true,
+    profileFound: true
+  };
+}
+
+// Vérité unique sur le rôle : tout l'affichage et toutes les
+// autorisations en découlent.
+function isAdmin() {
+  return state.user?.is_admin === true;
+}
+
+const NAV_ICONS = {
+  accueil: `<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>`,
+  favoris: `<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>`,
+  messages: `<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>`,
+  parc: `<path d="M12 3 4 20h16L12 3Z"/><path d="M12 3v17"/>`,
+};
+
+// Construit la barre du bas à partir du rôle réel de l'utilisateur.
+// Le bouton "+ Publier" n'est PAS masqué pour un client : il n'est
+// tout simplement jamais créé dans le document. Impossible donc de le
+// faire réapparaître en manipulant du CSS ou un attribut.
+// Rappelée à chaque navigation et à chaque changement de session.
+function renderBottomNav() {
+  const nav = $("#bottom-nav");
+  if (!nav) return;
+
+  const item = (href, key, label) =>
+    `<a href="${href}" data-nav="${key}" class="bottom-nav-item">
+       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${NAV_ICONS[key]}</svg>
+       <span>${label}</span>
+     </a>`;
+
+  const publishItem = isAdmin()
+    ? `<a href="#/admin?tab=new" data-nav="publier" class="bottom-nav-item bottom-nav-publish">
+         <span class="publish-badge">
+           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
+         </span>
+         <span>Publier</span>
+       </a>`
+    : "";
+
+  nav.innerHTML =
+    item("#/catalogue", "accueil", "Accueil") +
+    item("#/favoris", "favoris", "Favoris") +
+    publishItem +
+    item("#/messages", "messages", "Messages") +
+    item("#/parc", "parc", "Profil du parc");
+}
+
+function renderAuthArea() {
+  const area = $("#auth-area");
+
+  renderBottomNav();
+
+  if (!state.user) {
+    area.innerHTML = `<a href="#/login" class="btn btn-outline btn-sm">Se connecter</a>`;
+    return;
+  }
+  const initials = (state.user.full_name || state.user.email).slice(0, 2).toUpperCase();
+  const publishBtn = isAdmin()
+    ? `<a href="#/admin?tab=new" class="btn btn-cta btn-sm btn-publish-quick" title="Mettre une annonce en ligne">
+         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+         <span>Mettre en ligne</span>
+       </a>`
+    : "";
+  area.innerHTML = `
+    ${publishBtn}
+    <div class="dropdown-wrap">
+      <button class="user-chip ${isAdmin() ? "is-admin" : ""}" id="user-chip-btn">
+        <span class="avatar">${initials}</span>
+        ${isAdmin() ? "Admin" : (state.user.full_name || "Mon compte")}
+      </button>
+      <div class="dropdown-menu" id="user-dropdown">
+        ${isAdmin() ? `<a href="#/admin">Back-office</a>` : ""}
+        <a href="#/favoris">Mes favoris</a>
+        <a href="#/messages">Mes demandes</a>
+        <button id="btn-logout">Se déconnecter</button>
+      </div>
+    </div>
+  `;
+  $("#user-chip-btn").addEventListener("click", (e) => {
+    e.stopPropagation();
+    $("#user-dropdown").classList.toggle("open");
+  });
+  $("#btn-logout").addEventListener("click", async () => {
+    try { await sb.auth.signOut(); } catch (_) { /* session déjà absente */ }
+    state.user = null;
+    renderAuthArea();
+    toast("Déconnecté");
+    navigate("catalogue");
+  });
+}
+document.addEventListener("click", () => $("#user-dropdown")?.classList.remove("open"));
+
+// ===========================================================
+// AUTHENTIFICATION — messages, validation, diagnostic
+// ===========================================================
+
+// Affiche un message persistant dans le formulaire (et non un toast
+// fugace), pour que l'utilisateur puisse le lire et corriger.
+function showAuthMsg(id, kind, title, hint) {
+  const el = $("#" + id);
+  if (!el) return;
+  el.className = "auth-msg is-" + kind;
+  el.innerHTML = `<strong>${title}</strong>` + (hint ? `<span class="auth-msg-hint">${hint}</span>` : "");
+  el.hidden = false;
+}
+function clearAuthMsg(id) {
+  const el = $("#" + id);
+  if (el) el.hidden = true;
+}
+
+// Traduit les messages d'erreur techniques de Supabase (en anglais) en
+// explications claires, avec la piste de résolution quand elle est connue.
+function authErrorFr(error) {
+  const raw = (errMsg(error) || "").toLowerCase();
+
+  if (raw.includes("invalid login credentials"))
+    return ["Adresse e-mail ou mot de passe incorrect.", "Vérifiez votre saisie. Si vous n'avez pas encore de compte, créez-en un."];
+
+  if (raw.includes("email not confirmed"))
+    return ["Votre adresse e-mail n'est pas encore confirmée.",
+            "Ouvrez le message de confirmation reçu par e-mail. Vous pouvez aussi désactiver cette exigence dans Supabase : Authentication → Providers → Email → décocher « Confirm email »."];
+
+  if (raw.includes("already registered") || raw.includes("already been registered") || raw.includes("user already exists"))
+    return ["Cette adresse e-mail est déjà utilisée.", "Connectez-vous plutôt, ou utilisez une autre adresse."];
+
+  if (raw.includes("password should be at least") || raw.includes("password is too short"))
+    return ["Mot de passe trop court.", "Choisissez un mot de passe d'au moins 8 caractères."];
+
+  if (raw.includes("invalid email") || raw.includes("unable to validate email"))
+    return ["Adresse e-mail invalide.", "Vérifiez le format, par exemple : nom@domaine.fr"];
+
+  if (raw.includes("weak password") || raw.includes("password is known to be weak"))
+    return ["Mot de passe trop faible.", "Évitez les mots de passe courants ; mélangez lettres, chiffres et symboles."];
+
+  if (raw.includes("rate limit") || raw.includes("too many requests"))
+    return ["Trop de tentatives en peu de temps.", "Patientez quelques minutes avant de réessayer."];
+
+  if (raw.includes("email rate limit"))
+    return ["Limite d'envoi d'e-mails atteinte.", "Supabase limite les e-mails sur les projets gratuits. Désactivez « Confirm email » dans Authentication → Providers → Email pour continuer."];
+
+  // Base de données non initialisée : cause la plus fréquente sur un
+  // projet Supabase tout neuf où le script SQL n'a pas été exécuté.
+  if (raw.includes("database error") || raw.includes("relation") && raw.includes("does not exist"))
+    return ["La base de données n'est pas encore prête.",
+            "Exécutez le script setup-complet.sql dans Supabase (SQL Editor) : les tables nécessaires n'existent pas encore."];
+
+  if (raw.includes("failed to fetch") || raw.includes("networkerror") || raw.includes("impossible de contacter"))
+    return ["Impossible de joindre le serveur.",
+            "Vérifiez votre connexion internet. Si vous ouvrez le fichier depuis l'aperçu de Claude, téléchargez-le et ouvrez-le dans un vrai navigateur."];
+
+  // Message inconnu : on l'affiche tel quel plutôt que de le masquer.
+  return ["La connexion a échoué.", errMsg(error)];
+}
+
+// Vérifie que la base est bien en place. Renvoie true si tout va bien.
+async function checkDatabaseReady() {
+  const { error } = await sb.from("profiles").select("id").limit(1);
+  if (!error) return true;
+  console.error("Base de données non prête :", error);
+  return false;
+}
+
+function renderLogin() {
+  app.innerHTML = "";
+  app.appendChild($("#tpl-login").content.cloneNode(true));
+
+  const form = $("#form-login");
+  const emailInput = form.querySelector('[name="email"]');
+  const passInput = form.querySelector('[name="password"]');
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAuthMsg("login-msg");
+    [emailInput, passInput].forEach(i => i.classList.remove("field-error"));
+
+    const email = (emailInput.value || "").trim();
+    const password = passInput.value || "";
+
+    // Validation avant tout appel réseau
+    if (!email) {
+      emailInput.classList.add("field-error");
+      return showAuthMsg("login-msg", "error", "Adresse e-mail manquante.", "Renseignez l'adresse e-mail de votre compte.");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      emailInput.classList.add("field-error");
+      return showAuthMsg("login-msg", "error", "Adresse e-mail invalide.", "Vérifiez le format, par exemple : nom@domaine.fr");
+    }
+    if (!password) {
+      passInput.classList.add("field-error");
+      return showAuthMsg("login-msg", "error", "Mot de passe manquant.", "Saisissez votre mot de passe.");
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Connexion…";
+
+    try {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        const [title, hint] = authErrorFr(error);
+        return showAuthMsg("login-msg", "error", title, hint);
+      }
+      if (!data?.session) {
+        return showAuthMsg("login-msg", "error", "Session non créée.",
+          "La connexion a été acceptée mais aucune session n'a été ouverte. Votre adresse e-mail doit probablement être confirmée.");
+      }
+
+      // On charge le profil ici directement plutôt que d'attendre le
+      // callback onAuthStateChange, dont le timing n'est pas garanti :
+      // sans ça, la redirection pourrait partir avant que le rôle soit
+      // connu, et envoyer un admin vers l'espace client.
+      await loadProfile(data.user);
+      renderAuthArea();
+
+      if (!state.user?.profileFound) {
+        showAuthMsg("login-msg", "info", "Connecté, mais profil incomplet.",
+          "Votre compte existe mais sa fiche n'a pas été trouvée en base. Si vous venez de créer le projet Supabase, exécutez setup-complet.sql.");
+        return;
+      }
+
+      toast("Bienvenue " + (state.user.full_name || "") + " !");
+      navigate(isAdmin() ? "admin" : "catalogue");
+    } catch (err) {
+      const [title, hint] = authErrorFr(err);
+      showAuthMsg("login-msg", "error", title, hint);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Se connecter";
+    }
+  });
+
+  $("#link-to-signup").addEventListener("click", (e) => { e.preventDefault(); navigate("signup"); });
+}
+
+function renderSignup() {
+  app.innerHTML = "";
+  app.appendChild($("#tpl-signup").content.cloneNode(true));
+
+  const form = $("#form-signup");
+  const nameInput = form.querySelector('[name="full_name"]');
+  const emailInput = form.querySelector('[name="email"]');
+  const passInput = form.querySelector('[name="password"]');
+  const confirmInput = form.querySelector('[name="password_confirm"]');
+  const allInputs = [nameInput, emailInput, passInput, confirmInput];
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearAuthMsg("signup-msg");
+    allInputs.forEach(i => i.classList.remove("field-error"));
+
+    const fullName = (nameInput.value || "").trim();
+    const email = (emailInput.value || "").trim();
+    const password = passInput.value || "";
+    const confirm = confirmInput.value || "";
+
+    // ---- Validation complète, champ par champ ----
+    if (!fullName) {
+      nameInput.classList.add("field-error");
+      return showAuthMsg("signup-msg", "error", "Nom manquant.", "Indiquez votre nom et prénom.");
+    }
+    if (!email) {
+      emailInput.classList.add("field-error");
+      return showAuthMsg("signup-msg", "error", "Adresse e-mail manquante.", "Une adresse e-mail est nécessaire pour créer un compte.");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      emailInput.classList.add("field-error");
+      return showAuthMsg("signup-msg", "error", "Adresse e-mail invalide.", "Vérifiez le format, par exemple : nom@domaine.fr");
+    }
+    if (!password) {
+      passInput.classList.add("field-error");
+      return showAuthMsg("signup-msg", "error", "Mot de passe manquant.", "Choisissez un mot de passe d'au moins 8 caractères.");
+    }
+    if (password.length < 8) {
+      passInput.classList.add("field-error");
+      return showAuthMsg("signup-msg", "error", "Mot de passe trop court.", "Il doit contenir au moins 8 caractères.");
+    }
+    if (!confirm) {
+      confirmInput.classList.add("field-error");
+      return showAuthMsg("signup-msg", "error", "Confirmation manquante.", "Retapez le mot de passe pour confirmer.");
+    }
+    if (password !== confirm) {
+      passInput.classList.add("field-error");
+      confirmInput.classList.add("field-error");
+      return showAuthMsg("signup-msg", "error", "Les mots de passe ne correspondent pas.", "Vérifiez les deux champs et réessayez.");
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Création…";
+
+    try {
+      // Vérifie d'abord que la base est prête : sinon l'inscription
+      // échouerait avec un message incompréhensible.
+      const dbReady = await checkDatabaseReady();
+      if (!dbReady) {
+        return showAuthMsg("signup-msg", "error", "La base de données n'est pas encore prête.",
+          "Exécutez le script setup-complet.sql dans Supabase (SQL Editor → New query → Run), puis réessayez.");
+      }
+
+      const { data, error } = await sb.auth.signUp({
+        email, password,
+        options: { data: { full_name: fullName } }
+      });
+
+      if (error) {
+        const [title, hint] = authErrorFr(error);
+        return showAuthMsg("signup-msg", "error", title, hint);
+      }
+
+      // Supabase renvoie un utilisateur sans identité quand l'adresse
+      // est déjà enregistrée (pour ne pas révéler l'existence du compte).
+      if (data?.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        emailInput.classList.add("field-error");
+        return showAuthMsg("signup-msg", "error", "Cette adresse e-mail est déjà utilisée.",
+          "Connectez-vous plutôt, ou utilisez une autre adresse.");
+      }
+
+      // Si une session est immédiatement ouverte, la confirmation par
+      // e-mail est désactivée : on connecte directement l'utilisateur.
+      if (data?.session) {
+        await loadProfile(data.user);
+        renderAuthArea();
+        toast("Compte créé, bienvenue !");
+        navigate(isAdmin() ? "admin" : "catalogue");
+        return;
+      }
+
+      // Sinon, Supabase attend une confirmation par e-mail.
+      showAuthMsg("signup-msg", "success", "Compte créé.",
+        "Un e-mail de confirmation vous a été envoyé : ouvrez-le puis revenez vous connecter. " +
+        "Si vous ne recevez rien, désactivez « Confirm email » dans Supabase (Authentication → Providers → Email).");
+    } catch (err) {
+      const [title, hint] = authErrorFr(err);
+      showAuthMsg("signup-msg", "error", title, hint);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Créer mon compte";
+    }
+  });
+
+  $("#link-to-login").addEventListener("click", (e) => { e.preventDefault(); navigate("login"); });
+}
+
+function requireAuth() {
+  if (!state.user) { navigate("login"); toast("Connectez-vous pour continuer"); return false; }
+  return true;
+}
+
+// ===========================================================
+// DATA LOADING
+// ===========================================================
+async function loadParks() {
+  const { data, error } = await sb.from("parks").select("*").order("name");
+  if (!error) state.parks = data || [];
+}
+
+async function loadListings() {
+  const { data, error } = await sb
+    .from("listings")
+    .select("*, parks(name, city, region, department)")
+    .order("created_at", { ascending: false });
+  if (error) { console.error(error); return; }
+  state.listings = data || [];
+}
+
+async function loadFavorites() {
+  if (!state.user || !state.user.id) { state.favorites = new Set(); return; }
+  const { data, error } = await sb.from("favorites").select("listing_id").eq("user_id", state.user.id);
+  if (!error) state.favorites = new Set((data || []).map(f => f.listing_id));
+}
+
+// ===========================================================
+// RECHERCHE INTELLIGENTE (IA)
+// ===========================================================
+// Le champ de recherche reste un simple filtre texte pendant la
+// frappe (résultat instantané), mais valider (clic ou Entrée) envoie
+// la phrase à l'IA pour comprendre l'intention complète (budget,
+// chambres, équipements…) et appliquer les bons filtres d'un coup.
+async function runAISearch() {
+  const input = $("#quick-search-location");
+  const query = input.value.trim();
+  if (!query) { applyFilters(); return; }
+
+  const btn = $("#btn-quick-search");
+  btn.disabled = true;
+  const originalHTML = btn.innerHTML;
+  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation:aiSpin .8s linear infinite"><circle cx="12" cy="12" r="8" stroke-dasharray="30 20"/></svg>';
+
+  try {
+    const result = await callAIAssist("search", { query });
+
+    if (result.transaction === "Parcelle") {
+      state.filters.transaction = "Parcelle";
+      state.filters.typeBien = "";
+    } else {
+      state.filters.transaction = result.transaction || "";
+      if (result.type_bien) state.filters.typeBien = result.type_bien;
+    }
+    if (result.budget_max != null) state.filters.budgetMax = result.budget_max;
+    if (result.chambres_min != null) {
+      state.filters.chambres = result.chambres_min >= 4 ? "4" : String(result.chambres_min);
+    }
+    if (result.couchages_min != null) {
+      state.filters.couchages = result.couchages_min >= 8 ? "8" : (result.couchages_min <= 2 ? "2" : String(result.couchages_min));
+    }
+    if (Array.isArray(result.equipements) && result.equipements.length) {
+      state.filters.equipements = new Set(result.equipements);
+    }
+    if (result.mots_cles_localisation) {
+      state.filters.location = result.mots_cles_localisation.toLowerCase();
+    }
+
+    syncFilterControlsFromState();
+    applyFilters();
+    openFiltersPanel();
+    toast("Recherche comprise par l'IA ✨");
+  } catch (err) {
+    toast("Recherche IA indisponible (" + errMsg(err) + ") — recherche simple appliquée.");
+    applyFilters();
+    openFiltersPanel();
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalHTML;
+  }
+}
+
+// Reflète l'état de state.filters sur les contrôles visuels du
+// panneau de filtres, pour que la recherche IA reste transparente
+// (l'admin/le client voit exactement quels filtres ont été appliqués).
+function syncFilterControlsFromState() {
+  const f = state.filters;
+
+  const transGroup = $('[data-filter="transaction"]');
+  if (transGroup) $$("button", transGroup).forEach(b => b.classList.toggle("active", b.dataset.value === f.transaction));
+
+  const situGroup = $('[data-filter="situation"]');
+  if (situGroup) $$("button", situGroup).forEach(b => b.classList.toggle("active", b.dataset.value === f.situation));
+
+  const chambresGroup = $('[data-filter="chambres"]');
+  if (chambresGroup) $$("button", chambresGroup).forEach(b => b.classList.toggle("active", b.dataset.value === f.chambres));
+
+  const couchagesGroup = $('[data-filter="couchages"]');
+  if (couchagesGroup) $$("button", couchagesGroup).forEach(b => b.classList.toggle("active", b.dataset.value === f.couchages));
+
+  $$("#filter-equipements input").forEach(cb => { cb.checked = f.equipements.has(cb.value); });
+
+  const budgetMaxInput = $("#filter-budget-max");
+  if (budgetMaxInput && f.budgetMax != null) budgetMaxInput.value = f.budgetMax;
+
+  const locInput = $("#filter-location");
+  if (locInput) locInput.value = f.location;
+
+  $$(".category-pill", $("#category-rail")).forEach(p => p.classList.remove("active"));
+  const matchingPill = f.transaction === "Parcelle"
+    ? null
+    : $(`.category-pill[data-cat-type="${f.typeBien}"]`);
+  if (matchingPill) matchingPill.classList.add("active");
+  else if (!f.typeBien && f.transaction !== "Parcelle") $('.category-pill[data-cat-type=""]')?.classList.add("active");
+}
+
+// ===========================================================
+// CATALOGUE + FILTRES
+// ===========================================================
+function renderCatalogue(params) {
+  app.innerHTML = "";
+  app.appendChild($("#tpl-catalogue").content.cloneNode(true));
+
+  if (params?.get("transaction")) state.filters.transaction = params.get("transaction");
+  if (params?.get("situation")) state.filters.situation = params.get("situation");
+
+  // brand chips
+  const brandWrap = $("#filter-brands");
+  Object.keys(BRAND_CATALOG).forEach(brand => {
+    const btn = document.createElement("button");
+    btn.textContent = brand;
+    btn.dataset.value = brand;
+    btn.addEventListener("click", () => {
+      if (state.filters.brands.has(brand)) state.filters.brands.delete(brand);
+      else state.filters.brands.add(brand);
+      btn.classList.toggle("active");
+      applyFilters();
+    });
+    brandWrap.appendChild(btn);
+  });
+
+  // segmented filters
+  $$("[data-filter]").forEach(group => {
+    const key = group.dataset.filter;
+    $$("button", group).forEach(btn => {
+      if (btn.dataset.value === state.filters[key]) btn.classList.add("active");
+      btn.addEventListener("click", () => {
+        $$("button", group).forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        state.filters[key] = btn.dataset.value;
+        applyFilters();
+      });
+    });
+  });
+
+  $("#filter-location").addEventListener("input", debounce(e => {
+    state.filters.location = e.target.value.trim().toLowerCase();
+    applyFilters();
+  }, 250));
+
+  ["filter-budget-min", "filter-budget-max", "filter-year-min", "filter-year-max", "filter-surface-min", "filter-loyer-max"]
+    .forEach(id => {
+      $("#" + id).addEventListener("input", debounce(e => {
+        const map = {
+          "filter-budget-min": "budgetMin", "filter-budget-max": "budgetMax",
+          "filter-year-min": "yearMin", "filter-year-max": "yearMax",
+          "filter-surface-min": "surfaceMin", "filter-loyer-max": "loyerMax"
+        };
+        state.filters[map[id]] = e.target.value ? Number(e.target.value) : null;
+        applyFilters();
+      }, 250));
+    });
+
+  $$("#filter-equipements input").forEach(cb => {
+    cb.addEventListener("change", () => {
+      if (cb.checked) state.filters.equipements.add(cb.value);
+      else state.filters.equipements.delete(cb.value);
+      applyFilters();
+    });
+  });
+
+  $("#filter-souslocation").addEventListener("change", e => {
+    state.filters.sousLocation = e.target.checked; applyFilters();
+  });
+  $("#filter-sansdroit").addEventListener("change", e => {
+    state.filters.sansDroit = e.target.checked; applyFilters();
+  });
+
+  $("#btn-reset-filters").addEventListener("click", () => {
+    resetFilters();
+    renderCatalogue(new URLSearchParams());
+  });
+
+  // Barre de recherche simplifiée à un seul champ — le reste des critères
+  // (projet, budget, marque…) reste disponible dans le panneau de filtres.
+  $("#quick-search-location").value = state.filters.location;
+  $("#quick-search-location").addEventListener("input", debounce(e => {
+    state.filters.location = e.target.value.trim().toLowerCase();
+    const locInput = $("#filter-location");
+    if (locInput) locInput.value = e.target.value;
+    applyFilters();
+  }, 250));
+
+  $("#btn-quick-search").addEventListener("click", () => runAISearch());
+
+  $("#btn-welcome-search")?.addEventListener("click", () => {
+    $("#quick-search-location")?.focus();
+    const searchBar = $("#search-bar");
+    if (searchBar?.scrollIntoView) searchBar.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+  $("#quick-search-location").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); runAISearch(); }
+  });
+
+  const toggleFiltersBtn = $("#btn-toggle-filters");
+  toggleFiltersBtn.addEventListener("click", () => {
+    const layout = $(".catalogue-layout");
+    const isOpen = layout.classList.toggle("filters-open");
+    toggleFiltersBtn.classList.toggle("is-active", isOpen);
+  });
+
+  // Rail de catégories
+  $$(".category-pill", $("#category-rail")).forEach(pill => {
+    pill.addEventListener("click", () => {
+      $$(".category-pill", $("#category-rail")).forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      if (pill.dataset.catClub) {
+        // "Sélection Club" : on affiche les biens sur parcelle comme mise en avant du club
+        state.filters.typeBien = "";
+        state.filters.situation = "sur_parcelle";
+      } else {
+        state.filters.typeBien = pill.dataset.catType || "";
+        state.filters.situation = "";
+      }
+      const situGroup = $('[data-filter="situation"]');
+      if (situGroup) $$("button", situGroup).forEach(b => b.classList.toggle("active", b.dataset.value === state.filters.situation));
+      applyFilters();
+      openFiltersPanel();
+    });
+  });
+  $(`.category-pill[data-cat-type="${state.filters.typeBien}"]`)?.classList.add("active");
+  if (!state.filters.typeBien) $('.category-pill[data-cat-type=""]')?.classList.add("active");
+
+  if (params?.get("transaction") || params?.get("situation")) {
+    syncFilterControlsFromState();
+    openFiltersPanel();
+  }
+
+  applyFilters();
+}
+
+// Révèle le panneau de filtres — appelé après une recherche (barre de
+// recherche ou catégorie) puisque les filtres restent cachés par défaut
+// sur la page d'accueil du catalogue.
+function openFiltersPanel() {
+  $(".catalogue-layout")?.classList.add("filters-open");
+  $("#btn-toggle-filters")?.classList.add("is-active");
+}
+
+function resetFilters() {
+  state.filters = {
+    transaction: "", situation: "", location: "", budgetMin: null, budgetMax: null,
+    brands: new Set(), yearMin: null, yearMax: null, surfaceMin: null,
+    chambres: "", couchages: "", equipements: new Set(),
+    periode: "", loyerMax: null, sousLocation: false, sansDroit: false,
+    typeBien: ""
+  };
+}
+
+function debounce(fn, ms) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
+
+function applyFilters() {
+  const f = state.filters;
+  const results = state.listings.filter(l => {
+    if (l.status !== "publie") return false;
+    if (f.typeBien && l.type_bien !== f.typeBien) return false;
+    if (f.transaction) {
+      if (f.transaction === "Parcelle" && l.type_bien !== "Parcelle") return false;
+      if (f.transaction !== "Parcelle" && l.transaction !== f.transaction) return false;
+    }
+    if (f.situation && l.situation !== f.situation) return false;
+    if (f.location) {
+      const haystack = [
+        l.city, l.parks?.city, l.parks?.name, l.parks?.region, l.parks?.department
+      ].filter(Boolean).join(" ").toLowerCase();
+      if (!haystack.includes(f.location)) return false;
+    }
+    if (f.budgetMin != null && l.price < f.budgetMin) return false;
+    if (f.budgetMax != null && l.price > f.budgetMax) return false;
+    if (f.brands.size && !f.brands.has(l.brand)) return false;
+    if (f.yearMin != null && l.year < f.yearMin) return false;
+    if (f.yearMax != null && l.year > f.yearMax) return false;
+    if (f.surfaceMin != null && l.surface < f.surfaceMin) return false;
+    if (f.chambres) {
+      const n = Number(f.chambres);
+      if (n === 4 ? l.chambres < 4 : l.chambres !== n) return false;
+    }
+    if (f.couchages) {
+      const n = Number(f.couchages);
+      if (n === 8 ? l.couchages < 8 : l.couchages !== n) return false;
+    }
+    if (f.equipements.size) {
+      const eq = new Set(l.equipements || []);
+      for (const e of f.equipements) if (!eq.has(e)) return false;
+    }
+    if (l.situation === "sur_parcelle") {
+      const effectivePeriode = l.periode_override || String(l.parks?.open_months || "");
+      const effectiveSousLoc = l.sous_location != null ? l.sous_location : l.parks?.sublet_allowed;
+      const effectiveSansDroit = l.sans_droit_entree != null ? l.sans_droit_entree : l.parks?.no_entry_fee;
+      if (f.periode && effectivePeriode !== f.periode) return false;
+      if (f.loyerMax != null && l.rent_annual > f.loyerMax) return false;
+      if (f.sousLocation && !effectiveSousLoc) return false;
+      if (f.sansDroit && !effectiveSansDroit) return false;
+    }
+    return true;
+  });
+
+  renderListingsGrid(results, "#grid-listings");
+  const count = $("#results-count");
+  if (count) count.textContent = `${results.length} bien${results.length > 1 ? "s" : ""} trouvé${results.length > 1 ? "s" : ""}`;
+}
+
+function renderListingsGrid(listings, gridSelector) {
+  const grid = $(gridSelector);
+  if (!grid) return;
+  grid.innerHTML = "";
+  if (!listings.length) {
+    grid.innerHTML = `<div class="empty-state"><h3>Aucun bien ne correspond</h3><p>Essayez d'élargir vos critères de recherche.</p></div>`;
+    return;
+  }
+  listings.forEach(l => grid.appendChild(buildListingCard(l)));
+}
+
+function buildListingCard(l) {
+  const node = $("#tpl-listing-card").content.cloneNode(true);
+  const card = $(".listing-card", node);
+  card.addEventListener("click", (e) => {
+    if (e.target.closest(".fav-toggle")) return;
+    navigate("listing/" + l.id);
+  });
+
+  const img = $("img", node);
+  img.src = l.photo_exterieur || placeholderImg();
+  img.alt = `${l.brand || ""} ${l.model || ""}`.trim();
+
+  const badge = $(".card-badge", node);
+  badge.textContent = l.situation === "sur_parcelle" ? "Sur parcelle" : "À déplacer";
+
+  $(".card-title", node).textContent = `${l.type_bien} ${l.brand || ""} ${l.model || ""}`.trim();
+  $(".card-rating", node).textContent = l.etat || "";
+
+  $(".card-meta", node).textContent = [
+    l.situation === "sur_parcelle" ? l.parks?.name : (l.city || "Hors parcelle"),
+    l.year, l.surface ? `${l.surface} m²` : null
+  ].filter(Boolean).join(" · ");
+
+  const priceEl = $(".card-price", node);
+  const priceLabel = l.transaction === "Location" ? fmtEUR(l.price) : fmtEUR(l.price);
+  const suffix = l.transaction === "Location" ? " / mois" : " net vendeur";
+  priceEl.innerHTML = `${priceLabel}<span class="price-suffix">${suffix}</span>`;
+
+  const favBtn = $(".fav-toggle", node);
+  if (state.favorites.has(l.id)) favBtn.classList.add("is-fav");
+  favBtn.addEventListener("click", () => toggleFavorite(l.id, favBtn));
+
+  return node;
+}
+
+async function toggleFavorite(listingId, btnEl) {
+  if (!requireAuth()) return;
+  const isFav = state.favorites.has(listingId);
+  if (isFav) {
+    await sb.from("favorites").delete().eq("user_id", state.user.id).eq("listing_id", listingId);
+    state.favorites.delete(listingId);
+    btnEl?.classList.remove("is-fav");
+  } else {
+    const { error } = await sb.from("favorites").insert({ user_id: state.user.id, listing_id: listingId });
+    if (error) return toast("Erreur : " + errMsg(error));
+    state.favorites.add(listingId);
+    btnEl?.classList.add("is-fav");
+    toast("Ajouté aux favoris");
+  }
+}
+
+function tagEl(text) { const s = document.createElement("span"); s.textContent = text; return s; }
+function fmtEUR(n) { return n != null ? new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n) : "Prix sur demande"; }
+function placeholderImg() { return "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300'><rect width='100%' height='100%' fill='#e3f2ef'/></svg>`); }
+
+// ===========================================================
+// LISTING DETAIL
+// ===========================================================
+async function renderListingDetail(id) {
+  let l = state.listings.find(x => x.id === id);
+  if (!l) {
+    const { data } = await sb.from("listings").select("*, parks(name, city, region, department)").eq("id", id).single();
+    l = data;
+  }
+  app.innerHTML = "";
+  if (!l) { app.innerHTML = `<p>Cette annonce n'existe plus.</p>`; return; }
+  app.appendChild($("#tpl-listing-detail").content.cloneNode(true));
+
+  const photos = [l.photo_exterieur, l.photo_salon, l.photo_cuisine].filter(Boolean);
+  $("#detail-main-img").src = photos[0] || placeholderImg();
+  const thumbs = $("#detail-thumbs");
+  photos.forEach((src, i) => {
+    const img = document.createElement("img");
+    img.src = src; if (i === 0) img.classList.add("active");
+    img.addEventListener("click", () => {
+      $("#detail-main-img").src = src;
+      $$("img", thumbs).forEach(t => t.classList.remove("active"));
+      img.classList.add("active");
+    });
+    thumbs.appendChild(img);
+  });
+
+  $("#detail-badge").textContent = l.situation === "sur_parcelle" ? "Sur parcelle" : "À déplacer";
+  $("#detail-title").textContent = `${l.type_bien} ${l.brand || ""} ${l.model || ""}`.trim();
+  $("#detail-price").textContent = l.transaction === "Location" ? `${fmtEUR(l.price)} / mois` : fmtEUR(l.price);
+  $("#detail-location").textContent = l.situation === "sur_parcelle"
+    ? `${l.parks?.name || ""} — ${l.parks?.city || ""}`
+    : `${l.city || ""} ${l.postal_code || ""}`;
+
+  const specs = $("#detail-specs");
+  const specDefs = [
+    ["Année", l.year], ["Surface", l.surface ? l.surface + " m²" : null],
+    ["Chambres", l.chambres], ["Couchages", l.couchages],
+    ["Longueur", l.longueur ? l.longueur + " m" : null], ["Largeur", l.largeur ? l.largeur + " m" : null],
+    ["État", l.etat], ["Salles d'eau", l.salles_eau], ["Pièces", l.pieces]
+  ];
+  specDefs.filter(([, v]) => v != null && v !== "").forEach(([label, value]) => {
+    const div = document.createElement("div");
+    div.className = "spec-item";
+    div.innerHTML = `<span class="spec-label">${label}</span><span class="spec-value">${value}</span>`;
+    specs.appendChild(div);
+  });
+
+  const equipLabels = {
+    climatisation_reversible: "Climatisation réversible", terrasse_couverte: "Terrasse couverte",
+    terrasse_semi_couverte: "Terrasse semi-couverte",
+    lave_vaisselle: "Lave-vaisselle", lave_linge: "Lave-linge",
+    isolation_4_saisons: "Isolation 4 saisons", double_vitrage: "Double vitrage"
+  };
+  const equipWrap = $("#detail-equip");
+  (l.equipements || []).forEach(e => {
+    const span = document.createElement("span");
+    span.textContent = equipLabels[e] || e;
+    equipWrap.appendChild(span);
+  });
+
+  if (l.reference) {
+    const refP = document.createElement("p");
+    refP.className = "muted";
+    refP.style.fontSize = ".8rem";
+    refP.style.marginTop = "-14px";
+    refP.textContent = `Référence : ${l.reference}`;
+    $("#detail-equip").before(refP);
+  }
+
+  $("#detail-description").textContent = l.description || "";
+
+  if (l.situation === "hors_parcelle") {
+    $("#detail-transport-block").hidden = false;
+    $("#btn-transport-calc").addEventListener("click", () => {
+      const cp = $("#transport-cp").value.trim();
+      if (!cp) return toast("Indiquez un code postal");
+      const estimate = estimateTransport(cp, l.postal_code);
+      $("#transport-result").textContent = estimate;
+    });
+  }
+
+  $("#btn-contact-owner").addEventListener("click", () => openContactModal(l));
+
+  const favBtn = $("#btn-fav-detail");
+  if (state.favorites.has(l.id)) { favBtn.textContent = "Retirer des favoris"; favBtn.classList.add("is-fav"); }
+  favBtn.addEventListener("click", async () => {
+    await toggleFavorite(l.id);
+    const nowFav = state.favorites.has(l.id);
+    favBtn.textContent = nowFav ? "Retirer des favoris" : "Ajouter aux favoris";
+  });
+}
+
+function estimateTransport(cpA, cpB) {
+  // Estimation simplifiée basée sur l'écart de codes postaux (proxy de distance)
+  // sans appel API externe — cadre pour brancher une vraie API de distance ensuite.
+  const a = parseInt(cpA, 10) || 0, b = parseInt(cpB, 10) || 0;
+  const proxyDistance = Math.max(10, Math.min(900, Math.abs(a - b) / 3));
+  const cost = Math.round(proxyDistance * 3.2);
+  return `Distance estimée ≈ ${Math.round(proxyDistance)} km — coût de transport indicatif : ${fmtEUR(cost)}`;
+}
+
+// ===========================================================
+// CONTACT MODAL
+// ===========================================================
+function openContactModal(listing) {
+  if (!requireAuth()) return;
+
+  const node = $("#tpl-contact-modal").content.cloneNode(true);
+  document.body.appendChild(node);
+  const overlay = $("#contact-modal");
+
+  if (state.user) {
+    $('[name="name"]', overlay).value = state.user.full_name || "";
+    $('[name="email"]', overlay).value = state.user.email || "";
+  }
+
+  let requestType = "visite";
+  $$('[data-filter="request_type"] button', overlay).forEach(btn => {
+    btn.addEventListener("click", () => {
+      $$('[data-filter="request_type"] button', overlay).forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      requestType = btn.dataset.value;
+    });
+  });
+
+  $("#btn-close-contact", overlay).addEventListener("click", () => overlay.remove());
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+
+  $("#form-contact", overlay).addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const { error } = await sb.from("messages").insert({
+      listing_id: listing.id,
+      user_id: state.user?.id || null,
+      name: fd.get("name"), email: fd.get("email"), phone: fd.get("phone"),
+      request_type: requestType, message: fd.get("message")
+    });
+    if (error) return toast("Erreur : " + errMsg(error));
+    toast("Votre demande a été envoyée !");
+    overlay.remove();
+  });
+}
+
+// ===========================================================
+// FAVORIS / MESSAGES (espace client)
+// ===========================================================
+function requestTypeLabel(t) {
+  return { visite: "Demande de visite", estimation: "Demande d'estimation", info: "Demande d'infos" }[t] || "Demande";
+}
+
+async function renderFavoris() {
+  if (!requireAuth()) return;
+  app.innerHTML = "";
+  app.appendChild($("#tpl-favoris").content.cloneNode(true));
+  await loadFavorites();
+  const favListings = state.listings.filter(l => state.favorites.has(l.id));
+  renderListingsGrid(favListings, "#grid-favoris");
+}
+
+async function renderMessages() {
+  if (!requireAuth()) return;
+  app.innerHTML = "";
+  app.appendChild($("#tpl-messages").content.cloneNode(true));
+  const { data, error } = await sb.from("messages").select("*, listings(type_bien, brand, model)")
+    .eq("user_id", state.user.id).order("created_at", { ascending: false });
+  const list = $("#messages-list");
+  if (error || !data?.length) {
+    list.innerHTML = `<div class="empty-state"><h3>Aucune demande envoyée</h3><p>Vos demandes de visite ou d'infos apparaîtront ici.</p></div>`;
+    return;
+  }
+  data.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "message-item";
+    div.innerHTML = `
+      <div class="msg-top">
+        <span>${new Date(m.created_at).toLocaleDateString("fr-FR")}</span>
+        <span class="msg-status status-${m.status}">${m.status === "nouveau" ? "En attente" : "Traité"}</span>
+      </div>
+      <strong>${requestTypeLabel(m.request_type)} — ${m.listings?.type_bien || ""} ${m.listings?.brand || ""} ${m.listings?.model || ""}</strong>
+      <p class="muted">${m.message || ""}</p>
+    `;
+    list.appendChild(div);
+  });
+}
+
+// Page publique présentant le Parc de la Chesnaie, accessible depuis
+// l'espace client sans obligation de connexion (comme le catalogue).
+function renderParkProfile() {
+  app.innerHTML = "";
+
+  // L'admin voit et modifie directement la fiche du camping sur cette
+  // même page — pas besoin d'aller dans le back-office séparément.
+  // Les visiteurs/clients voient uniquement la version en lecture seule.
+  if (isAdmin()) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "simple-layout admin-panel park-edit-wrapper";
+    app.appendChild(wrapper);
+    renderAdminParks(wrapper);
+    return;
+  }
+
+  app.appendChild($("#tpl-park-profile").content.cloneNode(true));
+
+  const park = state.parks[0];
+  if (!park) {
+    $("#park-profile-name").textContent = "Informations indisponibles";
+    $("#park-profile-desc").textContent = "Les informations du camping n'ont pas encore été renseignées.";
+    return;
+  }
+
+  const address = [park.city, park.postal_code, park.department].filter(Boolean).join(" · ");
+  $("#park-hero-name").textContent = park.name;
+  $("#park-hero-address").textContent = address;
+  $("#park-profile-name").textContent = park.name;
+  $("#park-profile-address").textContent = address;
+  $("#park-profile-desc").textContent = park.description || "";
+
+  const photos = [park.photo_1, park.photo_2, park.photo_3, park.photo_4].filter(Boolean);
+  const media = [
+    ...(park.video_url ? [{ type: "video", src: park.video_url }] : []),
+    ...photos.map(src => ({ type: "image", src }))
+  ];
+
+  if (media.length) {
+    const hero = $("#park-hero");
+    hero.hidden = false;
+    const heroImg = $("#park-hero-img");
+    const heroVideo = $("#park-hero-video");
+
+    const showInHero = (item) => {
+      if (item.type === "video") {
+        heroVideo.src = item.src; heroVideo.hidden = false;
+        heroImg.hidden = true;
+      } else {
+        heroImg.src = item.src; heroImg.hidden = false;
+        heroVideo.hidden = true; heroVideo.removeAttribute("src");
+      }
+    };
+    showInHero(media[0]);
+
+    if (media.length > 1) {
+      const thumbs = $("#park-profile-thumbs");
+      media.forEach((item, i) => {
+        const thumb = item.type === "video" ? document.createElement("video") : document.createElement("img");
+        thumb.src = item.src;
+        if (item.type === "video") { thumb.muted = true; thumb.loop = true; thumb.autoplay = true; thumb.playsInline = true; }
+        if (i === 0) thumb.classList.add("active");
+        thumb.addEventListener("click", () => {
+          showInHero(item);
+          $$("img, video", thumbs).forEach(t => t.classList.remove("active"));
+          thumb.classList.add("active");
+        });
+        thumbs.appendChild(thumb);
+      });
+    }
+  }
+
+  // Chips d'équipements avec icône — esprit "fiche établissement" moderne
+  const ICONS = {
+    calendar: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>`,
+    euro: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 7a6 6 0 1 0 0 10M5 11h9M5 14h7"/></svg>`,
+    map: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/></svg>`,
+    tag: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.6 12.6 12 21.2 2.8 12 11.4 3.4H20.6z"/><circle cx="15.5" cy="8.5" r="1.2" fill="currentColor" stroke="none"/></svg>`,
+  };
+  const specs = $("#park-profile-specs");
+  const specDefs = [
+    ["calendar", park.open_months === 12 ? "Ouvert à l'année" : park.open_months ? "Ouvert " + park.open_months + " mois" : null],
+    ["euro", park.default_rent ? fmtEUR(park.default_rent) + " / an" : null],
+    ["map", park.region],
+    ["tag", park.department],
+  ];
+  specDefs.filter(([, v]) => v != null && v !== "").forEach(([icon, value]) => {
+    const chip = document.createElement("div");
+    chip.className = "park-spec-chip";
+    chip.innerHTML = `<span class="chip-icon">${ICONS[icon]}</span><span>${value}</span>`;
+    specs.appendChild(chip);
+  });
+
+  const conditions = $("#park-profile-conditions");
+  if (park.sublet_allowed) conditions.appendChild(tagEl("Sous-location autorisée"));
+  if (park.no_entry_fee) conditions.appendChild(tagEl("Sans droit d'entrée"));
+}
+
+// ===========================================================
+// ADMIN — DASHBOARD
+// ===========================================================
+
+// Garde de sécurité centrale : toute action de création, modification
+// ou suppression doit passer par ici. Elle est appelée dans chaque
+// fonction d'écriture (pas seulement à l'affichage du menu), pour
+// qu'un client ne puisse rien déclencher même en tapant l'URL admin
+// directement ou en appelant les fonctions depuis la console du
+// navigateur. La base Supabase applique en plus ses propres règles
+// (RLS) côté serveur : c'est cette double barrière qui protège.
+function requireAdmin(silent) {
+  if (!isAdmin()) {
+    if (!silent) toast("Action réservée à l'administrateur");
+    return false;
+  }
+  return true;
+}
+
+async function renderAdmin(params) {
+  if (!requireAuth()) return;
+  if (!requireAdmin()) return navigate("catalogue");
+
+  app.innerHTML = "";
+  app.appendChild($("#tpl-admin-dashboard").content.cloneNode(true));
+
+  const requestedTab = params?.get("tab");
+  const initialTab = ["listings", "new", "parks", "inbox"].includes(requestedTab) ? requestedTab : "listings";
+
+  $$(".admin-tab").forEach(tab => {
+    tab.classList.toggle("active", tab.dataset.tab === initialTab);
+    tab.addEventListener("click", () => {
+      $$(".admin-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      renderAdminTab(tab.dataset.tab);
+    });
+  });
+
+  await Promise.all([loadListings(), loadParks()]);
+  renderAdminTab(initialTab);
+}
+
+function renderAdminTab(tab) {
+  if (!requireAdmin()) return;
+  const panel = $("#admin-panel");
+  panel.innerHTML = "";
+  if (tab === "listings") return renderAdminListings(panel);
+  if (tab === "new") return renderAdminNewListing(panel);
+  if (tab === "parks") return renderAdminParks(panel);
+  if (tab === "inbox") return renderAdminInbox(panel);
+}
+
+function renderAdminListings(panel) {
+  if (!requireAdmin()) return;
+  panel.appendChild($("#tpl-admin-listings").content.cloneNode(true));
+  $("#admin-listings-count", panel).textContent = `${state.listings.length} annonce${state.listings.length > 1 ? "s" : ""}`;
+  const table = $("#admin-listings-table", panel);
+  state.listings.forEach(l => {
+    const row = document.createElement("div");
+    row.className = "admin-row";
+    row.innerHTML = `
+      <img src="${l.photo_exterieur || placeholderImg()}">
+      <div>
+        <div class="row-title">${l.type_bien} ${l.brand || ""} ${l.model || ""}</div>
+        <div class="row-sub">${l.transaction} · ${fmtEUR(l.price)} · ${l.situation === "sur_parcelle" ? (l.parks?.name || "Sur parcelle") : "Hors parcelle"}</div>
+      </div>
+      <span class="row-status ${l.status === "masque" ? "masque" : ""}">${l.status === "publie" ? "Publiée" : "Masquée"}</span>
+      <div class="admin-row-actions">
+        <button data-action="toggle" title="${l.status === "publie" ? "Masquer" : "Publier"}">${l.status === "publie" ? "Masquer" : "Publier"}</button>
+        <button data-action="delete" title="Supprimer">Suppr.</button>
+      </div>
+    `;
+    $('[data-action="toggle"]', row).addEventListener("click", () => toggleListingStatus(l));
+    $('[data-action="delete"]', row).addEventListener("click", () => deleteListing(l));
+    table.appendChild(row);
+  });
+}
+
+async function toggleListingStatus(l) {
+  if (!requireAdmin()) return;
+  const newStatus = l.status === "publie" ? "masque" : "publie";
+  const { error } = await sb.from("listings").update({ status: newStatus }).eq("id", l.id);
+  if (error) return toast("Erreur : " + errMsg(error));
+  l.status = newStatus;
+  toast(newStatus === "publie" ? "Annonce publiée" : "Annonce masquée");
+  renderAdminTab("listings");
+}
+
+async function deleteListing(l) {
+  if (!requireAdmin()) return;
+  if (!confirm("Supprimer définitivement cette annonce ?")) return;
+  const { error } = await sb.from("listings").delete().eq("id", l.id);
+  if (error) return toast("Erreur : " + errMsg(error));
+  state.listings = state.listings.filter(x => x.id !== l.id);
+  toast("Annonce supprimée");
+  renderAdminTab("listings");
+}
+
+// ---------- ADMIN: PARKS ----------
+function renderAdminParks(panel) {
+  if (!requireAdmin()) return;
+  panel.appendChild($("#tpl-admin-parks").content.cloneNode(true));
+  const form = $("#form-park", panel);
+  const existing = state.parks[0];
+  const pendingPhotos = {}; // slot -> File, uploadées seulement à l'enregistrement
+
+  if (existing) {
+    form.querySelector('[name="name"]').value = existing.name || "";
+    form.querySelector('[name="description"]').value = existing.description || "";
+    form.querySelector('[name="city"]').value = existing.city || "";
+    form.querySelector('[name="postal_code"]').value = existing.postal_code || "";
+    form.querySelector('[name="department"]').value = existing.department || "";
+    form.querySelector('[name="region"]').value = existing.region || "";
+    form.querySelector('[name="default_rent"]').value = existing.default_rent ?? "";
+    form.querySelector('[name="open_months"]').value = String(existing.open_months ?? 12);
+    form.querySelector('[name="sublet_allowed"]').checked = !!existing.sublet_allowed;
+    form.querySelector('[name="no_entry_fee"]').checked = !!existing.no_entry_fee;
+
+    // Affiche les photos déjà enregistrées dans leurs emplacements
+    [1, 2, 3, 4].forEach(n => {
+      const url = existing["photo_" + n];
+      if (!url) return;
+      const slotEl = $(`.photo-slot[data-slot="${n}"]`, panel);
+      slotEl.classList.add("filled");
+      const img = document.createElement("img");
+      img.src = url;
+      slotEl.appendChild(img);
+    });
+
+    // Affiche la vidéo déjà enregistrée
+    if (existing.video_url) {
+      const videoSlot = $('.photo-slot[data-slot="video"]', panel);
+      videoSlot.classList.add("filled");
+      const vid = document.createElement("video");
+      vid.src = existing.video_url; vid.muted = true; vid.loop = true; vid.autoplay = true; vid.playsInline = true;
+      videoSlot.appendChild(vid);
+    }
+  }
+
+  // Prévisualisation immédiate au choix d'un fichier, upload différé au submit
+  $$('[data-park-photo-input]', panel).forEach(input => {
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      if (!file) return;
+      const slot = input.dataset.parkPhotoInput;
+      pendingPhotos[slot] = file;
+      const slotEl = input.closest(".photo-slot");
+      slotEl.classList.add("filled");
+      const url = URL.createObjectURL(file);
+      const img = document.createElement("img");
+      img.src = url;
+      slotEl.querySelector("img")?.remove();
+      slotEl.appendChild(img);
+    });
+  });
+
+  // Suppression d'une photo — immédiate, sans attendre l'enregistrement
+  // du reste du formulaire.
+  $$('[data-remove-slot]', panel).forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const slot = btn.dataset.removeSlot;
+      const slotEl = btn.closest(".photo-slot");
+      const fileInput = slotEl.querySelector("input[type=file]");
+
+      delete pendingPhotos[slot];
+      fileInput.value = "";
+      slotEl.querySelector("img")?.remove();
+      slotEl.classList.remove("filled");
+
+      if (existing && existing["photo_" + slot]) {
+        const { error } = await sb.from("parks").update({ ["photo_" + slot]: null }).eq("id", existing.id);
+        if (error) return toast("Erreur : " + errMsg(error));
+        existing["photo_" + slot] = null;
+        toast("Photo supprimée");
+      }
+    });
+  });
+
+  // Vidéo de couverture — même logique que les photos, upload différé au submit
+  let pendingVideo = null;
+  const videoInput = $("#park-video-input", panel);
+  videoInput.addEventListener("change", () => {
+    const file = videoInput.files[0];
+    if (!file) return;
+    pendingVideo = file;
+    const slotEl = videoInput.closest(".photo-slot");
+    slotEl.classList.add("filled");
+    const url = URL.createObjectURL(file);
+    const vid = document.createElement("video");
+    vid.src = url; vid.muted = true; vid.loop = true; vid.autoplay = true; vid.playsInline = true;
+    slotEl.querySelector("video")?.remove();
+    slotEl.appendChild(vid);
+  });
+
+  $("#btn-remove-park-video", panel).addEventListener("click", async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const slotEl = videoInput.closest(".photo-slot");
+    pendingVideo = null;
+    videoInput.value = "";
+    slotEl.querySelector("video")?.remove();
+    slotEl.classList.remove("filled");
+
+    if (existing && existing.video_url) {
+      const { error } = await sb.from("parks").update({ video_url: null }).eq("id", existing.id);
+      if (error) return toast("Erreur : " + errMsg(error));
+      existing.video_url = null;
+      toast("Vidéo supprimée");
+    }
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Enregistrement…";
+
+    try {
+      const fd = new FormData(e.target);
+      const payload = {
+        name: fd.get("name"), description: fd.get("description"),
+        city: fd.get("city"), postal_code: fd.get("postal_code"),
+        department: fd.get("department"), region: fd.get("region"),
+        default_rent: fd.get("default_rent") ? Number(fd.get("default_rent")) : null,
+        open_months: Number(fd.get("open_months")),
+        sublet_allowed: fd.get("sublet_allowed") === "on",
+        no_entry_fee: fd.get("no_entry_fee") === "on"
+      };
+
+      let parkId = existing?.id;
+
+      if (existing) {
+        const { error } = await sb.from("parks").update(payload).eq("id", existing.id);
+        if (error) return toast("Erreur : " + errMsg(error));
+        Object.assign(existing, payload);
+      } else {
+        const { data, error } = await sb.from("parks").insert(payload).select().single();
+        if (error) return toast("Erreur : " + errMsg(error));
+        state.parks.push(data);
+        parkId = data.id;
+      }
+
+      // Upload des photos sélectionnées, puis mise à jour des colonnes photo_N
+      const photoUpdates = {};
+      for (const [slot, file] of Object.entries(pendingPhotos)) {
+        const url = await uploadParkPhoto(file, parkId, slot);
+        if (url) photoUpdates["photo_" + slot] = url;
+      }
+      if (Object.keys(photoUpdates).length) {
+        const { error } = await sb.from("parks").update(photoUpdates).eq("id", parkId);
+        if (error) return toast("Erreur lors de l'envoi des photos : " + errMsg(error));
+        Object.assign(state.parks[0], photoUpdates);
+      }
+
+      // Upload de la vidéo de couverture, si une nouvelle a été choisie
+      if (pendingVideo) {
+        const videoUrl = await uploadParkVideo(pendingVideo, parkId);
+        if (videoUrl) {
+          const { error } = await sb.from("parks").update({ video_url: videoUrl }).eq("id", parkId);
+          if (error) return toast("Erreur lors de l'envoi de la vidéo : " + errMsg(error));
+          state.parks[0].video_url = videoUrl;
+        }
+      }
+
+      toast("Informations du parc enregistrées");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Enregistrer";
+    }
+  });
+}
+
+async function uploadParkPhoto(file, parkId, slot) {
+  const ext = file.name.split(".").pop();
+  const path = `park/${parkId}/photo-${slot}.${ext}`;
+  const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
+  if (error) { console.error(error); return null; }
+  const { data } = sb.storage.from("listing-media").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function uploadParkVideo(file, parkId) {
+  const ext = file.name.split(".").pop();
+  const path = `park/${parkId}/video.${ext}`;
+  const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
+  if (error) { console.error(error); return null; }
+  const { data } = sb.storage.from("listing-media").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+// ---------- ADMIN: INBOX ----------
+async function renderAdminInbox(panel) {
+  if (!requireAdmin()) return;
+  panel.appendChild($("#tpl-admin-inbox").content.cloneNode(true));
+  const { data, error } = await sb.from("messages")
+    .select("*, listings(type_bien, brand, model)")
+    .order("created_at", { ascending: false });
+  const list = $("#admin-inbox-list", panel);
+  if (error || !data?.length) {
+    list.innerHTML = `<div class="empty-state"><h3>Aucun message reçu</h3></div>`;
+    return;
+  }
+  data.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "message-item";
+    div.innerHTML = `
+      <div class="msg-top">
+        <span>${new Date(m.created_at).toLocaleDateString("fr-FR")} — ${m.name} (${m.email}${m.phone ? ", " + m.phone : ""})</span>
+        <span class="msg-status status-${m.status}">${m.status === "nouveau" ? "Nouveau" : "Traité"}</span>
+      </div>
+      <strong>${requestTypeLabel(m.request_type)} — ${m.listings?.type_bien || ""} ${m.listings?.brand || ""} ${m.listings?.model || ""}</strong>
+      <p class="muted">${m.message || ""}</p>
+      ${m.status === "nouveau" ? `<button class="link-btn" data-action="treat">Marquer comme traité</button>` : ""}
+    `;
+    const btn = $('[data-action="treat"]', div);
+    if (btn) btn.addEventListener("click", async () => {
+      await sb.from("messages").update({ status: "traite" }).eq("id", m.id);
+      renderAdminTab("inbox");
+    });
+    list.appendChild(div);
+  });
+}
+
+// ===========================================================
+// ADMIN — TUNNEL "EXPRESS < 3 MIN"
+// ===========================================================
+function renderAdminNewListing(panel) {
+  if (!requireAdmin()) return;
+  panel.appendChild($("#tpl-admin-new-listing").content.cloneNode(true));
+  resetWizard();
+  startWizardTimer(panel);
+
+  // Brand datalist
+  const brandList = $("#brand-list", panel);
+  Object.keys(BRAND_CATALOG).forEach(b => {
+    const opt = document.createElement("option"); opt.value = b; brandList.appendChild(opt);
+  });
+
+  const wBrand = $("#w-brand", panel), wModel = $("#w-model", panel), modelList = $("#model-list", panel);
+  wBrand.addEventListener("input", () => {
+    modelList.innerHTML = "";
+    const models = BRAND_CATALOG[wBrand.value];
+    if (models) Object.keys(models).forEach(m => {
+      const opt = document.createElement("option"); opt.value = m; modelList.appendChild(opt);
+    });
+  });
+  wModel.addEventListener("change", () => {
+    const spec = BRAND_CATALOG[wBrand.value]?.[wModel.value];
+    if (!spec) return;
+    $("#w-surface", panel).value = spec.surface;
+    $("#w-longueur", panel).value = spec.longueur;
+    $("#w-largeur", panel).value = spec.largeur;
+    $("#w-chambres", panel).value = spec.chambres;
+    $("#w-couchages", panel).value = spec.couchages;
+    $("#autofill-hint", panel).hidden = false;
+  });
+
+  // ---------------------------------------------------------------
+  // ASSISTANT IA — complète les champs à partir de la marque/modèle.
+  // Si plusieurs versions existent pour ce modèle (années, chambres
+  // différentes…), on les propose toutes et l'admin choisit celle qui
+  // correspond à son bien. Dans tous les cas, tous les champs restent
+  // modifiables ensuite — l'IA ne fait que pré-remplir un brouillon.
+  // ---------------------------------------------------------------
+  $("#btn-ai-lookup", panel).addEventListener("click", async () => {
+    const brand = wBrand.value.trim();
+    const model = wModel.value.trim();
+    const statusEl = $("#ai-lookup-status", panel);
+    const pickerEl = $("#ai-variant-picker", panel);
+    const btn = $("#btn-ai-lookup", panel);
+
+    if (!brand || !model) {
+      statusEl.hidden = false;
+      statusEl.className = "ai-status is-error";
+      statusEl.textContent = "Renseigne d'abord une marque et un modèle.";
+      return;
+    }
+
+    pickerEl.hidden = true;
+    pickerEl.innerHTML = "";
+    statusEl.hidden = false;
+    statusEl.className = "ai-status is-loading";
+    statusEl.textContent = "L'IA recherche les caractéristiques de ce modèle…";
+    btn.disabled = true;
+
+    try {
+      const result = await callAIAssist("lookup", { brand, model });
+      const variants = Array.isArray(result.variants) ? result.variants : [];
+
+      if (!variants.length) {
+        statusEl.className = "ai-status is-error";
+        statusEl.textContent = result.avertissement || "L'IA ne connaît pas ce modèle avec certitude — renseigne les champs manuellement.";
+        return;
+      }
+
+      if (variants.length === 1) {
+        applyAIVariant(panel, variants[0]);
+        statusEl.className = "ai-status";
+        statusEl.textContent = (result.avertissement || "Champs complétés par l'IA") + " — vérifie et corrige si besoin.";
+        return;
+      }
+
+      // Plusieurs versions possibles : on laisse l'admin choisir.
+      statusEl.className = "ai-status";
+      statusEl.textContent = `${variants.length} versions trouvées pour ce modèle — choisis celle qui correspond :`;
+      pickerEl.hidden = false;
+      variants.forEach((variant) => {
+        const card = document.createElement("div");
+        card.className = "ai-variant-card";
+        const yearRange = variant.year_min === variant.year_max
+          ? `${variant.year_min || "?"}`
+          : `${variant.year_min || "?"}–${variant.year_max || "?"}`;
+        card.innerHTML = `
+          <strong>${variant.label || yearRange}</strong>
+          <span>${yearRange} · ${variant.chambres ?? "?"} chambres · ${variant.couchages ?? "?"} couchages · ${variant.surface_m2 ?? "?"} m²</span>
+        `;
+        card.addEventListener("click", () => {
+          applyAIVariant(panel, variant);
+          statusEl.className = "ai-status";
+          statusEl.textContent = `Version "${variant.label || yearRange}" appliquée — vérifie et corrige si besoin.`;
+          pickerEl.hidden = true;
+        });
+        pickerEl.appendChild(card);
+      });
+    } catch (err) {
+      statusEl.className = "ai-status is-error";
+      statusEl.textContent = "Erreur : " + errMsg(err);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  // Segmented toggles inside wizard (type_bien, transaction, etat)
+  $$("[data-field]", panel).forEach(group => {
+    $$("button", group).forEach(btn => {
+      btn.addEventListener("click", () => {
+        $$("button", group).forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+      });
+    });
+  });
+
+  $("#btn-step1-next", panel).addEventListener("click", () => goToStep(2, panel));
+  $("#btn-step2-back", panel).addEventListener("click", () => goToStep(1, panel));
+  $("#btn-step2-next", panel).addEventListener("click", () => goToStep(3, panel));
+  $("#btn-step3-back", panel).addEventListener("click", () => goToStep(2, panel));
+
+  // Situation toggle
+  const situationGroup = $('[data-field="situation"]', panel);
+  $$("button", situationGroup).forEach(btn => {
+    btn.addEventListener("click", () => {
+      const isPark = btn.dataset.value === "sur_parcelle";
+      $("#situation-sur-parcelle", panel).hidden = !isPark;
+      $("#situation-hors-parcelle", panel).hidden = isPark;
+      $("#situation-park-extra", panel).hidden = !isPark;
+    });
+  });
+
+  // Le site ne gère plus qu'un seul domaine (Parc de la Chesnaie) : pas de
+  // sélecteur, on affiche son nom et on pré-remplit le loyer indicatif.
+  const fixedPark = state.parks[0];
+  const parkLabelEl = $("#fixed-park-label", panel);
+  if (fixedPark) {
+    const cityLine = [fixedPark.city, fixedPark.postal_code].filter(Boolean).join(" ");
+    parkLabelEl.textContent = `📍 ${fixedPark.name}${cityLine ? " — " + cityLine : ""}`;
+    if (fixedPark.default_rent) $("#w-rent", panel).value = fixedPark.default_rent;
+  } else {
+    parkLabelEl.textContent = "⚠️ Renseigne d'abord les infos du Parc dans l'onglet \"Le Parc de la Chesnaie\".";
+  }
+
+  // Equipements chip toggle
+  $$("#w-equipements button", panel).forEach(btn => {
+    btn.addEventListener("click", () => btn.classList.toggle("active"));
+  });
+
+  // Photo upload
+  $$(".photo-slot input", panel).forEach(input => {
+    input.addEventListener("change", async () => {
+      const file = input.files[0];
+      if (!file) return;
+      const slot = input.dataset.slotInput;
+      state.wizard.photos[slot] = file;
+      const slotEl = input.closest(".photo-slot");
+      slotEl.classList.add("filled");
+      if (file.type.startsWith("image/")) {
+        const url = URL.createObjectURL(file);
+        const img = document.createElement("img");
+        img.src = url;
+        slotEl.querySelector("img")?.remove();
+        slotEl.appendChild(img);
+      } else {
+        slotEl.querySelector("span").textContent = "✓ Vidéo ajoutée";
+      }
+    });
+  });
+
+  $("#btn-regen-desc", panel).addEventListener("click", () => {
+    $("#w-description", panel).value = generateDescription(panel);
+  });
+
+  $("#btn-publish", panel).addEventListener("click", () => publishListing(panel));
+}
+
+function resetWizard() {
+  state.wizard = { step: 1, photos: {}, startedAt: Date.now(), timerHandle: null };
+}
+
+function startWizardTimer(panel) {
+  clearInterval(state.wizard.timerHandle);
+  const timerEl = $("#wizard-timer", panel);
+  state.wizard.timerHandle = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - state.wizard.startedAt) / 1000);
+    const m = Math.floor(elapsed / 60), s = elapsed % 60;
+    if (timerEl) timerEl.textContent = `${m}:${String(s).padStart(2, "0")}`;
+  }, 1000);
+}
+
+function goToStep(step, panel) {
+  state.wizard.step = step;
+  $$(".wizard-panel", panel).forEach(p => p.classList.toggle("active", Number(p.dataset.panel) === step));
+  $$(".wizard-step", panel).forEach(s => s.classList.toggle("active", Number(s.dataset.step) <= step));
+
+  if (step === 3) $("#w-description", panel).value = generateDescription(panel);
+}
+
+// Applique une variante proposée par l'IA aux champs du formulaire.
+// Tous les champs restent modifiables ensuite — rien n'est verrouillé.
+function applyAIVariant(panel, v) {
+  if (v.year_min) $("#w-year", panel).value = v.year_min;
+  if (v.surface_m2 != null) $("#w-surface", panel).value = v.surface_m2;
+  if (v.longueur_m != null) $("#w-longueur", panel).value = v.longueur_m;
+  if (v.largeur_m != null) $("#w-largeur", panel).value = v.largeur_m;
+  if (v.chambres != null) $("#w-chambres", panel).value = v.chambres;
+  if (v.couchages != null) $("#w-couchages", panel).value = v.couchages;
+  if (v.pieces != null) $("#w-pieces", panel).value = v.pieces;
+  if (v.plan_amenagement) $("#w-plan", panel).value = v.plan_amenagement;
+
+  const equipSet = new Set(v.equipements_origine || []);
+  $$("#w-equipements button", panel).forEach(btn => {
+    btn.classList.toggle("active", equipSet.has(btn.dataset.value));
+  });
+
+  $("#autofill-hint", panel).hidden = false;
+}
+
+function collectWizardData(panel) {
+  const getActive = (field) => $(`[data-field="${field}"] button.active`, panel)?.dataset.value;
+  const equipements = $$("#w-equipements button.active", panel).map(b => b.dataset.value);
+  const situation = getActive("situation") || "sur_parcelle";
+
+  return {
+    type_bien: getActive("type_bien") || "Mobil-home",
+    transaction: getActive("transaction") || "Vente",
+    brand: $("#w-brand", panel).value || null,
+    model: $("#w-model", panel).value || null,
+    year: numOrNull($("#w-year", panel).value),
+    etat: getActive("etat") || "Très bon état",
+    surface: numOrNull($("#w-surface", panel).value),
+    longueur: numOrNull($("#w-longueur", panel).value),
+    largeur: numOrNull($("#w-largeur", panel).value),
+    chambres: numOrNull($("#w-chambres", panel).value),
+    couchages: numOrNull($("#w-couchages", panel).value),
+    salles_eau: numOrNull($("#w-sdb", panel).value),
+    pieces: numOrNull($("#w-pieces", panel).value),
+    plan_amenagement: $("#w-plan", panel).value || null,
+    situation,
+    park_id: situation === "sur_parcelle" ? (state.parks[0]?.id || null) : null,
+    rent_annual: situation === "sur_parcelle" ? numOrNull($("#w-rent", panel).value) : null,
+    city: situation === "hors_parcelle" ? $("#w-city", panel).value : null,
+    postal_code: situation === "hors_parcelle" ? $("#w-cp", panel).value : null,
+    periode_override: situation === "sur_parcelle" ? (getActive("periode_override") || null) : null,
+    sous_location: situation === "sur_parcelle" ? $("#w-souslocation", panel).checked : null,
+    sans_droit_entree: situation === "sur_parcelle" ? $("#w-sansdroit", panel).checked : null,
+    equipements,
+    reference: $("#w-reference", panel).value || null,
+    price: numOrNull($("#w-price", panel).value)
+  };
+}
+
+function numOrNull(v) { return v === "" || v == null ? null : Number(v); }
+
+function generateDescription(panel) {
+  const d = collectWizardData(panel);
+  const parkName = state.parks.find(p => p.id === d.park_id)?.name;
+  const equipLabels = {
+    climatisation_reversible: "climatisation réversible", terrasse_couverte: "terrasse couverte",
+    terrasse_semi_couverte: "terrasse semi-couverte",
+    lave_vaisselle: "lave-vaisselle", lave_linge: "lave-linge",
+    isolation_4_saisons: "isolation 4 saisons", double_vitrage: "double vitrage"
+  };
+  const equipText = d.equipements.map(e => equipLabels[e]).filter(Boolean).join(", ");
+
+  const action = d.transaction === "Vente" ? "À vendre" : "À louer";
+  let txt = `${action} - Club Country Village : ${d.type_bien} ${d.brand || ""} ${d.model || ""}`.trim();
+  if (d.year) txt += ` (${d.year})`;
+  if (d.surface) txt += ` de ${d.surface} m²`;
+  if (d.etat) txt += ` en ${d.etat.toLowerCase()}`;
+  txt += ".";
+  if (d.chambres || d.couchages) {
+    txt += ` ${d.chambres ? d.chambres + " chambre" + (d.chambres > 1 ? "s" : "") : ""}${d.chambres && d.couchages ? ", " : ""}${d.couchages ? d.couchages + " couchages" : ""}.`;
+  }
+  if (d.pieces) txt += ` ${d.pieces} pièces.`;
+  if (d.plan_amenagement) txt += ` ${d.plan_amenagement}.`;
+  if (d.situation === "sur_parcelle" && parkName) txt += ` Installé sur le domaine ${parkName}.`;
+  if (d.situation === "hors_parcelle" && d.city) txt += ` Actuellement situé à ${d.city}, à déplacer.`;
+  if (equipText) txt += ` Équipements : ${equipText}.`;
+  if (d.sans_droit_entree) txt += ` Sans droit d'entrée.`;
+  if (d.sous_location) txt += ` Sous-location autorisée.`;
+  return txt;
+}
+
+async function uploadPhoto(file, listingId, slot) {
+  const ext = file.name.split(".").pop();
+  const path = `${listingId}/${slot}.${ext}`;
+  const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
+  if (error) { console.error(error); return null; }
+  const { data } = sb.storage.from("listing-media").getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function publishListing(panel) {
+  if (!requireAdmin()) return;
+  const d = collectWizardData(panel);
+  if (!d.price) return toast("Merci d'indiquer un prix");
+  if (!state.wizard.photos.exterieur || !state.wizard.photos.salon || !state.wizard.photos.cuisine) {
+    return toast("Les 3 photos obligatoires (extérieur, salon, cuisine) sont requises");
+  }
+
+  const description = $("#w-description", panel).value || generateDescription(panel);
+  const meta_title = `${d.type_bien} ${d.brand || ""} ${d.model || ""} ${d.transaction === "Location" ? "à louer" : "à vendre"} - Club Country Village`.replace(/\s+/g, " ").trim();
+  const meta_description = description.slice(0, 155);
+
+  const payload = {
+    ...d, description, meta_title, meta_description,
+    created_by: state.user.id, status: "publie"
+  };
+
+  const { data: inserted, error } = await sb.from("listings").insert(payload).select().single();
+  if (error) return toast("Erreur : " + errMsg(error));
+
+  // upload photos then update URLs
+  const updates = {};
+  for (const slot of ["exterieur", "salon", "cuisine", "video"]) {
+    const file = state.wizard.photos[slot];
+    if (file) {
+      const url = await uploadPhoto(file, inserted.id, slot);
+      if (url) updates[slot === "video" ? "video_url" : "photo_" + slot] = url;
+    }
+  }
+  if (Object.keys(updates).length) {
+    await sb.from("listings").update(updates).eq("id", inserted.id);
+    Object.assign(inserted, updates);
+  }
+
+  state.listings.unshift(inserted);
+  clearInterval(state.wizard.timerHandle);
+  toast("Annonce publiée en ligne");
+  renderAdminTab("listings");
+  $$(".admin-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === "listings"));
+}
+
+// ===========================================================
+// NAV TOGGLE (mobile) — pilote une classe sur .site-header, jamais
+// un style inline (voir commentaire CSS sur .nav-toggle pour le
+// bug que ça évite : hamburger + nav complète visibles ensemble).
+// ===========================================================
+const ICON_HAMBURGER = `<path d="M3 6h18M3 12h18M3 18h18"/>`;
+const ICON_CLOSE = `<path d="M6 6l12 12M18 6L6 18"/>`;
+
+function setMobileMenu(open) {
+  const header = $(".site-header");
+  const toggle = $("#nav-toggle");
+  header.classList.toggle("mobile-menu-open", open);
+  toggle.setAttribute("aria-expanded", String(open));
+  toggle.querySelector("svg").innerHTML = open ? ICON_CLOSE : ICON_HAMBURGER;
+}
+
+$("#nav-toggle").addEventListener("click", (e) => {
+  e.stopPropagation();
+  const isOpen = $(".site-header").classList.contains("mobile-menu-open");
+  setMobileMenu(!isOpen);
+});
+
+// Le menu se referme au clic sur un lien qu'il contient…
+$$(".mobile-nav-panel a").forEach(a => {
+  a.addEventListener("click", () => setMobileMenu(false));
+});
+// …ou au clic n'importe où ailleurs sur la page.
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".mobile-nav-panel") && !e.target.closest("#nav-toggle")) {
+    setMobileMenu(false);
+  }
+});
+
+// ===========================================================
+// BOOT
+// ===========================================================
+(async function boot() {
+  // Le routeur doit être opérationnel même si Supabase est mal configuré
+  // ou injoignable (clé/URL non renseignées, pas de réseau, etc.) —
+  // la navigation interne ne doit jamais dépendre du bon fonctionnement
+  // du backend.
+  try {
+    await initAuth();
+  } catch (err) {
+    console.error("Auth indisponible :", err);
+    renderAuthArea();
+  }
+
+  try {
+    await Promise.all([loadListings(), loadParks(), loadFavorites()]);
+  } catch (err) {
+    console.error("Chargement des données indisponible :", err);
+  }
+
+  if (supabaseUnavailable) {
+    toast("⚠️ Connexion au serveur impossible — vérifie ta connexion internet");
+  } else if (SUPABASE_URL.includes("VOTRE-PROJET") || SUPABASE_ANON_KEY.includes("VOTRE_CLE")) {
+    toast("⚠️ Configure tes clés Supabase en haut du script pour activer le site");
+  }
+
+  router();
+})();
+
+</script>
+
+</body>
+</html>
