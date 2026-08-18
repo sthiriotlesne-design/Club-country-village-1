@@ -620,6 +620,104 @@ input,select,textarea{font-family:inherit}
 .wizard-nav{display:flex; gap:12px; margin-top:30px}
 .wizard-nav .btn{flex:1}
 
+/* ============ TUNNEL SIMPLIFIÉ ============ */
+.req{
+  font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em;
+  color:var(--khaki-600); background:var(--khaki-50); padding:2px 7px; border-radius:5px; margin-left:6px;
+}
+.field-hint{font-size:.82rem; margin:2px 0 10px}
+.field-group{margin:16px 0}
+.form-row-3{display:grid; grid-template-columns:repeat(3,1fr); gap:13px}
+.wizard-intro{
+  background:var(--khaki-50); border-radius:var(--radius-md); padding:12px 15px;
+  font-size:.88rem; font-weight:600; color:var(--khaki-700); margin:0 0 18px;
+}
+.wizard-change-type{margin-left:auto}
+
+/* Choix initial vente / location */
+.choice-cards{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px}
+.choice-card{
+  display:flex; flex-direction:column; align-items:flex-start; gap:6px; text-align:left;
+  padding:24px 22px; border:2px solid var(--line); border-radius:var(--radius-lg); background:#fff;
+  transition:border-color .15s, transform .1s, box-shadow .15s;
+}
+.choice-card:hover{border-color:var(--khaki-500); transform:translateY(-2px); box-shadow:var(--shadow-card)}
+.choice-card .choice-icon{font-size:1.7rem}
+.choice-card strong{font-size:1.02rem; color:var(--ink-900)}
+.choice-card span:last-child{font-size:.85rem; color:var(--ink-500); font-weight:500}
+
+/* Champs affichés selon vente ou location */
+.mode-vente, .mode-location{display:none}
+.wizard[data-mode="Vente"] .mode-vente{display:block}
+.wizard[data-mode="Location"] .mode-location{display:block}
+.wizard[data-mode="Location"] [data-vente-only]{display:none}
+
+.btn-ai{margin-top:6px}
+
+/* Zone de dépôt des photos */
+.photo-dropzone{
+  display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center;
+  padding:30px 20px; border:2px dashed var(--khaki-200); border-radius:var(--radius-lg);
+  background:var(--khaki-50); cursor:pointer; position:relative; transition:border-color .15s, background .15s;
+}
+.photo-dropzone:hover, .photo-dropzone.is-dragover{border-color:var(--khaki-500); background:var(--khaki-100)}
+.photo-dropzone input{position:absolute; inset:0; opacity:0; cursor:pointer}
+.photo-dropzone .dz-icon{font-size:1.7rem}
+.photo-dropzone strong{font-size:.98rem; color:var(--ink-900)}
+.photo-dropzone .muted{font-size:.84rem}
+
+/* Vignettes réordonnables */
+.photo-sortable{display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:12px; margin-top:16px}
+.photo-thumb{
+  position:relative; aspect-ratio:4/3; border-radius:var(--radius-md); overflow:hidden;
+  border:2px solid var(--line); background:var(--khaki-50); cursor:grab;
+}
+.photo-thumb.dragging{opacity:.4}
+.photo-thumb.drag-over{border-color:var(--khaki-600); border-style:dashed}
+.photo-thumb img{width:100%; height:100%; object-fit:cover; display:block; pointer-events:none}
+.photo-thumb .thumb-main{
+  position:absolute; left:6px; top:6px; background:var(--gradient-primary); color:#fff;
+  font-size:.64rem; font-weight:800; padding:3px 8px; border-radius:5px;
+}
+.photo-thumb .thumb-remove{
+  position:absolute; right:6px; top:6px; width:26px; height:26px; border-radius:50%; border:none;
+  background:rgba(0,0,0,.6); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; cursor:pointer;
+}
+.photo-thumb .thumb-remove:hover{background:rgba(0,0,0,.8)}
+.photo-thumb .thumb-uploading{
+  position:absolute; inset:0; background:rgba(255,255,255,.75); display:flex;
+  align-items:center; justify-content:center; font-size:.75rem; font-weight:700; color:var(--khaki-700);
+}
+
+/* Éditeur de description enrichie */
+.rte{border:2px solid var(--line); border-radius:var(--radius-md); overflow:hidden; background:#fff}
+.rte-toolbar{display:flex; gap:4px; padding:7px 8px; background:var(--khaki-50); border-bottom:1px solid var(--line)}
+.rte-toolbar button{
+  border:1px solid transparent; background:#fff; border-radius:6px; padding:5px 11px;
+  font-size:.82rem; font-weight:700; color:var(--ink-700); cursor:pointer;
+}
+.rte-toolbar button:hover{border-color:var(--khaki-200); color:var(--khaki-700)}
+.rte-editor{
+  min-height:280px; padding:16px 18px; font-size:.96rem; line-height:1.65; color:var(--ink-800);
+  outline:none; overflow-y:auto;
+}
+.rte-editor:empty::before{content:attr(data-placeholder); color:var(--ink-300)}
+.rte-editor ul{padding-left:22px; margin:8px 0}
+.rte-editor p{margin:0 0 10px}
+
+.wizard-nav-publish{flex-wrap:wrap}
+.wizard-nav-publish .btn{flex:1; min-width:150px}
+
+/* Statuts des annonces dans le back-office */
+.row-status.brouillon{background:#fdf3e0; color:#8a5a1f}
+.row-status.vendu{background:#e9e9e9; color:#555}
+
+@media (max-width:640px){
+  .form-row-3{grid-template-columns:1fr 1fr}
+  .choice-cards{grid-template-columns:1fr}
+}
+
 .photo-upload-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:14px}
 .photo-slot{
   aspect-ratio:4/3; border:3px dashed var(--khaki-200); border-radius:var(--radius-lg); display:flex; align-items:center; justify-content:center;
@@ -937,31 +1035,31 @@ input,select,textarea{font-family:inherit}
 
 ```
   <div class="filter-group">
-    <span class="filter-label">Projet</span>
+    <span class="filter-label">Je souhaite</span>
     <div class="segmented" data-filter="transaction">
-      <button data-value="">Tous</button>
+      <button data-value="">Tout voir</button>
       <button data-value="Vente">Acheter</button>
       <button data-value="Location">Louer</button>
-      <button data-value="Parcelle">Emplacement</button>
     </div>
   </div>
 
   <div class="filter-group">
-    <span class="filter-label">Situation</span>
-    <div class="segmented" data-filter="situation">
+    <span class="filter-label">Type de bien</span>
+    <div class="segmented" data-filter="typeBien">
       <button data-value="">Tous</button>
-      <button data-value="sur_parcelle">Sur parcelle</button>
-      <button data-value="hors_parcelle">Hors parcelle</button>
+      <button data-value="Mobil-home">Mobil-home</button>
+      <button data-value="Chalet">Chalet</button>
+      <button data-value="Parcelle" class="vente-only">Parcelle</button>
     </div>
   </div>
 
   <div class="filter-group">
-    <span class="filter-label">Localisation</span>
-    <input type="text" id="filter-location" class="input-sm" placeholder="Ville, marque…">
+    <span class="filter-label">Recherche libre</span>
+    <input type="text" id="filter-location" class="input-sm" placeholder="Titre, marque, mot-clé…">
   </div>
 
   <div class="filter-group">
-    <span class="filter-label">Budget (€)</span>
+    <span class="filter-label" id="label-filter-budget">Budget (€)</span>
     <div class="range-row">
       <input type="number" id="filter-budget-min" class="input-sm" placeholder="Min">
       <span>—</span>
@@ -969,12 +1067,45 @@ input,select,textarea{font-family:inherit}
     </div>
   </div>
 
-  <details class="filter-accordion" open>
-    <summary>Marque &amp; modèle</summary>
+  <div class="filter-group">
+    <span class="filter-label">Chambres</span>
+    <div class="segmented" data-filter="chambres">
+      <button data-value="">Toutes</button>
+      <button data-value="1">1</button>
+      <button data-value="2">2</button>
+      <button data-value="3">3</button>
+      <button data-value="4">4+</button>
+    </div>
+  </div>
+
+  <!-- ---- Réservé à la location : dates et voyageurs ---- -->
+  <div class="filter-group filter-location-only">
+    <span class="filter-label">Voyageurs</span>
+    <div class="segmented" data-filter="voyageurs">
+      <button data-value="">Peu importe</button>
+      <button data-value="2">2</button>
+      <button data-value="4">4</button>
+      <button data-value="6">6</button>
+      <button data-value="8">8+</button>
+    </div>
+  </div>
+
+  <div class="filter-group filter-location-only">
+    <span class="filter-label">Dates du séjour</span>
+    <div class="range-row">
+      <input type="date" id="filter-date-debut" class="input-sm" title="Arrivée">
+      <span>—</span>
+      <input type="date" id="filter-date-fin" class="input-sm" title="Départ">
+    </div>
+  </div>
+
+  <!-- ---- Réservé à la vente ---- -->
+  <details class="filter-accordion filter-vente-only">
+    <summary>Marque</summary>
     <div class="chip-group" id="filter-brands"></div>
   </details>
 
-  <details class="filter-accordion">
+  <details class="filter-accordion filter-vente-only">
     <summary>Année</summary>
     <div class="range-row">
       <input type="number" id="filter-year-min" class="input-sm" placeholder="Min">
@@ -983,67 +1114,35 @@ input,select,textarea{font-family:inherit}
     </div>
   </details>
 
+  <details class="filter-accordion filter-vente-only">
+    <summary>Couchages</summary>
+    <div class="segmented" data-filter="couchages">
+      <button data-value="">Tous</button>
+      <button data-value="2">2</button>
+      <button data-value="4">4</button>
+      <button data-value="6">6</button>
+      <button data-value="8">8+</button>
+    </div>
+  </details>
+
   <details class="filter-accordion">
-    <summary>Dimensions &amp; surface</summary>
-    <label class="mini-label">Surface min (m²)
+    <summary>Surface</summary>
+    <label class="mini-label">Surface minimum (m²)
       <input type="number" id="filter-surface-min" class="input-sm">
     </label>
   </details>
 
   <details class="filter-accordion">
-    <summary>Agencement</summary>
-    <div class="filter-group">
-      <span class="filter-label">Chambres</span>
-      <div class="segmented" data-filter="chambres">
-        <button data-value="">Toutes</button>
-        <button data-value="1">1</button>
-        <button data-value="2">2</button>
-        <button data-value="3">3</button>
-        <button data-value="4">4+</button>
-      </div>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Couchages</span>
-      <div class="segmented" data-filter="couchages">
-        <button data-value="">Tous</button>
-        <button data-value="2">2</button>
-        <button data-value="4">4</button>
-        <button data-value="6">6</button>
-        <button data-value="8">8+</button>
-      </div>
-    </div>
-  </details>
-
-  <details class="filter-accordion">
     <summary>Équipements</summary>
-    <div class="checkbox-list" id="filter-equipements">
-      <label><input type="checkbox" value="climatisation_reversible"> Climatisation réversible</label>
-      <label><input type="checkbox" value="terrasse_couverte"> Terrasse couverte</label>
-      <label><input type="checkbox" value="terrasse_semi_couverte"> Terrasse semi-couverte</label>
-      <label><input type="checkbox" value="lave_vaisselle"> Lave-vaisselle</label>
-      <label><input type="checkbox" value="lave_linge"> Lave-linge</label>
-      <label><input type="checkbox" value="isolation_4_saisons"> Isolation 4 saisons</label>
-      <label><input type="checkbox" value="double_vitrage"> Double vitrage</label>
-    </div>
+    <div class="checkbox-list" id="filter-equipements"></div>
   </details>
 
-  <details class="filter-accordion">
-    <summary>Conditions camping</summary>
-    <div class="filter-group">
-      <span class="filter-label">Période d'ouverture</span>
-      <div class="segmented" data-filter="periode">
-        <button data-value="">Toutes</button>
-        <button data-value="6">6 mois</button>
-        <button data-value="9">9 mois</button>
-        <button data-value="12">Annuel</button>
-      </div>
-    </div>
-    <label class="mini-label">Loyer max de parcelle (€/an)
-      <input type="number" id="filter-loyer-max" class="input-sm">
+  <div class="filter-group">
+    <label class="checkbox-inline">
+      <input type="checkbox" id="filter-selection-club"> Sélection Club uniquement
     </label>
-    <label class="checkbox-inline"><input type="checkbox" id="filter-souslocation"> Sous-location autorisée</label>
-    <label class="checkbox-inline"><input type="checkbox" id="filter-sansdroit"> Sans droit d'entrée</label>
-  </details>
+  </div>
+
 </aside>
 
 <section class="results-panel">
@@ -1103,15 +1202,6 @@ input,select,textarea{font-family:inherit}
     <div class="detail-desc">
       <h2 class="section-title-sm">Description</h2>
       <p id="detail-description"></p>
-    </div>
-
-    <div class="detail-transport" id="detail-transport-block" hidden>
-      <h2 class="section-title-sm">Simulateur de transport</h2>
-      <div class="transport-form">
-        <input type="text" id="transport-cp" placeholder="Votre code postal">
-        <button class="btn btn-secondary" id="btn-transport-calc">Estimer</button>
-      </div>
-      <p class="transport-result" id="transport-result"></p>
     </div>
 
     <div class="detail-actions">
@@ -1313,188 +1403,173 @@ input,select,textarea{font-family:inherit}
 
 <template id="tpl-admin-new-listing">
   <div class="wizard">
-    <div class="wizard-progress">
-      <div class="wizard-step active" data-step="1"><span>1</span>Identité</div>
-      <div class="wizard-step" data-step="2"><span>2</span>Situation</div>
-      <div class="wizard-step" data-step="3"><span>3</span>Prix &amp; photos</div>
-      <div class="wizard-timer" id="wizard-timer">0:00</div>
-    </div>
 
 ```
-<!-- STEP 1 -->
-<section class="wizard-panel active" data-panel="1">
-  <h2 class="section-title-sm">Identité du bien</h2>
+<!-- CHOIX INITIAL : vente ou location -->
+<section class="wizard-choice" data-panel="0">
+  <h2 class="section-title-sm">Que souhaitez-vous mettre en ligne ?</h2>
+  <div class="choice-cards">
+    <button type="button" class="choice-card" data-choice="Vente">
+      <span class="choice-icon">🏷️</span>
+      <strong>Vendre un bien</strong>
+      <span>Mobil-home, chalet ou parcelle à vendre</span>
+    </button>
+    <button type="button" class="choice-card" data-choice="Location">
+      <span class="choice-icon">🗓️</span>
+      <strong>Proposer à la location</strong>
+      <span>Séjour en mobil-home ou chalet</span>
+    </button>
+  </div>
+</section>
 
-  <div class="filter-group">
-    <span class="filter-label">Type de bien</span>
-    <div class="segmented" data-field="type_bien">
-      <button data-value="Mobil-home" class="active">Mobil-home</button>
-      <button data-value="Chalet">Chalet</button>
-      <button data-value="Parcelle">Parcelle</button>
-    </div>
+<div class="wizard-body" hidden>
+  <div class="wizard-progress">
+    <div class="wizard-step active" data-step="1"><span>1</span>L'essentiel</div>
+    <div class="wizard-step" data-step="2"><span>2</span>Photos</div>
+    <div class="wizard-step" data-step="3"><span>3</span>Description</div>
+    <button type="button" class="link-btn wizard-change-type" id="btn-change-type">Changer</button>
   </div>
 
-  <div class="filter-group">
-    <span class="filter-label">Type de transaction</span>
-    <div class="segmented" data-field="transaction">
-      <button data-value="Vente" class="active">Vente</button>
-      <button data-value="Location">Location</button>
-    </div>
-  </div>
+  <!-- ================= ÉTAPE 1 : L'ESSENTIEL ================= -->
+  <section class="wizard-panel active" data-panel="1">
+    <p class="wizard-intro" id="wizard-intro"></p>
 
-  <div class="form-row-2">
-    <label>Marque
-      <input type="text" list="brand-list" id="w-brand" placeholder="IRM, O'Hara, Rapidhome…">
-      <datalist id="brand-list"></datalist>
+    <label>Titre de l'annonce <span class="req">obligatoire</span>
+      <input type="text" id="w-title" placeholder="Ex. Mobil-home IRM Riviera 3 chambres, terrasse couverte">
     </label>
-    <label>Modèle
-      <input type="text" list="model-list" id="w-model" placeholder="Sélectionnez la marque d'abord">
-      <datalist id="model-list"></datalist>
-    </label>
-  </div>
 
-  <button type="button" class="btn btn-secondary btn-block" id="btn-ai-lookup">✨ Compléter avec l'IA</button>
-  <div id="ai-lookup-status" class="ai-status" hidden></div>
-  <div id="ai-variant-picker" class="ai-variant-picker" hidden></div>
-
-  <div class="form-row-2">
-    <label>Année
-      <input type="number" id="w-year" min="1980" max="2027" placeholder="2024">
-    </label>
-    <div>
-      <span class="filter-label">État</span>
-      <div class="segmented" data-field="etat">
-        <button data-value="Neuf">Neuf</button>
-        <button data-value="Très bon état" class="active">Très bon état</button>
-        <button data-value="État correct">État correct</button>
+    <div class="field-group">
+      <span class="filter-label">Type de bien <span class="req">obligatoire</span></span>
+      <div class="segmented" data-field="type_bien">
+        <button type="button" data-value="Mobil-home" class="active">Mobil-home</button>
+        <button type="button" data-value="Chalet">Chalet</button>
+        <button type="button" data-value="Parcelle" data-vente-only>Parcelle</button>
       </div>
     </div>
-  </div>
 
-  <p class="autofill-hint" id="autofill-hint" hidden>✓ Champs pré-remplis depuis la fiche modèle</p>
-
-  <div class="form-row-4">
-    <label>Surface (m²)<input type="number" id="w-surface"></label>
-    <label>Longueur (m)<input type="number" step="0.1" id="w-longueur"></label>
-    <label>Largeur (m)<input type="number" step="0.1" id="w-largeur"></label>
-    <label>Chambres<input type="number" id="w-chambres"></label>
-  </div>
-  <div class="form-row-2">
-    <label>Couchages<input type="number" id="w-couchages"></label>
-    <label>Salles d'eau<input type="number" id="w-sdb"></label>
-  </div>
-  <div class="form-row-2">
-    <label>Nombre de pièces<input type="number" id="w-pieces"></label>
-  </div>
-  <label>Plan d'aménagement
-    <textarea id="w-plan" rows="2" placeholder="Ex. séjour/cuisine ouverts à l'avant, 2 chambres à l'arrière…"></textarea>
-  </label>
-
-  <div class="wizard-nav">
-    <button class="btn btn-primary" id="btn-step1-next">Continuer →</button>
-  </div>
-</section>
-
-<!-- STEP 2 -->
-<section class="wizard-panel" data-panel="2">
-  <h2 class="section-title-sm">Situation</h2>
-  <div class="segmented" data-field="situation">
-    <button data-value="sur_parcelle" class="active">Sur parcelle (en camping)</button>
-    <button data-value="hors_parcelle">Hors parcelle (à déplacer)</button>
-  </div>
-
-  <div id="situation-sur-parcelle">
-    <p class="autofill-hint" id="fixed-park-label" style="margin-top:0"></p>
-    <label>Loyer annuel (€)
-      <input type="number" id="w-rent">
+    <!-- Prix : libellé adapté selon vente / location -->
+    <label><span id="label-prix">Prix (€)</span> <span class="req">obligatoire</span>
+      <input type="number" id="w-price" min="0" placeholder="Ex. 25000">
     </label>
-  </div>
 
-  <div id="situation-hors-parcelle" hidden>
-    <div class="form-row-2">
-      <label>Ville
-        <input type="text" id="w-city">
+    <!-- ---- Champs communs ---- -->
+    <div class="form-row-3">
+      <label><span id="label-chambres">Chambres</span> <span class="req" id="req-chambres">obligatoire</span>
+        <input type="number" id="w-chambres" min="0" placeholder="2">
       </label>
-      <label>Code postal
-        <input type="text" id="w-cp">
+      <label id="wrap-couchages">Couchages
+        <input type="number" id="w-couchages" min="0" placeholder="6">
+      </label>
+      <label>Surface (m²)
+        <input type="number" id="w-surface" min="0" placeholder="32">
       </label>
     </div>
-  </div>
 
-  <div id="situation-park-extra">
-    <span class="filter-label" style="margin-top:16px; display:block;">Conditions spécifiques à cette annonce</span>
-    <div class="form-row-2">
-      <div>
-        <span class="filter-label">Période d'ouverture</span>
-        <div class="segmented" data-field="periode_override">
-          <button data-value="" class="active">Selon domaine</button>
-          <button data-value="6">6 mois</button>
-          <button data-value="9">9 mois</button>
-          <button data-value="12">Annuel</button>
-        </div>
+    <!-- ---- Spécifique VENTE ---- -->
+    <div class="mode-vente">
+      <div class="form-row-3">
+        <label>Année
+          <input type="number" id="w-year" min="1980" max="2030" placeholder="2020">
+        </label>
+        <label>Marque
+          <input type="text" list="brand-list" id="w-brand" placeholder="IRM, O'Hara…">
+          <datalist id="brand-list"></datalist>
+        </label>
+        <label>Modèle
+          <input type="text" id="w-model" placeholder="Riviera">
+        </label>
+      </div>
+      <button type="button" class="btn btn-secondary btn-block btn-ai" id="btn-ai-lookup">✨ Compléter avec l'IA</button>
+      <div id="ai-lookup-status" class="ai-status" hidden></div>
+      <div id="ai-variant-picker" class="ai-variant-picker" hidden></div>
+    </div>
+
+    <!-- ---- Spécifique LOCATION ---- -->
+    <div class="mode-location">
+      <div class="form-row-3">
+        <label>Capacité max. <span class="req" id="req-capacite">obligatoire</span>
+          <input type="number" id="w-capacite" min="1" placeholder="6">
+        </label>
+        <label>Nombre de lits
+          <input type="number" id="w-lits" min="0" placeholder="3">
+        </label>
+        <label>Salles de bain
+          <input type="number" id="w-sdb" min="0" placeholder="1">
+        </label>
+      </div>
+      <div class="form-row-3">
+        <label>Disponible du
+          <input type="date" id="w-dispo-debut">
+        </label>
+        <label>Disponible au
+          <input type="date" id="w-dispo-fin">
+        </label>
+        <label>Nuits minimum
+          <input type="number" id="w-nuits-min" min="1" placeholder="2">
+        </label>
       </div>
     </div>
-    <label class="checkbox-inline"><input type="checkbox" id="w-souslocation"> Sous-location autorisée</label>
-    <label class="checkbox-inline"><input type="checkbox" id="w-sansdroit"> Sans droit d'entrée</label>
-  </div>
 
-  <h2 class="section-title-sm">Équipements</h2>
-  <div class="chip-toggle-group" id="w-equipements">
-    <button type="button" data-value="climatisation_reversible">Climatisation réversible</button>
-    <button type="button" data-value="terrasse_couverte">Terrasse couverte</button>
-    <button type="button" data-value="terrasse_semi_couverte">Terrasse semi-couverte</button>
-    <button type="button" data-value="lave_vaisselle">Lave-vaisselle</button>
-    <button type="button" data-value="lave_linge">Lave-linge</button>
-    <button type="button" data-value="isolation_4_saisons">Isolation 4 saisons</button>
-    <button type="button" data-value="double_vitrage">Double vitrage</button>
-  </div>
+    <span class="filter-label" style="margin-top:20px; display:block">Équipements</span>
+    <p class="muted field-hint">Cochez uniquement ce qui sert de filtre. Le reste se raconte dans la description.</p>
+    <div class="chip-toggle-group" id="w-equipements"></div>
 
-  <div class="wizard-nav">
-    <button class="btn btn-ghost" id="btn-step2-back">← Retour</button>
-    <button class="btn btn-primary" id="btn-step2-next">Continuer →</button>
-  </div>
-</section>
-
-<!-- STEP 3 -->
-<section class="wizard-panel" data-panel="3">
-  <h2 class="section-title-sm">Prix, visuels &amp; publication</h2>
-
-  <label>Référence interne (optionnel)
-    <input type="text" id="w-reference" placeholder="Ex. IRM-2024-032">
-  </label>
-
-  <label>Prix net (€)
-    <input type="number" id="w-price">
-  </label>
-
-  <div class="photo-upload-grid">
-    <label class="photo-slot" data-slot="exterieur">
-      <input type="file" accept="image/*" data-slot-input="exterieur">
-      <span>Extérieur *</span>
+    <label class="checkbox-inline" style="margin-top:16px">
+      <input type="checkbox" id="w-selection-club"> Mettre en avant dans la « Sélection Club »
     </label>
-    <label class="photo-slot" data-slot="salon">
-      <input type="file" accept="image/*" data-slot-input="salon">
-      <span>Salon *</span>
-    </label>
-    <label class="photo-slot" data-slot="cuisine">
-      <input type="file" accept="image/*" data-slot-input="cuisine">
-      <span>Cuisine *</span>
-    </label>
-    <label class="photo-slot" data-slot="video">
-      <input type="file" accept="video/mp4" data-slot-input="video">
-      <span>Vidéo (optionnel)</span>
-    </label>
-  </div>
 
-  <h2 class="section-title-sm">Description générée automatiquement</h2>
-  <textarea id="w-description" rows="4"></textarea>
-  <button type="button" class="link-btn" id="btn-regen-desc">Régénérer la description</button>
+    <div class="wizard-nav">
+      <button type="button" class="btn btn-primary btn-block" id="btn-step1-next">Continuer vers les photos →</button>
+    </div>
+  </section>
 
-  <div class="wizard-nav">
-    <button class="btn btn-ghost" id="btn-step3-back">← Retour</button>
-    <button class="btn btn-cta btn-block" id="btn-publish">Publier l’annonce</button>
-  </div>
-</section>
+  <!-- ================= ÉTAPE 2 : PHOTOS ================= -->
+  <section class="wizard-panel" data-panel="2">
+    <h2 class="section-title-sm">Photos <span class="req">au moins une</span></h2>
+    <p class="muted field-hint">
+      Sélectionnez toutes vos photos d'un coup. La première est la photo principale —
+      glissez-déposez les vignettes pour changer l'ordre.
+    </p>
+
+    <label class="photo-dropzone" id="photo-dropzone">
+      <input type="file" id="w-photos-input" accept="image/*" multiple>
+      <span class="dz-icon">📷</span>
+      <strong>Ajouter des photos</strong>
+      <span class="muted">Sélection multiple possible — ou glissez vos fichiers ici</span>
+    </label>
+
+    <div class="photo-sortable" id="photo-sortable"></div>
+
+    <div class="wizard-nav">
+      <button type="button" class="btn btn-ghost" id="btn-step2-back">← Retour</button>
+      <button type="button" class="btn btn-primary" id="btn-step2-next">Continuer →</button>
+    </div>
+  </section>
+
+  <!-- ================= ÉTAPE 3 : DESCRIPTION ================= -->
+  <section class="wizard-panel" data-panel="3">
+    <h2 class="section-title-sm" id="desc-title">Description <span class="req">obligatoire</span></h2>
+    <p class="muted field-hint" id="desc-hint"></p>
+
+    <div class="rte">
+      <div class="rte-toolbar">
+        <button type="button" data-cmd="bold" title="Gras"><b>G</b></button>
+        <button type="button" data-cmd="italic" title="Italique"><i>I</i></button>
+        <button type="button" data-cmd="insertUnorderedList" title="Liste à puces">• Liste</button>
+        <button type="button" data-cmd="removeFormat" title="Effacer la mise en forme">✕ Format</button>
+      </div>
+      <div class="rte-editor" id="w-description" contenteditable="true" spellcheck="true"></div>
+    </div>
+
+    <button type="button" class="link-btn" id="btn-suggest-desc">✨ Proposer un brouillon de description</button>
+
+    <div class="wizard-nav wizard-nav-publish">
+      <button type="button" class="btn btn-ghost" id="btn-step3-back">← Retour</button>
+      <button type="button" class="btn btn-outline" id="btn-save-draft">Enregistrer en brouillon</button>
+      <button type="button" class="btn btn-cta" id="btn-publish">Publier l'annonce</button>
+    </div>
+  </section>
+</div>
 ```
 
   </div>
@@ -1610,13 +1685,14 @@ const state = {
   parks: [],
   favorites: new Set(),
   filters: {
-    transaction: "", situation: "", location: "", budgetMin: null, budgetMax: null,
+    transaction: "", typeBien: "", location: "",
+    budgetMin: null, budgetMax: null,
+    chambres: "", couchages: "", voyageurs: "",
+    dateDebut: "", dateFin: "",
     brands: new Set(), yearMin: null, yearMax: null, surfaceMin: null,
-    chambres: "", couchages: "", equipements: new Set(),
-    periode: "", loyerMax: null, sousLocation: false, sansDroit: false,
-    typeBien: ""
+    equipements: new Set(), selectionClub: false
   },
-  wizard: { step: 1, photos: {}, startedAt: null, timerHandle: null }
+  wizard: { step: 1, photos: [], mode: null, editingId: null }
 };
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -2163,23 +2239,22 @@ async function runAISearch() {
   try {
     const result = await callAIAssist("search", { query });
 
-    if (result.transaction === "Parcelle") {
-      state.filters.transaction = "Parcelle";
-      state.filters.typeBien = "";
-    } else {
-      state.filters.transaction = result.transaction || "";
-      if (result.type_bien) state.filters.typeBien = result.type_bien;
-    }
+    state.filters.transaction = result.transaction || "";
+    if (result.type_bien) state.filters.typeBien = result.type_bien;
     if (result.budget_max != null) state.filters.budgetMax = result.budget_max;
     if (result.chambres_min != null) {
       state.filters.chambres = result.chambres_min >= 4 ? "4" : String(result.chambres_min);
     }
     if (result.couchages_min != null) {
-      state.filters.couchages = result.couchages_min >= 8 ? "8" : (result.couchages_min <= 2 ? "2" : String(result.couchages_min));
+      const n = result.couchages_min;
+      // Le nombre de personnes sert de capacité en location, de couchages en vente
+      state.filters.voyageurs = n >= 8 ? "8" : (n <= 2 ? "2" : String(n));
+      state.filters.couchages = n >= 8 ? "8" : (n <= 2 ? "2" : String(n));
     }
     if (Array.isArray(result.equipements) && result.equipements.length) {
       state.filters.equipements = new Set(result.equipements);
     }
+    // La recherche libre porte désormais sur le titre / la marque / le modèle
     if (result.mots_cles_localisation) {
       state.filters.location = result.mots_cles_localisation.toLowerCase();
     }
@@ -2204,50 +2279,55 @@ async function runAISearch() {
 function syncFilterControlsFromState() {
   const f = state.filters;
 
-  const transGroup = $('[data-filter="transaction"]');
-  if (transGroup) $$("button", transGroup).forEach(b => b.classList.toggle("active", b.dataset.value === f.transaction));
+  // Groupes de boutons : on reflète l'état courant sur chaque groupe
+  ["transaction", "typeBien", "chambres", "couchages", "voyageurs"].forEach(key => {
+    const group = $(`[data-filter="${key}"]`);
+    if (group) $$("button", group).forEach(b => b.classList.toggle("active", b.dataset.value === (f[key] || "")));
+  });
 
-  const situGroup = $('[data-filter="situation"]');
-  if (situGroup) $$("button", situGroup).forEach(b => b.classList.toggle("active", b.dataset.value === f.situation));
+  const setVal = (sel, val) => { const el = $(sel); if (el) el.value = (val ?? "") === "" ? "" : val; };
+  setVal("#filter-location", f.location);
+  setVal("#filter-budget-min", f.budgetMin);
+  setVal("#filter-budget-max", f.budgetMax);
+  setVal("#filter-year-min", f.yearMin);
+  setVal("#filter-year-max", f.yearMax);
+  setVal("#filter-surface-min", f.surfaceMin);
+  setVal("#filter-date-debut", f.dateDebut);
+  setVal("#filter-date-fin", f.dateFin);
 
-  const chambresGroup = $('[data-filter="chambres"]');
-  if (chambresGroup) $$("button", chambresGroup).forEach(b => b.classList.toggle("active", b.dataset.value === f.chambres));
+  const clubCb = $("#filter-selection-club");
+  if (clubCb) clubCb.checked = !!f.selectionClub;
 
-  const couchagesGroup = $('[data-filter="couchages"]');
-  if (couchagesGroup) $$("button", couchagesGroup).forEach(b => b.classList.toggle("active", b.dataset.value === f.couchages));
+  $$("#filter-brands button").forEach(b => b.classList.toggle("active", f.brands.has(b.dataset.value)));
 
+  applyFilterContext();
   $$("#filter-equipements input").forEach(cb => { cb.checked = f.equipements.has(cb.value); });
 
-  const budgetMaxInput = $("#filter-budget-max");
-  if (budgetMaxInput && f.budgetMax != null) budgetMaxInput.value = f.budgetMax;
-
-  const locInput = $("#filter-location");
-  if (locInput) locInput.value = f.location;
-
+  // Pastilles de catégories en haut du catalogue
   $$(".category-pill", $("#category-rail")).forEach(p => p.classList.remove("active"));
-  const matchingPill = f.transaction === "Parcelle"
-    ? null
-    : $(`.category-pill[data-cat-type="${f.typeBien}"]`);
-  if (matchingPill) matchingPill.classList.add("active");
-  else if (!f.typeBien && f.transaction !== "Parcelle") $('.category-pill[data-cat-type=""]')?.classList.add("active");
+  if (f.selectionClub) {
+    $('.category-pill[data-cat-club]')?.classList.add("active");
+  } else if (f.typeBien) {
+    $(`.category-pill[data-cat-type="${f.typeBien}"]`)?.classList.add("active");
+  } else {
+    $('.category-pill[data-cat-type=""]')?.classList.add("active");
+  }
 }
 
-// ===========================================================
-// CATALOGUE + FILTRES
-// ===========================================================
 function renderCatalogue(params) {
   app.innerHTML = "";
   app.appendChild($("#tpl-catalogue").content.cloneNode(true));
 
   if (params?.get("transaction")) state.filters.transaction = params.get("transaction");
-  if (params?.get("situation")) state.filters.situation = params.get("situation");
+  if (params?.get("type")) state.filters.typeBien = params.get("type");
 
-  // brand chips
+  // Marques connues, proposées en filtre (vente uniquement)
   const brandWrap = $("#filter-brands");
   Object.keys(BRAND_CATALOG).forEach(brand => {
     const btn = document.createElement("button");
     btn.textContent = brand;
     btn.dataset.value = brand;
+    if (state.filters.brands.has(brand)) btn.classList.add("active");
     btn.addEventListener("click", () => {
       if (state.filters.brands.has(brand)) state.filters.brands.delete(brand);
       else state.filters.brands.add(brand);
@@ -2257,7 +2337,7 @@ function renderCatalogue(params) {
     brandWrap.appendChild(btn);
   });
 
-  // segmented filters
+  // Groupes de boutons (je souhaite / type / chambres / couchages / voyageurs)
   $$("[data-filter]").forEach(group => {
     const key = group.dataset.filter;
     $$("button", group).forEach(btn => {
@@ -2266,6 +2346,8 @@ function renderCatalogue(params) {
         $$("button", group).forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         state.filters[key] = btn.dataset.value;
+        // Changer de projet (acheter / louer) change les filtres proposés
+        if (key === "transaction") applyFilterContext();
         applyFilters();
       });
     });
@@ -2276,32 +2358,27 @@ function renderCatalogue(params) {
     applyFilters();
   }, 250));
 
-  ["filter-budget-min", "filter-budget-max", "filter-year-min", "filter-year-max", "filter-surface-min", "filter-loyer-max"]
-    .forEach(id => {
-      $("#" + id).addEventListener("input", debounce(e => {
-        const map = {
-          "filter-budget-min": "budgetMin", "filter-budget-max": "budgetMax",
-          "filter-year-min": "yearMin", "filter-year-max": "yearMax",
-          "filter-surface-min": "surfaceMin", "filter-loyer-max": "loyerMax"
-        };
-        state.filters[map[id]] = e.target.value ? Number(e.target.value) : null;
-        applyFilters();
-      }, 250));
-    });
-
-  $$("#filter-equipements input").forEach(cb => {
-    cb.addEventListener("change", () => {
-      if (cb.checked) state.filters.equipements.add(cb.value);
-      else state.filters.equipements.delete(cb.value);
+  const numericFilters = {
+    "filter-budget-min": "budgetMin", "filter-budget-max": "budgetMax",
+    "filter-year-min": "yearMin", "filter-year-max": "yearMax",
+    "filter-surface-min": "surfaceMin"
+  };
+  Object.entries(numericFilters).forEach(([id, key]) => {
+    $("#" + id)?.addEventListener("input", debounce(e => {
+      state.filters[key] = e.target.value ? Number(e.target.value) : null;
       applyFilters();
-    });
+    }, 250));
   });
 
-  $("#filter-souslocation").addEventListener("change", e => {
-    state.filters.sousLocation = e.target.checked; applyFilters();
+  $("#filter-date-debut")?.addEventListener("change", e => {
+    state.filters.dateDebut = e.target.value; applyFilters();
   });
-  $("#filter-sansdroit").addEventListener("change", e => {
-    state.filters.sansDroit = e.target.checked; applyFilters();
+  $("#filter-date-fin")?.addEventListener("change", e => {
+    state.filters.dateFin = e.target.value; applyFilters();
+  });
+
+  $("#filter-selection-club")?.addEventListener("change", e => {
+    state.filters.selectionClub = e.target.checked; applyFilters();
   });
 
   $("#btn-reset-filters").addEventListener("click", () => {
@@ -2310,7 +2387,7 @@ function renderCatalogue(params) {
   });
 
   // Barre de recherche simplifiée à un seul champ — le reste des critères
-  // (projet, budget, marque…) reste disponible dans le panneau de filtres.
+  // reste disponible dans le panneau de filtres.
   $("#quick-search-location").value = state.filters.location;
   $("#quick-search-location").addEventListener("input", debounce(e => {
     state.filters.location = e.target.value.trim().toLowerCase();
@@ -2343,15 +2420,13 @@ function renderCatalogue(params) {
       $$(".category-pill", $("#category-rail")).forEach(p => p.classList.remove("active"));
       pill.classList.add("active");
       if (pill.dataset.catClub) {
-        // "Sélection Club" : on affiche les biens sur parcelle comme mise en avant du club
         state.filters.typeBien = "";
-        state.filters.situation = "sur_parcelle";
+        state.filters.selectionClub = true;
       } else {
         state.filters.typeBien = pill.dataset.catType || "";
-        state.filters.situation = "";
+        state.filters.selectionClub = false;
       }
-      const situGroup = $('[data-filter="situation"]');
-      if (situGroup) $$("button", situGroup).forEach(b => b.classList.toggle("active", b.dataset.value === state.filters.situation));
+      syncFilterControlsFromState();
       applyFilters();
       openFiltersPanel();
     });
@@ -2359,7 +2434,9 @@ function renderCatalogue(params) {
   $(`.category-pill[data-cat-type="${state.filters.typeBien}"]`)?.classList.add("active");
   if (!state.filters.typeBien) $('.category-pill[data-cat-type=""]')?.classList.add("active");
 
-  if (params?.get("transaction") || params?.get("situation")) {
+  applyFilterContext();
+
+  if (params?.get("transaction") || params?.get("type")) {
     syncFilterControlsFromState();
     openFiltersPanel();
   }
@@ -2377,11 +2454,12 @@ function openFiltersPanel() {
 
 function resetFilters() {
   state.filters = {
-    transaction: "", situation: "", location: "", budgetMin: null, budgetMax: null,
+    transaction: "", typeBien: "", location: "",
+    budgetMin: null, budgetMax: null,
+    chambres: "", couchages: "", voyageurs: "",
+    dateDebut: "", dateFin: "",
     brands: new Set(), yearMin: null, yearMax: null, surfaceMin: null,
-    chambres: "", couchages: "", equipements: new Set(),
-    periode: "", loyerMax: null, sousLocation: false, sansDroit: false,
-    typeBien: ""
+    equipements: new Set(), selectionClub: false
   };
 }
 
@@ -2393,45 +2471,55 @@ function debounce(fn, ms) {
 function applyFilters() {
   const f = state.filters;
   const results = state.listings.filter(l => {
+    // Seules les annonces publiées sont visibles des visiteurs.
+    // Brouillons, annonces masquées et biens vendus restent hors catalogue.
     if (l.status !== "publie") return false;
+
+    if (f.transaction && l.transaction !== f.transaction) return false;
     if (f.typeBien && l.type_bien !== f.typeBien) return false;
-    if (f.transaction) {
-      if (f.transaction === "Parcelle" && l.type_bien !== "Parcelle") return false;
-      if (f.transaction !== "Parcelle" && l.transaction !== f.transaction) return false;
-    }
-    if (f.situation && l.situation !== f.situation) return false;
+    if (f.selectionClub && !l.selection_club) return false;
+
+    // Recherche libre : porte sur le titre, la marque, le modèle et la
+    // description — pas seulement sur la localisation, puisqu'il n'y a
+    // désormais qu'un seul camping.
     if (f.location) {
       const haystack = [
-        l.city, l.parks?.city, l.parks?.name, l.parks?.region, l.parks?.department
+        l.title, l.brand, l.model, l.type_bien, l.description
       ].filter(Boolean).join(" ").toLowerCase();
       if (!haystack.includes(f.location)) return false;
     }
-    if (f.budgetMin != null && l.price < f.budgetMin) return false;
-    if (f.budgetMax != null && l.price > f.budgetMax) return false;
-    if (f.brands.size && !f.brands.has(l.brand)) return false;
-    if (f.yearMin != null && l.year < f.yearMin) return false;
-    if (f.yearMax != null && l.year > f.yearMax) return false;
-    if (f.surfaceMin != null && l.surface < f.surfaceMin) return false;
+
+    if (f.budgetMin != null && (l.price == null || l.price < f.budgetMin)) return false;
+    if (f.budgetMax != null && (l.price == null || l.price > f.budgetMax)) return false;
+    if (f.surfaceMin != null && (l.surface == null || l.surface < f.surfaceMin)) return false;
+
     if (f.chambres) {
       const n = Number(f.chambres);
-      if (n === 4 ? l.chambres < 4 : l.chambres !== n) return false;
+      if (n === 4 ? !(l.chambres >= 4) : l.chambres !== n) return false;
     }
+
+    // --- critères propres à la vente ---
+    if (f.brands.size && !f.brands.has(l.brand)) return false;
+    if (f.yearMin != null && (l.year == null || l.year < f.yearMin)) return false;
+    if (f.yearMax != null && (l.year == null || l.year > f.yearMax)) return false;
     if (f.couchages) {
       const n = Number(f.couchages);
-      if (n === 8 ? l.couchages < 8 : l.couchages !== n) return false;
+      if (n === 8 ? !(l.couchages >= 8) : l.couchages !== n) return false;
     }
+
+    // --- critères propres à la location ---
+    if (f.voyageurs) {
+      const n = Number(f.voyageurs);
+      const cap = l.capacite_max ?? l.couchages;
+      if (cap == null || cap < n) return false;
+    }
+    // Le séjour demandé doit tenir dans la période de disponibilité.
+    if (f.dateDebut && l.dispo_fin && f.dateDebut > l.dispo_fin) return false;
+    if (f.dateFin && l.dispo_debut && f.dateFin < l.dispo_debut) return false;
+
     if (f.equipements.size) {
       const eq = new Set(l.equipements || []);
       for (const e of f.equipements) if (!eq.has(e)) return false;
-    }
-    if (l.situation === "sur_parcelle") {
-      const effectivePeriode = l.periode_override || String(l.parks?.open_months || "");
-      const effectiveSousLoc = l.sous_location != null ? l.sous_location : l.parks?.sublet_allowed;
-      const effectiveSansDroit = l.sans_droit_entree != null ? l.sans_droit_entree : l.parks?.no_entry_fee;
-      if (f.periode && effectivePeriode !== f.periode) return false;
-      if (f.loyerMax != null && l.rent_annual > f.loyerMax) return false;
-      if (f.sousLocation && !effectiveSousLoc) return false;
-      if (f.sansDroit && !effectiveSansDroit) return false;
     }
     return true;
   });
@@ -2439,6 +2527,49 @@ function applyFilters() {
   renderListingsGrid(results, "#grid-listings");
   const count = $("#results-count");
   if (count) count.textContent = `${results.length} bien${results.length > 1 ? "s" : ""} trouvé${results.length > 1 ? "s" : ""}`;
+}
+
+// Affiche uniquement les filtres pertinents : les critères de vente
+// (marque, année, couchages) n'ont pas de sens quand on cherche un
+// séjour, et inversement pour les dates et le nombre de voyageurs.
+function applyFilterContext() {
+  const t = state.filters.transaction;
+  const showVente = t !== "Location";
+  const showLoc = t !== "Vente";
+
+  $$(".filter-vente-only").forEach(el => el.hidden = !showVente);
+  $$(".filter-location-only").forEach(el => el.hidden = !showLoc);
+  $$(".vente-only").forEach(el => el.hidden = !showVente);
+
+  const budgetLabel = $("#label-filter-budget");
+  if (budgetLabel) budgetLabel.textContent = t === "Location" ? "Tarif par nuit (€)" : "Budget (€)";
+
+  renderFilterEquipChips();
+}
+
+// Les cases d'équipements suivent le contexte : celles de la location
+// (Wi-Fi, télévision…) ne s'affichent pas pour un achat.
+function renderFilterEquipChips() {
+  const wrap = $("#filter-equipements");
+  if (!wrap) return;
+  const t = state.filters.transaction;
+  const list = t === "Location" ? EQUIPEMENTS_LOCATION
+             : t === "Vente" ? EQUIPEMENTS_VENTE
+             : [...new Map([...EQUIPEMENTS_VENTE, ...EQUIPEMENTS_LOCATION]).entries()];
+
+  wrap.innerHTML = "";
+  list.forEach(([value, label]) => {
+    const lab = document.createElement("label");
+    lab.innerHTML = `<input type="checkbox" value="${value}"> ${label}`;
+    const cb = lab.querySelector("input");
+    cb.checked = state.filters.equipements.has(value);
+    cb.addEventListener("change", () => {
+      if (cb.checked) state.filters.equipements.add(value);
+      else state.filters.equipements.delete(value);
+      applyFilters();
+    });
+    wrap.appendChild(lab);
+  });
 }
 
 function renderListingsGrid(listings, gridSelector) {
@@ -2452,6 +2583,13 @@ function renderListingsGrid(listings, gridSelector) {
   listings.forEach(l => grid.appendChild(buildListingCard(l)));
 }
 
+// Récupère la liste des photos d'une annonce, en gérant les annonces
+// créées avant la refonte (anciennes colonnes photo_*).
+function listingPhotos(l) {
+  if (Array.isArray(l.photos) && l.photos.length) return l.photos;
+  return [l.photo_exterieur, l.photo_salon, l.photo_cuisine].filter(Boolean);
+}
+
 function buildListingCard(l) {
   const node = $("#tpl-listing-card").content.cloneNode(true);
   const card = $(".listing-card", node);
@@ -2460,25 +2598,39 @@ function buildListingCard(l) {
     navigate("listing/" + l.id);
   });
 
+  const photos = listingPhotos(l);
   const img = $("img", node);
-  img.src = l.photo_exterieur || placeholderImg();
-  img.alt = `${l.brand || ""} ${l.model || ""}`.trim();
+  img.src = photos[0] || placeholderImg();
+  img.alt = l.title || "";
 
   const badge = $(".card-badge", node);
-  badge.textContent = l.situation === "sur_parcelle" ? "Sur parcelle" : "À déplacer";
+  if (l.status === "vendu") {
+    badge.textContent = "Vendu";
+    badge.classList.add("badge-club");
+  } else if (l.selection_club) {
+    badge.textContent = "Sélection Club";
+    badge.classList.add("badge-club");
+  } else {
+    badge.textContent = l.transaction === "Location" ? "À louer" : "À vendre";
+  }
 
-  $(".card-title", node).textContent = `${l.type_bien} ${l.brand || ""} ${l.model || ""}`.trim();
+  // Le titre libre saisi par l'admin prime ; sinon on reconstruit
+  $(".card-title", node).textContent =
+    l.title || `${l.type_bien} ${l.brand || ""} ${l.model || ""}`.trim();
+
   $(".card-rating", node).textContent = l.etat || "";
 
-  $(".card-meta", node).textContent = [
-    l.situation === "sur_parcelle" ? l.parks?.name : (l.city || "Hors parcelle"),
-    l.year, l.surface ? `${l.surface} m²` : null
-  ].filter(Boolean).join(" · ");
+  const meta = l.transaction === "Location"
+    ? [l.capacite_max ? `${l.capacite_max} pers.` : null,
+       l.chambres ? `${l.chambres} ch.` : null,
+       l.surface ? `${l.surface} m²` : null]
+    : [l.year, l.chambres ? `${l.chambres} ch.` : null,
+       l.surface ? `${l.surface} m²` : null];
+  $(".card-meta", node).textContent = meta.filter(Boolean).join(" · ");
 
   const priceEl = $(".card-price", node);
-  const priceLabel = l.transaction === "Location" ? fmtEUR(l.price) : fmtEUR(l.price);
-  const suffix = l.transaction === "Location" ? " / mois" : " net vendeur";
-  priceEl.innerHTML = `${priceLabel}<span class="price-suffix">${suffix}</span>`;
+  const suffix = l.transaction === "Location" ? " / nuit" : "";
+  priceEl.innerHTML = `${fmtEUR(l.price)}<span class="price-suffix">${suffix}</span>`;
 
   const favBtn = $(".fav-toggle", node);
   if (state.favorites.has(l.id)) favBtn.classList.add("is-fav");
@@ -2520,7 +2672,7 @@ async function renderListingDetail(id) {
   if (!l) { app.innerHTML = `<p>Cette annonce n'existe plus.</p>`; return; }
   app.appendChild($("#tpl-listing-detail").content.cloneNode(true));
 
-  const photos = [l.photo_exterieur, l.photo_salon, l.photo_cuisine].filter(Boolean);
+  const photos = listingPhotos(l);
   $("#detail-main-img").src = photos[0] || placeholderImg();
   const thumbs = $("#detail-thumbs");
   photos.forEach((src, i) => {
@@ -2534,20 +2686,37 @@ async function renderListingDetail(id) {
     thumbs.appendChild(img);
   });
 
-  $("#detail-badge").textContent = l.situation === "sur_parcelle" ? "Sur parcelle" : "À déplacer";
-  $("#detail-title").textContent = `${l.type_bien} ${l.brand || ""} ${l.model || ""}`.trim();
-  $("#detail-price").textContent = l.transaction === "Location" ? `${fmtEUR(l.price)} / mois` : fmtEUR(l.price);
-  $("#detail-location").textContent = l.situation === "sur_parcelle"
-    ? `${l.parks?.name || ""} — ${l.parks?.city || ""}`
-    : `${l.city || ""} ${l.postal_code || ""}`;
+  $("#detail-badge").textContent = l.status === "vendu"
+    ? "Vendu"
+    : (l.transaction === "Location" ? "À louer" : "À vendre");
+  $("#detail-title").textContent =
+    l.title || `${l.type_bien} ${l.brand || ""} ${l.model || ""}`.trim();
+  $("#detail-price").textContent = l.transaction === "Location"
+    ? `${fmtEUR(l.price)} / nuit`
+    : fmtEUR(l.price);
+  $("#detail-location").textContent = [l.parks?.name, l.parks?.city].filter(Boolean).join(" — ");
 
+  // Caractéristiques : seules celles réellement renseignées s'affichent.
   const specs = $("#detail-specs");
-  const specDefs = [
-    ["Année", l.year], ["Surface", l.surface ? l.surface + " m²" : null],
-    ["Chambres", l.chambres], ["Couchages", l.couchages],
-    ["Longueur", l.longueur ? l.longueur + " m" : null], ["Largeur", l.largeur ? l.largeur + " m" : null],
-    ["État", l.etat], ["Salles d'eau", l.salles_eau], ["Pièces", l.pieces]
-  ];
+  const isLoc = l.transaction === "Location";
+  const specDefs = isLoc
+    ? [
+        ["Capacité", l.capacite_max ? l.capacite_max + " pers." : null],
+        ["Chambres", l.chambres],
+        ["Lits", l.nb_lits],
+        ["Salles de bain", l.nb_salles_bain],
+        ["Surface", l.surface ? l.surface + " m²" : null],
+        ["Nuits minimum", l.nuits_min],
+      ]
+    : [
+        ["Type", l.type_bien],
+        ["Année", l.year],
+        ["Chambres", l.chambres],
+        ["Couchages", l.couchages],
+        ["Surface", l.surface ? l.surface + " m²" : null],
+        ["Marque", l.brand],
+        ["Modèle", l.model],
+      ];
   specDefs.filter(([, v]) => v != null && v !== "").forEach(([label, value]) => {
     const div = document.createElement("div");
     div.className = "spec-item";
@@ -2555,39 +2724,24 @@ async function renderListingDetail(id) {
     specs.appendChild(div);
   });
 
-  const equipLabels = {
-    climatisation_reversible: "Climatisation réversible", terrasse_couverte: "Terrasse couverte",
-    terrasse_semi_couverte: "Terrasse semi-couverte",
-    lave_vaisselle: "Lave-vaisselle", lave_linge: "Lave-linge",
-    isolation_4_saisons: "Isolation 4 saisons", double_vitrage: "Double vitrage"
-  };
   const equipWrap = $("#detail-equip");
   (l.equipements || []).forEach(e => {
     const span = document.createElement("span");
-    span.textContent = equipLabels[e] || e;
+    span.textContent = EQUIP_LABELS[e] || e;
     equipWrap.appendChild(span);
   });
 
-  if (l.reference) {
-    const refP = document.createElement("p");
-    refP.className = "muted";
-    refP.style.fontSize = ".8rem";
-    refP.style.marginTop = "-14px";
-    refP.textContent = `Référence : ${l.reference}`;
-    $("#detail-equip").before(refP);
+  if (isLoc && (l.dispo_debut || l.dispo_fin)) {
+    const dispo = document.createElement("span");
+    const fmtD = (d) => d ? new Date(d).toLocaleDateString("fr-FR") : "…";
+    dispo.textContent = `Disponible du ${fmtD(l.dispo_debut)} au ${fmtD(l.dispo_fin)}`;
+    equipWrap.appendChild(dispo);
   }
 
-  $("#detail-description").textContent = l.description || "";
-
-  if (l.situation === "hors_parcelle") {
-    $("#detail-transport-block").hidden = false;
-    $("#btn-transport-calc").addEventListener("click", () => {
-      const cp = $("#transport-cp").value.trim();
-      if (!cp) return toast("Indiquez un code postal");
-      const estimate = estimateTransport(cp, l.postal_code);
-      $("#transport-result").textContent = estimate;
-    });
-  }
+  // Description enrichie (paragraphes, gras, listes) saisie par l'admin
+  const descEl = $("#detail-description");
+  if (l.description_html) descEl.innerHTML = l.description_html;
+  else descEl.textContent = l.description || "";
 
   $("#btn-contact-owner").addEventListener("click", () => openContactModal(l));
 
@@ -2600,14 +2754,6 @@ async function renderListingDetail(id) {
   });
 }
 
-function estimateTransport(cpA, cpB) {
-  // Estimation simplifiée basée sur l'écart de codes postaux (proxy de distance)
-  // sans appel API externe — cadre pour brancher une vraie API de distance ensuite.
-  const a = parseInt(cpA, 10) || 0, b = parseInt(cpB, 10) || 0;
-  const proxyDistance = Math.max(10, Math.min(900, Math.abs(a - b) / 3));
-  const cost = Math.round(proxyDistance * 3.2);
-  return `Distance estimée ≈ ${Math.round(proxyDistance)} km — coût de transport indicatif : ${fmtEUR(cost)}`;
-}
 
 // ===========================================================
 // CONTACT MODAL
@@ -2843,30 +2989,79 @@ function renderAdminTab(tab) {
   if (tab === "inbox") return renderAdminInbox(panel);
 }
 
+const STATUS_LABELS = {
+  brouillon: "Brouillon",
+  publie: "En ligne",
+  masque: "Masquée",
+  vendu: "Vendu"
+};
+
 function renderAdminListings(panel) {
   if (!requireAdmin()) return;
   panel.appendChild($("#tpl-admin-listings").content.cloneNode(true));
-  $("#admin-listings-count", panel).textContent = `${state.listings.length} annonce${state.listings.length > 1 ? "s" : ""}`;
+
+  const total = state.listings.length;
+  const enLigne = state.listings.filter(l => l.status === "publie").length;
+  const brouillons = state.listings.filter(l => l.status === "brouillon").length;
+  $("#admin-listings-count", panel).textContent =
+    `${total} annonce${total > 1 ? "s" : ""} · ${enLigne} en ligne${brouillons ? ` · ${brouillons} brouillon${brouillons > 1 ? "s" : ""}` : ""}`;
+
   const table = $("#admin-listings-table", panel);
-  state.listings.forEach(l => {
+
+  if (!total) {
+    table.innerHTML = `<div class="empty-state"><h3>Aucune annonce</h3><p>Cliquez sur « + Nouvelle annonce » pour commencer.</p></div>`;
+    return;
+  }
+
+  // Brouillons d'abord (ce sont eux qui demandent une action)
+  const ordered = [...state.listings].sort((a, b) => {
+    const rank = s => s === "brouillon" ? 0 : s === "publie" ? 1 : 2;
+    return rank(a.status) - rank(b.status);
+  });
+
+  ordered.forEach(l => {
+    const photos = listingPhotos(l);
+    const isVente = l.transaction !== "Location";
     const row = document.createElement("div");
     row.className = "admin-row";
     row.innerHTML = `
-      <img src="${l.photo_exterieur || placeholderImg()}">
+      <img src="${photos[0] || placeholderImg()}" alt="">
       <div>
-        <div class="row-title">${l.type_bien} ${l.brand || ""} ${l.model || ""}</div>
-        <div class="row-sub">${l.transaction} · ${fmtEUR(l.price)} · ${l.situation === "sur_parcelle" ? (l.parks?.name || "Sur parcelle") : "Hors parcelle"}</div>
+        <div class="row-title">${l.title || `${l.type_bien} ${l.brand || ""} ${l.model || ""}`.trim()}</div>
+        <div class="row-sub">${isVente ? "Vente" : "Location"} · ${fmtEUR(l.price)}${isVente ? "" : " / nuit"} · ${photos.length} photo${photos.length > 1 ? "s" : ""}</div>
       </div>
-      <span class="row-status ${l.status === "masque" ? "masque" : ""}">${l.status === "publie" ? "Publiée" : "Masquée"}</span>
+      <span class="row-status ${l.status}">${STATUS_LABELS[l.status] || l.status}</span>
       <div class="admin-row-actions">
-        <button data-action="toggle" title="${l.status === "publie" ? "Masquer" : "Publier"}">${l.status === "publie" ? "Masquer" : "Publier"}</button>
-        <button data-action="delete" title="Supprimer">Suppr.</button>
+        <button data-action="edit">Modifier</button>
+        <button data-action="duplicate">Dupliquer</button>
+        <button data-action="status">${l.status === "publie" ? "Masquer" : "Publier"}</button>
+        ${isVente && l.status !== "vendu" ? `<button data-action="sold">Vendu</button>` : ""}
+        <button data-action="delete">Suppr.</button>
       </div>
     `;
-    $('[data-action="toggle"]', row).addEventListener("click", () => toggleListingStatus(l));
+    $('[data-action="edit"]', row).addEventListener("click", () => openListingEditor(l, false));
+    $('[data-action="duplicate"]', row).addEventListener("click", () => openListingEditor(l, true));
+    $('[data-action="status"]', row).addEventListener("click", () => toggleListingStatus(l));
+    $('[data-action="sold"]', row)?.addEventListener("click", () => markListingSold(l));
     $('[data-action="delete"]', row).addEventListener("click", () => deleteListing(l));
     table.appendChild(row);
   });
+}
+
+// Ouvre le tunnel prérempli. En duplication, on repart d'une copie sans
+// identifiant : équipements, caractéristiques et description sont repris,
+// il ne reste qu'à ajuster titre, prix et photos.
+function openListingEditor(listing, duplicate) {
+  if (!requireAdmin()) return;
+  const source = duplicate
+    ? { ...listing, id: null, title: (listing.title || "") + " (copie)", photos: [] }
+    : listing;
+
+  const adminPanel = $("#admin-panel");
+  adminPanel.innerHTML = "";
+  renderAdminNewListing(adminPanel, source);
+  $$(".admin-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === "new"));
+  toast(duplicate ? "Annonce dupliquée — ajustez et publiez" : "Modification de l'annonce");
 }
 
 async function toggleListingStatus(l) {
@@ -2875,7 +3070,17 @@ async function toggleListingStatus(l) {
   const { error } = await sb.from("listings").update({ status: newStatus }).eq("id", l.id);
   if (error) return toast("Erreur : " + errMsg(error));
   l.status = newStatus;
-  toast(newStatus === "publie" ? "Annonce publiée" : "Annonce masquée");
+  toast(newStatus === "publie" ? "Annonce en ligne" : "Annonce masquée");
+  renderAdminTab("listings");
+}
+
+async function markListingSold(l) {
+  if (!requireAdmin()) return;
+  if (!confirm("Marquer ce bien comme vendu ? Il sortira du catalogue mais restera dans vos annonces.")) return;
+  const { error } = await sb.from("listings").update({ status: "vendu" }).eq("id", l.id);
+  if (error) return toast("Erreur : " + errMsg(error));
+  l.status = "vendu";
+  toast("Bien marqué comme vendu");
   renderAdminTab("listings");
 }
 
@@ -3119,113 +3324,99 @@ async function renderAdminInbox(panel) {
 // ===========================================================
 // ADMIN — TUNNEL "EXPRESS < 3 MIN"
 // ===========================================================
-function renderAdminNewListing(panel) {
+// ===========================================================
+// TUNNEL DE CRÉATION D'ANNONCE — version simplifiée
+// ===========================================================
+// Principe : très peu de champs structurés (uniquement ceux qui servent
+// aux filtres et à l'affichage), puis une grande description libre pour
+// tout le reste. Trois étapes : l'essentiel → photos → description.
+// ===========================================================
+
+// Équipements proposés, selon le type d'annonce. Ce sont exactement les
+// mêmes valeurs que les filtres du catalogue — pas de case qui ne serve
+// à rien côté visiteur.
+const EQUIPEMENTS_VENTE = [
+  ["climatisation", "Climatisation"],
+  ["terrasse", "Terrasse"],
+  ["terrasse_couverte", "Terrasse couverte"],
+  ["lave_vaisselle", "Lave-vaisselle"],
+  ["lave_linge", "Lave-linge"],
+  ["deux_salles_bain", "2 salles de bain"],
+  ["parcelle_cloturee", "Parcelle clôturée"],
+  ["parking", "Parking"],
+  ["animaux_acceptes", "Animaux acceptés"],
+];
+
+const EQUIPEMENTS_LOCATION = [
+  ["climatisation", "Climatisation"],
+  ["terrasse", "Terrasse"],
+  ["lave_vaisselle", "Lave-vaisselle"],
+  ["lave_linge", "Lave-linge"],
+  ["television", "Télévision"],
+  ["wifi", "Wi-Fi"],
+  ["deux_salles_bain", "2 salles de bain"],
+  ["animaux_acceptes", "Animaux acceptés"],
+];
+
+const EQUIP_LABELS = Object.fromEntries([...EQUIPEMENTS_VENTE, ...EQUIPEMENTS_LOCATION]);
+
+function renderAdminNewListing(panel, existingListing) {
   if (!requireAdmin()) return;
   panel.appendChild($("#tpl-admin-new-listing").content.cloneNode(true));
-  resetWizard();
-  startWizardTimer(panel);
 
-  // Brand datalist
+  const wizard = $(".wizard", panel);
+  const choice = $(".wizard-choice", panel);
+  const body = $(".wizard-body", panel);
+
+  // state.wizard.photos : [{ id, url, file, uploading }]
+  // Une photo déjà en ligne n'a pas de "file" ; une photo tout juste
+  // ajoutée n'a pas encore d'"url" définitive.
+  state.wizard = { step: 1, photos: [], mode: null, editingId: existingListing?.id || null };
+
+  const setMode = (mode) => {
+    state.wizard.mode = mode;
+    wizard.dataset.mode = mode;
+    choice.hidden = true;
+    body.hidden = false;
+
+    const isVente = mode === "Vente";
+    $("#wizard-intro", panel).textContent = isVente
+      ? "Quelques informations essentielles, vos photos, puis une description libre. C'est tout."
+      : "Comme sur un site de réservation : l'essentiel, les photos, puis une description libre.";
+    $("#label-prix", panel).textContent = isVente ? "Prix de vente (€)" : "Tarif (€ / nuit)";
+    $("#label-chambres", panel).textContent = "Chambres";
+    $("#w-title", panel).placeholder = isVente
+      ? "Ex. Mobil-home IRM Riviera 3 chambres, terrasse couverte"
+      : "Ex. Chalet cosy 6 personnes avec terrasse";
+    $("#desc-hint", panel).textContent = isVente
+      ? "État général, rénovations, agencement, terrasse, parcelle, charges, avantages… écrivez librement."
+      : "Agencement, types de lits, équipements, arrivée/départ, ménage, linge, caution… écrivez librement.";
+    $("#w-description", panel).setAttribute("data-placeholder",
+      isVente ? "Décrivez le bien librement…" : "Décrivez le logement librement…");
+
+    // Chambres obligatoire en vente, capacité obligatoire en location
+    $("#req-chambres", panel).hidden = !isVente;
+
+    renderEquipChips(panel, isVente ? EQUIPEMENTS_VENTE : EQUIPEMENTS_LOCATION);
+    if (existingListing) fillWizardFrom(panel, existingListing);
+  };
+
+  $$(".choice-card", panel).forEach(card => {
+    card.addEventListener("click", () => setMode(card.dataset.choice));
+  });
+
+  $("#btn-change-type", panel).addEventListener("click", () => {
+    choice.hidden = false;
+    body.hidden = true;
+  });
+
+  // Marques connues pour l'auto-complétion
   const brandList = $("#brand-list", panel);
   Object.keys(BRAND_CATALOG).forEach(b => {
     const opt = document.createElement("option"); opt.value = b; brandList.appendChild(opt);
   });
 
-  const wBrand = $("#w-brand", panel), wModel = $("#w-model", panel), modelList = $("#model-list", panel);
-  wBrand.addEventListener("input", () => {
-    modelList.innerHTML = "";
-    const models = BRAND_CATALOG[wBrand.value];
-    if (models) Object.keys(models).forEach(m => {
-      const opt = document.createElement("option"); opt.value = m; modelList.appendChild(opt);
-    });
-  });
-  wModel.addEventListener("change", () => {
-    const spec = BRAND_CATALOG[wBrand.value]?.[wModel.value];
-    if (!spec) return;
-    $("#w-surface", panel).value = spec.surface;
-    $("#w-longueur", panel).value = spec.longueur;
-    $("#w-largeur", panel).value = spec.largeur;
-    $("#w-chambres", panel).value = spec.chambres;
-    $("#w-couchages", panel).value = spec.couchages;
-    $("#autofill-hint", panel).hidden = false;
-  });
-
-  // ---------------------------------------------------------------
-  // ASSISTANT IA — complète les champs à partir de la marque/modèle.
-  // Si plusieurs versions existent pour ce modèle (années, chambres
-  // différentes…), on les propose toutes et l'admin choisit celle qui
-  // correspond à son bien. Dans tous les cas, tous les champs restent
-  // modifiables ensuite — l'IA ne fait que pré-remplir un brouillon.
-  // ---------------------------------------------------------------
-  $("#btn-ai-lookup", panel).addEventListener("click", async () => {
-    const brand = wBrand.value.trim();
-    const model = wModel.value.trim();
-    const statusEl = $("#ai-lookup-status", panel);
-    const pickerEl = $("#ai-variant-picker", panel);
-    const btn = $("#btn-ai-lookup", panel);
-
-    if (!brand || !model) {
-      statusEl.hidden = false;
-      statusEl.className = "ai-status is-error";
-      statusEl.textContent = "Renseigne d'abord une marque et un modèle.";
-      return;
-    }
-
-    pickerEl.hidden = true;
-    pickerEl.innerHTML = "";
-    statusEl.hidden = false;
-    statusEl.className = "ai-status is-loading";
-    statusEl.textContent = "L'IA recherche les caractéristiques de ce modèle…";
-    btn.disabled = true;
-
-    try {
-      const result = await callAIAssist("lookup", { brand, model });
-      const variants = Array.isArray(result.variants) ? result.variants : [];
-
-      if (!variants.length) {
-        statusEl.className = "ai-status is-error";
-        statusEl.textContent = result.avertissement || "L'IA ne connaît pas ce modèle avec certitude — renseigne les champs manuellement.";
-        return;
-      }
-
-      if (variants.length === 1) {
-        applyAIVariant(panel, variants[0]);
-        statusEl.className = "ai-status";
-        statusEl.textContent = (result.avertissement || "Champs complétés par l'IA") + " — vérifie et corrige si besoin.";
-        return;
-      }
-
-      // Plusieurs versions possibles : on laisse l'admin choisir.
-      statusEl.className = "ai-status";
-      statusEl.textContent = `${variants.length} versions trouvées pour ce modèle — choisis celle qui correspond :`;
-      pickerEl.hidden = false;
-      variants.forEach((variant) => {
-        const card = document.createElement("div");
-        card.className = "ai-variant-card";
-        const yearRange = variant.year_min === variant.year_max
-          ? `${variant.year_min || "?"}`
-          : `${variant.year_min || "?"}–${variant.year_max || "?"}`;
-        card.innerHTML = `
-          <strong>${variant.label || yearRange}</strong>
-          <span>${yearRange} · ${variant.chambres ?? "?"} chambres · ${variant.couchages ?? "?"} couchages · ${variant.surface_m2 ?? "?"} m²</span>
-        `;
-        card.addEventListener("click", () => {
-          applyAIVariant(panel, variant);
-          statusEl.className = "ai-status";
-          statusEl.textContent = `Version "${variant.label || yearRange}" appliquée — vérifie et corrige si besoin.`;
-          pickerEl.hidden = true;
-        });
-        pickerEl.appendChild(card);
-      });
-    } catch (err) {
-      statusEl.className = "ai-status is-error";
-      statusEl.textContent = "Erreur : " + errMsg(err);
-    } finally {
-      btn.disabled = false;
-    }
-  });
-
-  // Segmented toggles inside wizard (type_bien, transaction, etat)
+  // Groupes de boutons (type de bien)
   $$("[data-field]", panel).forEach(group => {
     $$("button", group).forEach(btn => {
       btn.addEventListener("click", () => {
@@ -3235,223 +3426,427 @@ function renderAdminNewListing(panel) {
     });
   });
 
-  $("#btn-step1-next", panel).addEventListener("click", () => goToStep(2, panel));
+  setupPhotoStep(panel);
+  setupRichText(panel);
+  setupAILookup(panel);
+
+  $("#btn-step1-next", panel).addEventListener("click", () => {
+    if (validateStep1(panel)) goToStep(2, panel);
+  });
   $("#btn-step2-back", panel).addEventListener("click", () => goToStep(1, panel));
-  $("#btn-step2-next", panel).addEventListener("click", () => goToStep(3, panel));
+  $("#btn-step2-next", panel).addEventListener("click", () => {
+    if (state.wizard.photos.length === 0) return toast("Ajoutez au moins une photo");
+    goToStep(3, panel);
+  });
   $("#btn-step3-back", panel).addEventListener("click", () => goToStep(2, panel));
 
-  // Situation toggle
-  const situationGroup = $('[data-field="situation"]', panel);
-  $$("button", situationGroup).forEach(btn => {
-    btn.addEventListener("click", () => {
-      const isPark = btn.dataset.value === "sur_parcelle";
-      $("#situation-sur-parcelle", panel).hidden = !isPark;
-      $("#situation-hors-parcelle", panel).hidden = isPark;
-      $("#situation-park-extra", panel).hidden = !isPark;
-    });
+  $("#btn-save-draft", panel).addEventListener("click", () => saveListing(panel, "brouillon"));
+  $("#btn-publish", panel).addEventListener("click", () => saveListing(panel, "publie"));
+
+  $("#btn-suggest-desc", panel).addEventListener("click", () => {
+    const d = collectWizardData(panel);
+    $("#w-description", panel).innerHTML = suggestDescriptionHtml(d);
   });
 
-  // Le site ne gère plus qu'un seul domaine (Parc de la Chesnaie) : pas de
-  // sélecteur, on affiche son nom et on pré-remplit le loyer indicatif.
-  const fixedPark = state.parks[0];
-  const parkLabelEl = $("#fixed-park-label", panel);
-  if (fixedPark) {
-    const cityLine = [fixedPark.city, fixedPark.postal_code].filter(Boolean).join(" ");
-    parkLabelEl.textContent = `📍 ${fixedPark.name}${cityLine ? " — " + cityLine : ""}`;
-    if (fixedPark.default_rent) $("#w-rent", panel).value = fixedPark.default_rent;
-  } else {
-    parkLabelEl.textContent = "⚠️ Renseigne d'abord les infos du Parc dans l'onglet \"Le Parc de la Chesnaie\".";
-  }
+  // En mode duplication / modification, on préremplit tout de suite
+  if (existingListing) setMode(existingListing.transaction || "Vente");
+}
 
-  // Equipements chip toggle
-  $$("#w-equipements button", panel).forEach(btn => {
+function renderEquipChips(panel, list) {
+  const wrap = $("#w-equipements", panel);
+  const previouslyActive = new Set($$("button.active", wrap).map(b => b.dataset.value));
+  wrap.innerHTML = "";
+  list.forEach(([value, label]) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.dataset.value = value;
+    btn.textContent = label;
+    if (previouslyActive.has(value)) btn.classList.add("active");
     btn.addEventListener("click", () => btn.classList.toggle("active"));
+    wrap.appendChild(btn);
   });
-
-  // Photo upload
-  $$(".photo-slot input", panel).forEach(input => {
-    input.addEventListener("change", async () => {
-      const file = input.files[0];
-      if (!file) return;
-      const slot = input.dataset.slotInput;
-      state.wizard.photos[slot] = file;
-      const slotEl = input.closest(".photo-slot");
-      slotEl.classList.add("filled");
-      if (file.type.startsWith("image/")) {
-        const url = URL.createObjectURL(file);
-        const img = document.createElement("img");
-        img.src = url;
-        slotEl.querySelector("img")?.remove();
-        slotEl.appendChild(img);
-      } else {
-        slotEl.querySelector("span").textContent = "✓ Vidéo ajoutée";
-      }
-    });
-  });
-
-  $("#btn-regen-desc", panel).addEventListener("click", () => {
-    $("#w-description", panel).value = generateDescription(panel);
-  });
-
-  $("#btn-publish", panel).addEventListener("click", () => publishListing(panel));
-}
-
-function resetWizard() {
-  state.wizard = { step: 1, photos: {}, startedAt: Date.now(), timerHandle: null };
-}
-
-function startWizardTimer(panel) {
-  clearInterval(state.wizard.timerHandle);
-  const timerEl = $("#wizard-timer", panel);
-  state.wizard.timerHandle = setInterval(() => {
-    const elapsed = Math.floor((Date.now() - state.wizard.startedAt) / 1000);
-    const m = Math.floor(elapsed / 60), s = elapsed % 60;
-    if (timerEl) timerEl.textContent = `${m}:${String(s).padStart(2, "0")}`;
-  }, 1000);
 }
 
 function goToStep(step, panel) {
   state.wizard.step = step;
   $$(".wizard-panel", panel).forEach(p => p.classList.toggle("active", Number(p.dataset.panel) === step));
   $$(".wizard-step", panel).forEach(s => s.classList.toggle("active", Number(s.dataset.step) <= step));
-
-  if (step === 3) $("#w-description", panel).value = generateDescription(panel);
+  $(".wizard", panel)?.scrollIntoView?.({ behavior: "smooth", block: "start" });
 }
 
-// Applique une variante proposée par l'IA aux champs du formulaire.
-// Tous les champs restent modifiables ensuite — rien n'est verrouillé.
+// ---------- Validation : très peu de champs obligatoires ----------
+function validateStep1(panel) {
+  const isVente = state.wizard.mode === "Vente";
+  const title = $("#w-title", panel).value.trim();
+  const price = $("#w-price", panel).value;
+
+  if (!title) { toast("Donnez un titre à l'annonce"); $("#w-title", panel).focus(); return false; }
+  if (!price) { toast(isVente ? "Indiquez le prix de vente" : "Indiquez le tarif"); $("#w-price", panel).focus(); return false; }
+
+  if (isVente && !$("#w-chambres", panel).value) {
+    toast("Indiquez le nombre de chambres"); $("#w-chambres", panel).focus(); return false;
+  }
+  if (!isVente && !$("#w-capacite", panel).value) {
+    toast("Indiquez la capacité maximale"); $("#w-capacite", panel).focus(); return false;
+  }
+  return true;
+}
+
+// ---------- ÉTAPE 2 : photos multiples, réordonnables ----------
+function setupPhotoStep(panel) {
+  const input = $("#w-photos-input", panel);
+  const dropzone = $("#photo-dropzone", panel);
+
+  const addFiles = (files) => {
+    [...files].filter(f => f.type.startsWith("image/")).forEach(file => {
+      state.wizard.photos.push({
+        id: "p" + Math.random().toString(36).slice(2),
+        file,
+        url: URL.createObjectURL(file),
+        uploaded: false
+      });
+    });
+    renderPhotoThumbs(panel);
+  };
+
+  input.addEventListener("change", () => { addFiles(input.files); input.value = ""; });
+
+  ["dragenter", "dragover"].forEach(ev =>
+    dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add("is-dragover"); }));
+  ["dragleave", "drop"].forEach(ev =>
+    dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove("is-dragover"); }));
+  dropzone.addEventListener("drop", e => {
+    if (e.dataTransfer?.files?.length) addFiles(e.dataTransfer.files);
+  });
+}
+
+function renderPhotoThumbs(panel) {
+  const wrap = $("#photo-sortable", panel);
+  wrap.innerHTML = "";
+
+  state.wizard.photos.forEach((photo, index) => {
+    const el = document.createElement("div");
+    el.className = "photo-thumb";
+    el.draggable = true;
+    el.dataset.id = photo.id;
+    el.innerHTML = `
+      <img src="${photo.url}" alt="">
+      ${index === 0 ? '<span class="thumb-main">Principale</span>' : ""}
+      <button type="button" class="thumb-remove" title="Supprimer">✕</button>
+    `;
+
+    $(".thumb-remove", el).addEventListener("click", (e) => {
+      e.stopPropagation();
+      state.wizard.photos = state.wizard.photos.filter(p => p.id !== photo.id);
+      renderPhotoThumbs(panel);
+    });
+
+    // Glisser-déposer pour réordonner (la première photo = photo principale)
+    el.addEventListener("dragstart", () => {
+      el.classList.add("dragging");
+      state.wizard.draggingId = photo.id;
+    });
+    el.addEventListener("dragend", () => {
+      el.classList.remove("dragging");
+      state.wizard.draggingId = null;
+      $$(".photo-thumb", wrap).forEach(t => t.classList.remove("drag-over"));
+    });
+    el.addEventListener("dragover", (e) => { e.preventDefault(); el.classList.add("drag-over"); });
+    el.addEventListener("dragleave", () => el.classList.remove("drag-over"));
+    el.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const fromId = state.wizard.draggingId;
+      if (!fromId || fromId === photo.id) return;
+      const list = state.wizard.photos;
+      const from = list.findIndex(p => p.id === fromId);
+      const to = list.findIndex(p => p.id === photo.id);
+      list.splice(to, 0, list.splice(from, 1)[0]);
+      renderPhotoThumbs(panel);
+    });
+
+    wrap.appendChild(el);
+  });
+}
+
+// ---------- ÉTAPE 3 : éditeur de description enrichie ----------
+function setupRichText(panel) {
+  const editor = $("#w-description", panel);
+  $$(".rte-toolbar button", panel).forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      editor.focus();
+      document.execCommand(btn.dataset.cmd, false, null);
+    });
+  });
+  // Colle en texte brut : évite d'importer la mise en forme d'un autre site
+  editor.addEventListener("paste", (e) => {
+    e.preventDefault();
+    const text = (e.clipboardData || window.clipboardData).getData("text/plain");
+    document.execCommand("insertText", false, text);
+  });
+}
+
+// Brouillon de description à partir des champs déjà remplis : un point
+// de départ à retravailler, pas un texte définitif.
+function suggestDescriptionHtml(d) {
+  const parts = [];
+  const bits = [];
+  if (d.chambres) bits.push(`${d.chambres} chambre${d.chambres > 1 ? "s" : ""}`);
+  if (d.couchages) bits.push(`${d.couchages} couchages`);
+  if (d.capacite_max) bits.push(`jusqu'à ${d.capacite_max} personnes`);
+  if (d.surface) bits.push(`${d.surface} m²`);
+
+  if (d.transaction === "Vente") {
+    let intro = `${d.type_bien}${d.brand ? " " + d.brand : ""}${d.model ? " " + d.model : ""}`;
+    if (d.year) intro += ` de ${d.year}`;
+    parts.push(`<p>${intro}${bits.length ? ", " + bits.join(", ") : ""}.</p>`);
+    parts.push(`<p><b>État général :</b> à compléter.</p>`);
+    parts.push(`<p><b>Aménagement et terrasse :</b> à compléter.</p>`);
+    parts.push(`<p><b>Parcelle et charges :</b> à compléter.</p>`);
+  } else {
+    parts.push(`<p>${d.type_bien}${bits.length ? " — " + bits.join(", ") : ""}.</p>`);
+    parts.push(`<p><b>Le logement :</b> à compléter (agencement, literie).</p>`);
+    parts.push(`<p><b>Séjour :</b> arrivée, départ, ménage, linge, caution — à compléter.</p>`);
+  }
+
+  const equips = (d.equipements || []).map(e => EQUIP_LABELS[e]).filter(Boolean);
+  if (equips.length) parts.push(`<ul>${equips.map(e => `<li>${e}</li>`).join("")}</ul>`);
+  return parts.join("");
+}
+
+// ---------- Assistant IA (vente uniquement) ----------
+function setupAILookup(panel) {
+  const btn = $("#btn-ai-lookup", panel);
+  if (!btn) return;
+
+  btn.addEventListener("click", async () => {
+    const brand = $("#w-brand", panel).value.trim();
+    const model = $("#w-model", panel).value.trim();
+    const statusEl = $("#ai-lookup-status", panel);
+    const pickerEl = $("#ai-variant-picker", panel);
+
+    if (!brand || !model) {
+      statusEl.hidden = false;
+      statusEl.className = "ai-status is-error";
+      statusEl.textContent = "Renseignez d'abord une marque et un modèle.";
+      return;
+    }
+
+    pickerEl.hidden = true; pickerEl.innerHTML = "";
+    statusEl.hidden = false;
+    statusEl.className = "ai-status is-loading";
+    statusEl.textContent = "Recherche des caractéristiques de ce modèle…";
+    btn.disabled = true;
+
+    try {
+      const result = await callAIAssist("lookup", { brand, model });
+      const variants = Array.isArray(result.variants) ? result.variants : [];
+
+      if (!variants.length) {
+        statusEl.className = "ai-status is-error";
+        statusEl.textContent = result.avertissement || "Modèle inconnu — renseignez les champs manuellement.";
+        return;
+      }
+      if (variants.length === 1) {
+        applyAIVariant(panel, variants[0]);
+        statusEl.className = "ai-status";
+        statusEl.textContent = "Champs complétés — vérifiez et corrigez si besoin.";
+        return;
+      }
+
+      statusEl.className = "ai-status";
+      statusEl.textContent = `${variants.length} versions trouvées — choisissez la bonne :`;
+      pickerEl.hidden = false;
+      variants.forEach(v => {
+        const years = v.year_min === v.year_max ? `${v.year_min || "?"}` : `${v.year_min || "?"}–${v.year_max || "?"}`;
+        const card = document.createElement("div");
+        card.className = "ai-variant-card";
+        card.innerHTML = `<strong>${v.label || years}</strong>
+          <span>${years} · ${v.chambres ?? "?"} ch. · ${v.couchages ?? "?"} couchages · ${v.surface_m2 ?? "?"} m²</span>`;
+        card.addEventListener("click", () => {
+          applyAIVariant(panel, v);
+          statusEl.textContent = `Version « ${v.label || years} » appliquée — vérifiez et corrigez si besoin.`;
+          pickerEl.hidden = true;
+        });
+        pickerEl.appendChild(card);
+      });
+    } catch (err) {
+      statusEl.className = "ai-status is-error";
+      statusEl.textContent = "Assistant indisponible : " + errMsg(err);
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
 function applyAIVariant(panel, v) {
-  if (v.year_min) $("#w-year", panel).value = v.year_min;
-  if (v.surface_m2 != null) $("#w-surface", panel).value = v.surface_m2;
-  if (v.longueur_m != null) $("#w-longueur", panel).value = v.longueur_m;
-  if (v.largeur_m != null) $("#w-largeur", panel).value = v.largeur_m;
-  if (v.chambres != null) $("#w-chambres", panel).value = v.chambres;
-  if (v.couchages != null) $("#w-couchages", panel).value = v.couchages;
-  if (v.pieces != null) $("#w-pieces", panel).value = v.pieces;
-  if (v.plan_amenagement) $("#w-plan", panel).value = v.plan_amenagement;
+  const set = (sel, val) => { if (val != null && val !== "") $(sel, panel).value = val; };
+  set("#w-year", v.year_min);
+  set("#w-surface", v.surface_m2);
+  set("#w-chambres", v.chambres);
+  set("#w-couchages", v.couchages);
 
   const equipSet = new Set(v.equipements_origine || []);
   $$("#w-equipements button", panel).forEach(btn => {
-    btn.classList.toggle("active", equipSet.has(btn.dataset.value));
+    if (equipSet.has(btn.dataset.value)) btn.classList.add("active");
   });
-
-  $("#autofill-hint", panel).hidden = false;
 }
 
-function collectWizardData(panel) {
-  const getActive = (field) => $(`[data-field="${field}"] button.active`, panel)?.dataset.value;
-  const equipements = $$("#w-equipements button.active", panel).map(b => b.dataset.value);
-  const situation = getActive("situation") || "sur_parcelle";
-
-  return {
-    type_bien: getActive("type_bien") || "Mobil-home",
-    transaction: getActive("transaction") || "Vente",
-    brand: $("#w-brand", panel).value || null,
-    model: $("#w-model", panel).value || null,
-    year: numOrNull($("#w-year", panel).value),
-    etat: getActive("etat") || "Très bon état",
-    surface: numOrNull($("#w-surface", panel).value),
-    longueur: numOrNull($("#w-longueur", panel).value),
-    largeur: numOrNull($("#w-largeur", panel).value),
-    chambres: numOrNull($("#w-chambres", panel).value),
-    couchages: numOrNull($("#w-couchages", panel).value),
-    salles_eau: numOrNull($("#w-sdb", panel).value),
-    pieces: numOrNull($("#w-pieces", panel).value),
-    plan_amenagement: $("#w-plan", panel).value || null,
-    situation,
-    park_id: situation === "sur_parcelle" ? (state.parks[0]?.id || null) : null,
-    rent_annual: situation === "sur_parcelle" ? numOrNull($("#w-rent", panel).value) : null,
-    city: situation === "hors_parcelle" ? $("#w-city", panel).value : null,
-    postal_code: situation === "hors_parcelle" ? $("#w-cp", panel).value : null,
-    periode_override: situation === "sur_parcelle" ? (getActive("periode_override") || null) : null,
-    sous_location: situation === "sur_parcelle" ? $("#w-souslocation", panel).checked : null,
-    sans_droit_entree: situation === "sur_parcelle" ? $("#w-sansdroit", panel).checked : null,
-    equipements,
-    reference: $("#w-reference", panel).value || null,
-    price: numOrNull($("#w-price", panel).value)
-  };
-}
-
+// ---------- Collecte et enregistrement ----------
 function numOrNull(v) { return v === "" || v == null ? null : Number(v); }
 
-function generateDescription(panel) {
-  const d = collectWizardData(panel);
-  const parkName = state.parks.find(p => p.id === d.park_id)?.name;
-  const equipLabels = {
-    climatisation_reversible: "climatisation réversible", terrasse_couverte: "terrasse couverte",
-    terrasse_semi_couverte: "terrasse semi-couverte",
-    lave_vaisselle: "lave-vaisselle", lave_linge: "lave-linge",
-    isolation_4_saisons: "isolation 4 saisons", double_vitrage: "double vitrage"
-  };
-  const equipText = d.equipements.map(e => equipLabels[e]).filter(Boolean).join(", ");
+function collectWizardData(panel) {
+  const isVente = state.wizard.mode === "Vente";
+  const getActive = (field) => $(`[data-field="${field}"] button.active`, panel)?.dataset.value;
 
-  const action = d.transaction === "Vente" ? "À vendre" : "À louer";
-  let txt = `${action} - Club Country Village : ${d.type_bien} ${d.brand || ""} ${d.model || ""}`.trim();
-  if (d.year) txt += ` (${d.year})`;
-  if (d.surface) txt += ` de ${d.surface} m²`;
-  if (d.etat) txt += ` en ${d.etat.toLowerCase()}`;
-  txt += ".";
-  if (d.chambres || d.couchages) {
-    txt += ` ${d.chambres ? d.chambres + " chambre" + (d.chambres > 1 ? "s" : "") : ""}${d.chambres && d.couchages ? ", " : ""}${d.couchages ? d.couchages + " couchages" : ""}.`;
-  }
-  if (d.pieces) txt += ` ${d.pieces} pièces.`;
-  if (d.plan_amenagement) txt += ` ${d.plan_amenagement}.`;
-  if (d.situation === "sur_parcelle" && parkName) txt += ` Installé sur le domaine ${parkName}.`;
-  if (d.situation === "hors_parcelle" && d.city) txt += ` Actuellement situé à ${d.city}, à déplacer.`;
-  if (equipText) txt += ` Équipements : ${equipText}.`;
-  if (d.sans_droit_entree) txt += ` Sans droit d'entrée.`;
-  if (d.sous_location) txt += ` Sous-location autorisée.`;
-  return txt;
+  return {
+    transaction: state.wizard.mode,
+    title: $("#w-title", panel).value.trim(),
+    type_bien: getActive("type_bien") || "Mobil-home",
+    price: numOrNull($("#w-price", panel).value),
+    chambres: numOrNull($("#w-chambres", panel).value),
+    couchages: numOrNull($("#w-couchages", panel).value),
+    surface: numOrNull($("#w-surface", panel).value),
+
+    // Vente
+    year: isVente ? numOrNull($("#w-year", panel).value) : null,
+    brand: isVente ? ($("#w-brand", panel).value.trim() || null) : null,
+    model: isVente ? ($("#w-model", panel).value.trim() || null) : null,
+
+    // Location
+    capacite_max: !isVente ? numOrNull($("#w-capacite", panel).value) : null,
+    nb_lits: !isVente ? numOrNull($("#w-lits", panel).value) : null,
+    nb_salles_bain: !isVente ? numOrNull($("#w-sdb", panel).value) : null,
+    dispo_debut: !isVente ? ($("#w-dispo-debut", panel).value || null) : null,
+    dispo_fin: !isVente ? ($("#w-dispo-fin", panel).value || null) : null,
+    nuits_min: !isVente ? numOrNull($("#w-nuits-min", panel).value) : null,
+
+    equipements: $$("#w-equipements button.active", panel).map(b => b.dataset.value),
+    selection_club: $("#w-selection-club", panel).checked,
+    description_html: $("#w-description", panel).innerHTML.trim(),
+
+    // Toutes les annonces sont rattachées au Parc de la Chesnaie
+    situation: "sur_parcelle",
+    park_id: state.parks[0]?.id || null,
+  };
 }
 
-async function uploadPhoto(file, listingId, slot) {
-  const ext = file.name.split(".").pop();
-  const path = `${listingId}/${slot}.${ext}`;
+function fillWizardFrom(panel, l) {
+  const set = (sel, val) => { if (val != null && val !== "") $(sel, panel).value = val; };
+  set("#w-title", l.title);
+  set("#w-price", l.price);
+  set("#w-chambres", l.chambres);
+  set("#w-couchages", l.couchages);
+  set("#w-surface", l.surface);
+  set("#w-year", l.year);
+  set("#w-brand", l.brand);
+  set("#w-model", l.model);
+  set("#w-capacite", l.capacite_max);
+  set("#w-lits", l.nb_lits);
+  set("#w-sdb", l.nb_salles_bain);
+  set("#w-dispo-debut", l.dispo_debut);
+  set("#w-dispo-fin", l.dispo_fin);
+  set("#w-nuits-min", l.nuits_min);
+
+  $$(`[data-field="type_bien"] button`, panel).forEach(b =>
+    b.classList.toggle("active", b.dataset.value === l.type_bien));
+
+  const equipSet = new Set(l.equipements || []);
+  $$("#w-equipements button", panel).forEach(b =>
+    b.classList.toggle("active", equipSet.has(b.dataset.value)));
+
+  $("#w-selection-club", panel).checked = !!l.selection_club;
+  $("#w-description", panel).innerHTML = l.description_html || l.description || "";
+
+  // Les photos existantes sont reprises telles quelles (déjà en ligne)
+  state.wizard.photos = (l.photos || []).map(url => ({
+    id: "p" + Math.random().toString(36).slice(2),
+    url, uploaded: true
+  }));
+  renderPhotoThumbs(panel);
+}
+
+async function uploadListingPhoto(file, listingId, index) {
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+  const path = `listing/${listingId}/${Date.now()}-${index}.${ext}`;
   const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
   if (error) { console.error(error); return null; }
   const { data } = sb.storage.from("listing-media").getPublicUrl(path);
   return data.publicUrl;
 }
 
-async function publishListing(panel) {
+async function saveListing(panel, status) {
   if (!requireAdmin()) return;
+
   const d = collectWizardData(panel);
-  if (!d.price) return toast("Merci d'indiquer un prix");
-  if (!state.wizard.photos.exterieur || !state.wizard.photos.salon || !state.wizard.photos.cuisine) {
-    return toast("Les 3 photos obligatoires (extérieur, salon, cuisine) sont requises");
+  const publishing = status === "publie";
+
+  // Contrôles : stricts pour une publication, souples pour un brouillon
+  if (!d.title) { toast("Donnez un titre à l'annonce"); return goToStep(1, panel); }
+  if (publishing) {
+    if (!d.price) { toast("Indiquez un prix"); return goToStep(1, panel); }
+    if (!state.wizard.photos.length) { toast("Ajoutez au moins une photo"); return goToStep(2, panel); }
+    const descText = $("#w-description", panel).textContent.trim();
+    if (!descText) { toast("Rédigez une description"); return goToStep(3, panel); }
   }
 
-  const description = $("#w-description", panel).value || generateDescription(panel);
-  const meta_title = `${d.type_bien} ${d.brand || ""} ${d.model || ""} ${d.transaction === "Location" ? "à louer" : "à vendre"} - Club Country Village`.replace(/\s+/g, " ").trim();
-  const meta_description = description.slice(0, 155);
+  const btns = [$("#btn-publish", panel), $("#btn-save-draft", panel)];
+  btns.forEach(b => b.disabled = true);
+  const publishBtn = $("#btn-publish", panel);
+  const originalLabel = publishBtn.textContent;
+  publishBtn.textContent = "Enregistrement…";
 
-  const payload = {
-    ...d, description, meta_title, meta_description,
-    created_by: state.user.id, status: "publie"
-  };
+  try {
+    const meta_title = `${d.title} — Club Country Village`;
+    const meta_description = ($("#w-description", panel).textContent || "").trim().slice(0, 155);
 
-  const { data: inserted, error } = await sb.from("listings").insert(payload).select().single();
-  if (error) return toast("Erreur : " + errMsg(error));
+    const payload = {
+      ...d,
+      status,
+      meta_title,
+      meta_description,
+      // Compatibilité avec l'ancien champ texte simple
+      description: ($("#w-description", panel).textContent || "").trim(),
+      created_by: state.user?.id || null,
+    };
 
-  // upload photos then update URLs
-  const updates = {};
-  for (const slot of ["exterieur", "salon", "cuisine", "video"]) {
-    const file = state.wizard.photos[slot];
-    if (file) {
-      const url = await uploadPhoto(file, inserted.id, slot);
-      if (url) updates[slot === "video" ? "video_url" : "photo_" + slot] = url;
+    let listingId = state.wizard.editingId;
+
+    if (listingId) {
+      const { error } = await sb.from("listings").update(payload).eq("id", listingId);
+      if (error) { toast("Erreur : " + errMsg(error)); return; }
+    } else {
+      const { data, error } = await sb.from("listings").insert(payload).select().single();
+      if (error) { toast("Erreur : " + errMsg(error)); return; }
+      listingId = data.id;
+      state.wizard.editingId = listingId;
     }
-  }
-  if (Object.keys(updates).length) {
-    await sb.from("listings").update(updates).eq("id", inserted.id);
-    Object.assign(inserted, updates);
-  }
 
-  state.listings.unshift(inserted);
-  clearInterval(state.wizard.timerHandle);
-  toast("Annonce publiée en ligne");
-  renderAdminTab("listings");
-  $$(".admin-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === "listings"));
+    // Envoi des photos nouvellement ajoutées, dans l'ordre affiché
+    const urls = [];
+    for (let i = 0; i < state.wizard.photos.length; i++) {
+      const photo = state.wizard.photos[i];
+      if (photo.uploaded) { urls.push(photo.url); continue; }
+      publishBtn.textContent = `Envoi photo ${i + 1}/${state.wizard.photos.length}…`;
+      const url = await uploadListingPhoto(photo.file, listingId, i);
+      if (url) urls.push(url);
+    }
+
+    if (urls.length) {
+      const { error } = await sb.from("listings")
+        .update({ photos: urls, photo_exterieur: urls[0] })
+        .eq("id", listingId);
+      if (error) { toast("Photos non enregistrées : " + errMsg(error)); return; }
+    }
+
+    await loadListings();
+    toast(publishing ? "Annonce publiée" : "Brouillon enregistré");
+    renderAdminTab("listings");
+    $$(".admin-tab").forEach(t => t.classList.toggle("active", t.dataset.tab === "listings"));
+  } finally {
+    btns.forEach(b => b.disabled = false);
+    publishBtn.textContent = originalLabel;
+  }
 }
 
 // ===========================================================
