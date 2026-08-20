@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 
 <html lang="fr">
 <head>
@@ -3937,6 +3937,10 @@ function renderAdminParks(panel) {
         }
       }
 
+      // On relit la fiche depuis la base plutôt que de se fier à la
+      // copie en mémoire : ce qui s'affichera ensuite est exactement
+      // ce qui est réellement enregistré.
+      await loadParks();
       toast("Informations du parc enregistrées");
     } finally {
       submitBtn.disabled = false;
