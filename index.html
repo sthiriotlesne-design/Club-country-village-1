@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="fr">
 <head>
@@ -515,6 +515,9 @@ input,select,textarea{font-family:inherit}
   background:var(--forest-950); overflow:hidden; isolation:isolate;
 }
 .hero-media{position:absolute; inset:0; z-index:0}
+.hero-video{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;
+}
 .hero-img{
   position:absolute; inset:0; background-size:cover; background-position:center;
   transform:scale(1.06); animation:heroDrift 20s ease-out forwards;
@@ -1427,7 +1430,10 @@ input,select,textarea{font-family:inherit}
        Écran plein, photographie à fond perdu, texte centré, deux
        actions. Rien d'autre. -->
   <section class="hero">
-    <div class="hero-media"><div class="hero-img" id="hero-img"></div></div>
+    <div class="hero-media">
+      <div class="hero-img" id="hero-img"></div>
+      <video class="hero-video" id="hero-video" muted loop autoplay playsinline hidden></video>
+    </div>
     <div class="hero-inner">
       <!-- Chaque mot est enveloppé : il monte depuis sous une ligne de
            masquage, légèrement décalé du précédent. -->
@@ -3001,12 +3007,44 @@ function renderCatalogue(params) {
   app.innerHTML = "";
   app.appendChild($("#tpl-catalogue").content.cloneNode(true));
 
-  // Le hero reprend la photo de couverture du parc si elle existe.
-  // Sinon, un visuel de repli discret évite un bloc vide — il est
-  // remplacé dès qu'une photo est ajoutée depuis "Profil du parc".
+  // Le hero d'accueil : la vidéo prime sur la photo si elle existe —
+  // c'est elle qui donne le plus de vie au premier écran. À défaut,
+  // on reprend la photo d'accueil, puis les photos du parc, puis un
+  // visuel de repli pour ne jamais laisser un bloc vide.
+  const park = state.parks[0];
+  const heroVideo = $("#hero-video");
   const heroEl = $("#hero-img");
-  if (heroEl) {
-    const park = state.parks[0];
+
+  if (park?.video_url && heroVideo) {
+    // Les navigateurs n'autorisent la lecture automatique que si la
+    // vidéo est muette : on force le réglage en JavaScript, l'attribut
+    // HTML seul ne suffit pas toujours.
+    heroVideo.muted = true;
+    heroVideo.defaultMuted = true;
+    heroVideo.playsInline = true;
+    heroVideo.loop = true;
+    heroVideo.src = park.video_url;
+    heroVideo.hidden = false;
+    if (heroEl) heroEl.hidden = true;
+    // Certains navigateurs mobiles refusent la lecture automatique :
+    // on retombe alors sur la photo plutôt que d'afficher un écran noir.
+    // (les navigateurs anciens ne renvoient pas de promesse ici)
+    const fallbackToPhoto = () => {
+      heroVideo.hidden = true;
+      if (heroEl) {
+        heroEl.hidden = false;
+        heroEl.style.backgroundImage =
+          `url("${park?.photo_accueil || park?.photo_1 || heroFallbackImg()}")`;
+      }
+    };
+    heroVideo.addEventListener("error", fallbackToPhoto, { once: true });
+    try {
+      const played = heroVideo.play?.();
+      if (played?.catch) played.catch(fallbackToPhoto);
+    } catch (_) {
+      fallbackToPhoto();
+    }
+  } else if (heroEl) {
     const heroSrc = park?.photo_accueil || park?.photo_1 || park?.photo_2 || heroFallbackImg();
     heroEl.style.backgroundImage = `url("${heroSrc}")`;
   }
@@ -3349,9 +3387,12 @@ function setupParallax() {
     ticking = true;
     requestAnimationFrame(() => {
       const y = window.scrollY;
-      const img = $("#hero-img");
       const inner = $(".hero-inner");
-      if (img) img.style.transform = `translate3d(0, ${y * 0.32}px, 0) scale(${1.06 - Math.min(y, 900) * 0.00006})`;
+      const parallaxed = `translate3d(0, ${y * 0.32}px, 0) scale(${1.06 - Math.min(y, 900) * 0.00006})`;
+      const img = $("#hero-img");
+      const vid = $("#hero-video");
+      if (img) img.style.transform = parallaxed;
+      if (vid) vid.style.transform = parallaxed;
       if (inner) {
         inner.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
         inner.style.opacity = String(Math.max(0, 1 - y / 520));
@@ -3724,8 +3765,20 @@ function renderParkProfile() {
   // 01 — Découvrir : la vidéo prend la place de l'image si elle existe
   if (park.video_url) {
     const v = $("#park-hero-video");
+    v.muted = true; v.defaultMuted = true; v.playsInline = true; v.loop = true;
     v.src = park.video_url; v.hidden = false;
     $("#park-hero-img").hidden = true;
+    // Si la vidéo ne peut pas être lue, on revient à la photo.
+    const backToPhoto = () => {
+      v.hidden = true;
+      const img = $("#park-hero-img");
+      img.hidden = false; img.src = pick(0);
+    };
+    v.addEventListener("error", backToPhoto, { once: true });
+    try {
+      const p = v.play?.();
+      if (p?.catch) p.catch(backToPhoto);
+    } catch (_) { backToPhoto(); }
   } else {
     $("#park-hero-img").src = pick(0);
   }
