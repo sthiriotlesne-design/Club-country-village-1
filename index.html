@@ -416,6 +416,94 @@ input,select,textarea{font-family:inherit}
 }
 .dropdown-menu button:hover, .dropdown-menu a:hover{background:var(--khaki-50)}
 
+/* ===========================================================
+   MOUVEMENT
+   Le site doit sembler vivant : le texte se révèle à l'arrivée,
+   l'image respire au défilement, les éléments entrent à mesure
+   qu'on avance. Tout est neutralisé si la personne a demandé
+   moins d'animations.
+   =========================================================== */
+
+/* Titre : chaque mot monte depuis une ligne de masquage */
+.hero-title .line{display:block; overflow:hidden}
+.hero-title .line i{
+  display:block; font-style:normal;
+  transform:translateY(105%);
+  animation:wordUp 1.1s cubic-bezier(.16,1,.3,1) forwards;
+  animation-delay:var(--d,0s);
+}
+@keyframes wordUp{to{transform:translateY(0)}}
+
+/* Éléments secondaires : montée douce, décalée */
+.rise{opacity:0; transform:translateY(22px); animation:riseIn .9s cubic-bezier(.16,1,.3,1) forwards; animation-delay:var(--d,0s)}
+@keyframes riseIn{to{opacity:1; transform:none}}
+
+/* Bandeau défilant en continu */
+.marquee{
+  position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
+  background:var(--forest-950); color:var(--paper);
+  padding:18px 0; overflow:hidden; white-space:nowrap;
+}
+.marquee-track{
+  display:inline-flex; align-items:center; gap:26px;
+  animation:marquee 34s linear infinite; will-change:transform;
+}
+.marquee-track span{
+  font-size:.78rem; font-weight:500; letter-spacing:.22em; text-transform:uppercase;
+}
+.marquee-track i{color:var(--forest-500); font-style:normal}
+@keyframes marquee{to{transform:translateX(-50%)}}
+
+/* Chiffres clés */
+.figures{
+  display:grid; grid-template-columns:repeat(3,1fr); gap:24px;
+  max-width:960px; margin:clamp(56px,9vh,104px) auto; text-align:center;
+}
+.figure{display:flex; flex-direction:column; gap:8px}
+.figure .count{
+  font-family:var(--font-display); font-weight:300;
+  font-size:clamp(2.6rem,6vw,4.4rem); line-height:1; letter-spacing:-.03em;
+  color:var(--ink-900); font-variant-numeric:tabular-nums;
+}
+.figure small{
+  font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-500);
+}
+
+/* Apparition au défilement, avec décalage entre voisins */
+.reveal{opacity:0; transform:translateY(30px); transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1)}
+.reveal.is-in{opacity:1; transform:none}
+
+/* Boutons qui suivent légèrement le curseur */
+.magnetic{transition:transform .35s cubic-bezier(.16,1,.3,1), background .2s ease, color .2s ease}
+
+/* Rideau de transition entre les pages */
+.curtain{
+  position:fixed; inset:0; z-index:200; background:var(--forest-950);
+  transform:scaleY(0); transform-origin:bottom; pointer-events:none;
+}
+.curtain.is-closing{animation:curtainIn .42s cubic-bezier(.7,0,.3,1) forwards}
+.curtain.is-opening{animation:curtainOut .52s cubic-bezier(.7,0,.3,1) forwards}
+@keyframes curtainIn{from{transform:scaleY(0); transform-origin:bottom} to{transform:scaleY(1); transform-origin:bottom}}
+@keyframes curtainOut{from{transform:scaleY(1); transform-origin:top} to{transform:scaleY(0); transform-origin:top}}
+
+/* Jauge de progression du défilement */
+.scroll-bar{
+  position:fixed; top:0; left:0; height:2px; width:100%; z-index:150;
+  background:var(--paper); transform:scaleX(0); transform-origin:left;
+  mix-blend-mode:difference; pointer-events:none;
+}
+
+@media (max-width:640px){
+  .figures{grid-template-columns:1fr; gap:34px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .hero-title .line i, .rise{animation:none; opacity:1; transform:none}
+  .marquee-track{animation:none}
+  .curtain{display:none}
+  .scroll-bar{display:none}
+}
+
 /* ============ HERO ============
    Plein écran, texte centré, deux actions. Aucun cadre, aucun aplat
    de couleur — juste un voile sombre très léger pour garantir la
@@ -1236,6 +1324,9 @@ input,select,textarea{font-family:inherit}
 
 <!-- ============ APP ROOT ============ -->
 
+<div class="scroll-bar" id="scroll-bar" aria-hidden="true"></div>
+<div class="curtain" id="curtain" aria-hidden="true"></div>
+
 <main id="app" class="app-root"></main>
 
 <!-- ============ FOOTER (réplique Airbnb) ============ -->
@@ -1338,14 +1429,42 @@ input,select,textarea{font-family:inherit}
   <section class="hero">
     <div class="hero-media"><div class="hero-img" id="hero-img"></div></div>
     <div class="hero-inner">
-      <h1 class="hero-title">Club Country Village</h1>
-      <p class="hero-claim">Seize hectares de nature, à 45 minutes de Paris</p>
-      <div class="hero-actions">
-        <a class="btn btn-outline" href="#/catalogue?transaction=Vente">Acheter</a>
-        <a class="btn btn-outline" href="#/catalogue?transaction=Location">Séjourner</a>
+      <!-- Chaque mot est enveloppé : il monte depuis sous une ligne de
+           masquage, légèrement décalé du précédent. -->
+      <h1 class="hero-title">
+        <span class="line"><i style="--d:.05s">Club</i></span>
+        <span class="line"><i style="--d:.13s">Country</i></span>
+        <span class="line"><i style="--d:.21s">Village</i></span>
+      </h1>
+      <p class="hero-claim rise" style="--d:.42s">Seize hectares de nature, à 45 minutes de Paris</p>
+      <div class="hero-actions rise" style="--d:.54s">
+        <a class="btn btn-outline magnetic" href="#/catalogue?transaction=Vente">Acheter</a>
+        <a class="btn btn-outline magnetic" href="#/catalogue?transaction=Location">Séjourner</a>
       </div>
-      <a class="hero-scroll" href="#/parc">Découvrir le parc</a>
+      <a class="hero-scroll rise" style="--d:.66s" href="#/parc">Découvrir le parc</a>
     </div>
+  </section>
+
+  <!-- Bandeau défilant : donne immédiatement une sensation de mouvement
+       et rappelle les repères du domaine. -->
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>16 hectares</span><i>◦</i><span>300 emplacements</span><i>◦</i>
+      <span>45 minutes de Paris</span><i>◦</i><span>Piscine chauffée</span><i>◦</i>
+      <span>Ouvert à l'année</span><i>◦</i>
+      <span>16 hectares</span><i>◦</i><span>300 emplacements</span><i>◦</i>
+      <span>45 minutes de Paris</span><i>◦</i><span>Piscine chauffée</span><i>◦</i>
+      <span>Ouvert à l'année</span><i>◦</i>
+    </div>
+  </div>
+
+  <!-- Chiffres qui s'incrémentent quand ils entrent à l'écran -->
+
+  <section class="figures reveal">
+    <div class="figure"><span class="count" data-to="16">0</span><small>hectares de nature</small></div>
+    <div class="figure"><span class="count" data-to="300">0</span><small>emplacements arborés</small></div>
+    <div class="figure"><span class="count" data-to="45">0</span><small>minutes de Paris</small></div>
   </section>
 
   <div class="search-hero">
@@ -1626,7 +1745,7 @@ input,select,textarea{font-family:inherit}
 
   <section class="story-chapter">
     <div class="story-figure"><img id="story-img-2" alt=""></div>
-    <div class="story-text">
+    <div class="story-text reveal">
       <span class="story-num">02 — Respirer</span>
       <h2 class="story-title">Seize hectares, et le temps qui ralentit</h2>
       <div class="story-body" id="park-profile-desc"></div>
@@ -1640,7 +1759,7 @@ input,select,textarea{font-family:inherit}
 
   <section class="story-chapter">
     <div class="story-figure"><img id="story-img-3" alt=""></div>
-    <div class="story-text">
+    <div class="story-text reveal">
       <span class="story-num">03 — Profiter</span>
       <h2 class="story-title">Piscine, tennis, terrains de jeu</h2>
       <p class="story-body">
@@ -1656,7 +1775,7 @@ input,select,textarea{font-family:inherit}
 
   <section class="story-chapter">
     <div class="story-figure"><img id="story-img-4" alt=""></div>
-    <div class="story-text">
+    <div class="story-text reveal">
       <span class="story-num">04 — Vivre</span>
       <h2 class="story-title">Une saison qui s'anime</h2>
       <p class="story-body">
@@ -2304,6 +2423,16 @@ async function router() {
   renderBottomNav();
   highlightNav(path, params);
   requestAnimationFrame(syncHeaderOverHero);
+
+  // À chaque changement de page : rideau, puis on réarme les
+  // animations sur le nouveau contenu.
+  playCurtain();
+  window.scrollTo({ top: 0 });
+  requestAnimationFrame(() => {
+    observeReveals(document);
+    setupMagnetic(document);
+    setupParallax();
+  });
 
   if (path === "catalogue") return renderCatalogue(params);
   if (path === "login") return renderLogin();
@@ -3156,19 +3285,119 @@ function syncHeaderOverHero() {
 }
 window.addEventListener("scroll", syncHeaderOverHero, { passive: true });
 
+const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
 function observeReveals(root) {
-  if (!("IntersectionObserver" in window)) {
-    $$(".reveal", root).forEach(el => el.classList.add("is-in"));
+  if (REDUCED_MOTION || !("IntersectionObserver" in window)) {
+    $$(".reveal", root || document).forEach(el => el.classList.add("is-in"));
+    $$(".count", root || document).forEach(el => el.textContent = el.dataset.to);
     return;
   }
   if (!revealObserver) {
     revealObserver = new IntersectionObserver((entries, obs) => {
       entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add("is-in"); obs.unobserve(e.target); }
+        if (!e.isIntersecting) return;
+        // Décalage entre voisins : les éléments d'une même rangée
+        // n'apparaissent pas tous exactement en même temps.
+        const siblings = [...(e.target.parentElement?.children || [])].filter(x => x.classList.contains("reveal"));
+        const rank = Math.max(0, siblings.indexOf(e.target));
+        e.target.style.transitionDelay = Math.min(rank, 6) * 70 + "ms";
+        e.target.classList.add("is-in");
+        obs.unobserve(e.target);
       });
     }, { rootMargin: "0px 0px -8% 0px" });
   }
   $$(".reveal", root || document).forEach(el => revealObserver.observe(el));
+  observeCounters(root);
+}
+
+// Chiffres qui s'incrémentent à l'entrée à l'écran.
+let counterObserver = null;
+function observeCounters(root) {
+  const els = $$(".count", root || document);
+  if (!els.length) return;
+  if (REDUCED_MOTION) { els.forEach(el => el.textContent = el.dataset.to); return; }
+  if (!counterObserver) {
+    counterObserver = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        obs.unobserve(e.target);
+        const target = Number(e.target.dataset.to) || 0;
+        const started = performance.now();
+        const duration = 1400;
+        const step = (now) => {
+          const p = Math.min(1, (now - started) / duration);
+          // Ralentit en fin de course, plus naturel qu'une progression linéaire
+          const eased = 1 - Math.pow(1 - p, 3);
+          e.target.textContent = Math.round(target * eased);
+          if (p < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      });
+    }, { rootMargin: "0px 0px -12% 0px" });
+  }
+  els.forEach(el => counterObserver.observe(el));
+}
+
+// Parallaxe du hero : l'image se déplace moins vite que la page et
+// s'assombrit doucement — sensation de profondeur au défilement.
+function setupParallax() {
+  if (REDUCED_MOTION) return;
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y = window.scrollY;
+      const img = $("#hero-img");
+      const inner = $(".hero-inner");
+      if (img) img.style.transform = `translate3d(0, ${y * 0.32}px, 0) scale(${1.06 - Math.min(y, 900) * 0.00006})`;
+      if (inner) {
+        inner.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
+        inner.style.opacity = String(Math.max(0, 1 - y / 520));
+      }
+      const bar = $("#scroll-bar");
+      if (bar) {
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.transform = `scaleX(${h > 0 ? y / h : 0})`;
+      }
+      ticking = false;
+    });
+  };
+  window.removeEventListener("scroll", window.__ccvScroll || (() => {}));
+  window.__ccvScroll = onScroll;
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+}
+
+// Boutons qui suivent légèrement le curseur : le survol devient vivant
+// sans être tape-à-l'œil. Sans effet au doigt (pas de curseur).
+function setupMagnetic(root) {
+  if (REDUCED_MOTION) return;
+  $$(".magnetic", root || document).forEach(el => {
+    if (el.dataset.magnetic) return;
+    el.dataset.magnetic = "1";
+    el.addEventListener("pointermove", (e) => {
+      if (e.pointerType !== "mouse") return;
+      const r = el.getBoundingClientRect();
+      const dx = (e.clientX - (r.left + r.width / 2)) * 0.22;
+      const dy = (e.clientY - (r.top + r.height / 2)) * 0.28;
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    el.addEventListener("pointerleave", () => { el.style.transform = ""; });
+  });
+}
+
+// Rideau de transition entre les pages : évite le saut brutal d'un
+// écran à l'autre.
+function playCurtain() {
+  if (REDUCED_MOTION) return;
+  const curtain = $("#curtain");
+  if (!curtain) return;
+  curtain.classList.remove("is-closing");
+  void curtain.offsetWidth;
+  curtain.classList.add("is-opening");
+  setTimeout(() => curtain.classList.remove("is-opening"), 560);
 }
 
 // Récupère la liste des photos d'une annonce, en gérant les annonces
