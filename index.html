@@ -35,46 +35,53 @@
 :root{
   /* ---------------------------------------------------------------
      PARC DE LA CHESNAIE — socle graphique
-     Direction : un domaine de nature, avec l'exigence d'une marque
-     premium contemporaine. Le vert forêt n'est pas un accent posé sur
-     du blanc : c'est la matière dominante du site. Les grands aplats
-     sombres alternent avec des respirations claires, et la seule
-     couleur chaude — la brique — sert de repère d'action.
+     Gamme entièrement neutre : des gris clairs et translucides,
+     du verre dépoli sur les surfaces, et des noirs profonds pour les
+     grands aplats. Aucune couleur dominante : ce sont les
+     photographies qui apportent la couleur, l'interface reste neutre.
      --------------------------------------------------------------- */
 
-  /* Verts — du plus profond (fonds pleine page) au plus clair (surfaces) */
-  --forest-950:#0E2018;
-  --forest-900:#132A20;
-  --forest-800:#17352A;
-  --forest-700:#1F4634;
-  --forest-600:#2A5C46;
-  --forest-500:#3D7A5C;
-  --forest-300:#8FB3A0;
-  --forest-100:#DCE7E0;
-  --forest-50:#EEF3EF;
+  /* Gris — du plus profond (fonds pleine page) au plus clair (surfaces) */
+  --forest-950:#0E1012;
+  --forest-900:#15181B;
+  --forest-800:#1E2226;
+  --forest-700:#2B3036;
+  --forest-600:#3C4249;
+  --forest-500:#6E757C;
+  --forest-300:#AEB4BA;
+  --forest-100:#E7E9EB;
+  --forest-50:#F3F4F5;
 
-  /* Olive, pierre et bois — matières du parc */
-  --olive-600:#5A6B45;
-  --olive-500:#6F7D52;
-  --stone-200:#DDD8CC;
-  --stone-100:#EDEAE1;
-  --wood-700:#6B4A2F;
+  /* Surfaces translucides — posées sur une photo, elles laissent
+     transparaître ce qu'il y a derrière (verre dépoli) */
+  --glass-light:rgba(255,255,255,.62);
+  --glass-lighter:rgba(255,255,255,.82);
+  --glass-dark:rgba(18,20,22,.42);
+  --glass-border:rgba(255,255,255,.28);
+  --blur:blur(18px) saturate(1.4);
 
-  /* Brique — unique couleur chaude, réservée aux actions et aux repères */
-  --brick-700:#8F3F2C;
-  --brick-600:#B4533B;
-  --brick-500:#C86A4F;
-  --brick-100:#F6E4DD;
+  /* Matières neutres */
+  --olive-600:#5C6167;
+  --olive-500:#767C83;
+  --stone-200:#DEE0E2;
+  --stone-100:#EDEEEF;
+  --wood-700:#5A5F65;
 
-  /* Papier et encres */
-  --paper:#FBFAF7;
-  --paper-warm:#F5F2EB;
-  --ink-900:#12201A;
-  --ink-800:#22322A;
-  --ink-700:#3D4B43;
-  --ink-500:#68746C;
-  --ink-300:#A9B3AC;
-  --line:#E2E5DE;
+  /* Accent discret — gris soutenu, aucune couleur */
+  --brick-700:#2B3036;
+  --brick-600:#3C4249;
+  --brick-500:#6E757C;
+  --brick-100:#ECEEEF;
+
+  /* Papier et encres, entièrement neutres */
+  --paper:#FAFAFB;
+  --paper-warm:#F2F3F4;
+  --ink-900:#121417;
+  --ink-800:#22262A;
+  --ink-700:#3F454B;
+  --ink-500:#6A7076;
+  --ink-300:#AAAFB5;
+  --line:#E4E6E8;
 
   /* Rétro-compatibilité : d'anciens composants utilisent encore ces noms.
      Ils pointent désormais vers la nouvelle palette. */
@@ -121,6 +128,13 @@ body{
   font-size:16px;
 }
 a{color:inherit;text-decoration:none}
+
+/* Un élément portant l'attribut "hidden" doit TOUJOURS rester masqué.
+   Sans cette règle, une classe qui impose un display (flex, block…)
+   l'emporte sur le comportement par défaut du navigateur — c'est ce
+   qui faisait apparaître la galerie plein écran dès l'arrivée sur le
+   site, et la vidéo par-dessus la photo. */
+[hidden]{display:none !important}
 button{font-family:inherit;cursor:pointer}
 input,select,textarea{font-family:inherit}
 .muted{color:var(--ink-500)}
@@ -138,7 +152,7 @@ input,select,textarea{font-family:inherit}
 /* ============ HEADER — simple, aéré, un seul repère visuel ============ */
 .site-header{
   position:sticky; top:0; z-index:40;
-  background:rgba(251,250,247,.88); backdrop-filter:blur(14px);
+  background:var(--glass-lighter); backdrop-filter:var(--blur); -webkit-backdrop-filter:var(--blur);
   border-bottom:1px solid var(--line);
   transition:background .3s ease, border-color .3s ease;
 }
@@ -212,15 +226,16 @@ input,select,textarea{font-family:inherit}
 .btn-primary{background:var(--ink-900); color:var(--paper)}
 .btn-primary:hover{background:#000}
 
-.btn-secondary{background:rgba(18,32,26,.08); color:var(--ink-900)}
-.btn-secondary:hover{background:rgba(18,32,26,.14)}
+.btn-secondary{background:rgba(18,20,22,.06); color:var(--ink-900)}
+.btn-secondary:hover{background:rgba(18,20,22,.11)}
 
 /* Posé sur une photographie : verre dépoli */
 .btn-outline{
-  background:rgba(255,255,255,.65); color:var(--ink-900);
-  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  background:var(--glass-light); color:var(--ink-900);
+  border:1px solid var(--glass-border);
+  backdrop-filter:var(--blur); -webkit-backdrop-filter:var(--blur);
 }
-.btn-outline:hover{background:rgba(255,255,255,.9)}
+.btn-outline:hover{background:var(--glass-lighter)}
 
 .btn-ghost{background:transparent; color:var(--ink-500)}
 .btn-ghost:hover{color:var(--ink-900)}
@@ -477,14 +492,24 @@ input,select,textarea{font-family:inherit}
 .magnetic{transition:transform .35s cubic-bezier(.16,1,.3,1), background .2s ease, color .2s ease}
 
 /* Rideau de transition entre les pages */
+/* Transition entre les pages : un voile passe brièvement pendant que
+   le contenu se renouvelle, et la nouvelle page arrive en montant. */
 .curtain{
   position:fixed; inset:0; z-index:200; background:var(--forest-950);
-  transform:scaleY(0); transform-origin:bottom; pointer-events:none;
+  opacity:0; pointer-events:none;
 }
-.curtain.is-closing{animation:curtainIn .42s cubic-bezier(.7,0,.3,1) forwards}
-.curtain.is-opening{animation:curtainOut .52s cubic-bezier(.7,0,.3,1) forwards}
-@keyframes curtainIn{from{transform:scaleY(0); transform-origin:bottom} to{transform:scaleY(1); transform-origin:bottom}}
-@keyframes curtainOut{from{transform:scaleY(1); transform-origin:top} to{transform:scaleY(0); transform-origin:top}}
+.curtain.is-opening{animation:veil .62s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes veil{
+  0%{opacity:.9}
+  100%{opacity:0}
+}
+
+/* Le contenu de la nouvelle page monte légèrement en apparaissant */
+.app-root.page-in{animation:pageIn .62s cubic-bezier(.16,1,.3,1)}
+@keyframes pageIn{
+  from{opacity:0; transform:translateY(16px)}
+  to{opacity:1; transform:none}
+}
 
 /* Jauge de progression du défilement */
 .scroll-bar{
@@ -502,6 +527,197 @@ input,select,textarea{font-family:inherit}
   .marquee-track{animation:none}
   .curtain{display:none}
   .scroll-bar{display:none}
+}
+
+/* ===========================================================
+   TEXTE PILOTÉ PAR LE DÉFILEMENT
+   Chaque mot s'éclaire quand il atteint le centre de l'écran :
+   c'est le défilement qui donne le rythme de lecture.
+   =========================================================== */
+.manifesto{
+  max-width:1000px; margin:clamp(70px,14vh,150px) auto; padding:0 28px;
+}
+.lit{
+  font-family:var(--font-display); font-weight:300;
+  font-size:clamp(1.5rem,4.2vw,3rem); line-height:1.32; letter-spacing:-.025em;
+}
+.lit w{
+  display:inline-block; color:var(--ink-900); opacity:.14;
+  transition:opacity .35s ease;
+}
+.lit w.on{opacity:1}
+
+/* ===========================================================
+   SECTION FIGÉE
+   Le visuel reste en place pendant que le récit défile à côté.
+   =========================================================== */
+.pinned{
+  position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
+  background:var(--forest-950); color:var(--paper);
+  display:grid; grid-template-columns:1fr 1fr;
+}
+.pinned-media{
+  position:sticky; top:0; height:100svh; overflow:hidden;
+}
+.pin-img{
+  position:absolute; inset:0; background-size:cover; background-position:center;
+  opacity:0; transform:scale(1.08); transition:opacity .8s ease, transform 1.2s ease;
+}
+.pin-img.on{opacity:1; transform:scale(1)}
+.pinned-steps{display:flex; flex-direction:column}
+.pin-step{
+  min-height:100svh; display:flex; flex-direction:column; justify-content:center;
+  padding:clamp(30px,6vw,90px);
+  opacity:.25; transition:opacity .5s ease;
+}
+.pin-step.on{opacity:1}
+.pin-num{
+  font-size:.68rem; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--forest-300); margin-bottom:20px;
+}
+.pin-step h2{
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(1.9rem,4vw,3.2rem); line-height:1.06; letter-spacing:-.03em; margin-bottom:16px;
+}
+.pin-step p{color:rgba(251,250,247,.72); font-size:1.02rem; line-height:1.6; max-width:34ch}
+
+@media (max-width:860px){
+  .pinned{grid-template-columns:1fr}
+  .pinned-media{height:56svh}
+  .pin-step{min-height:auto; padding:44px 24px 60px; opacity:1}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .lit w{opacity:1}
+  .pin-img{transition:none}
+  .pin-step{opacity:1}
+}
+
+/* ===========================================================
+   ÉCRAN D'OUVERTURE
+   Une seule fois par visite : le nom, un trait qui se trace,
+   puis l'écran s'efface vers le haut.
+   =========================================================== */
+.intro-screen{
+  position:fixed; inset:0; z-index:300; background:var(--forest-950);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px;
+}
+.intro-name{
+  font-family:var(--font-display); font-weight:300;
+  font-size:clamp(1.3rem,4vw,2.2rem); letter-spacing:.06em; color:var(--paper);
+  opacity:0; animation:introName .9s cubic-bezier(.16,1,.3,1) .15s forwards;
+}
+.intro-line{
+  width:min(220px,42vw); height:1px; background:rgba(251,250,247,.28); position:relative; overflow:hidden;
+}
+.intro-line::after{
+  content:""; position:absolute; inset:0; background:var(--paper);
+  transform:scaleX(0); transform-origin:left;
+  animation:introLine 1.25s cubic-bezier(.6,0,.2,1) .35s forwards;
+}
+@keyframes introName{to{opacity:1}}
+@keyframes introLine{to{transform:scaleX(1)}}
+.intro-screen.is-done{
+  animation:introOut .8s cubic-bezier(.7,0,.2,1) forwards;
+}
+@keyframes introOut{
+  to{transform:translateY(-100%)}
+}
+
+/* ===========================================================
+   GRAIN — texture très légère, évite l'aplat trop numérique
+   =========================================================== */
+.grain{
+  position:fixed; inset:-120px; z-index:1; pointer-events:none; opacity:.16;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='.5'/></svg>");
+  animation:grainShift 7s steps(6) infinite; mix-blend-mode:overlay;
+}
+@keyframes grainShift{
+  0%{transform:translate(0,0)} 20%{transform:translate(-4%,3%)}
+  40%{transform:translate(3%,-4%)} 60%{transform:translate(-3%,-3%)}
+  80%{transform:translate(4%,4%)} 100%{transform:translate(0,0)}
+}
+
+/* ===========================================================
+   CURSEUR PERSONNALISÉ (ordinateur uniquement)
+   =========================================================== */
+.cursor{
+  position:fixed; top:0; left:0; z-index:250; pointer-events:none;
+  width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%;
+  background:var(--paper); mix-blend-mode:difference;
+  display:none; align-items:center; justify-content:center;
+  transition:width .3s cubic-bezier(.16,1,.3,1), height .3s cubic-bezier(.16,1,.3,1), margin .3s cubic-bezier(.16,1,.3,1);
+}
+.cursor span{
+  font-size:.6rem; font-weight:500; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--forest-950); opacity:0; transition:opacity .2s ease;
+}
+.cursor.is-big{width:78px; height:78px; margin:-39px 0 0 -39px}
+.cursor.is-big span{opacity:1}
+@media (hover:hover) and (pointer:fine){
+  .cursor{display:flex}
+}
+
+/* ===========================================================
+   GALERIE PLEIN ÉCRAN
+   =========================================================== */
+.lightbox{
+  position:fixed; inset:0; z-index:280; background:rgba(8,14,11,.96);
+  display:flex; align-items:center; justify-content:center;
+  animation:lbIn .3s ease;
+}
+@keyframes lbIn{from{opacity:0} to{opacity:1}}
+.lb-img{
+  max-width:92vw; max-height:86vh; object-fit:contain; display:block;
+  animation:lbImg .45s cubic-bezier(.16,1,.3,1);
+}
+@keyframes lbImg{from{opacity:0; transform:scale(.97)} to{opacity:1; transform:none}}
+.lb-close, .lb-nav{
+  position:absolute; background:rgba(255,255,255,.1); border:none; color:#fff;
+  width:52px; height:52px; border-radius:50%; font-size:1.5rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  backdrop-filter:blur(8px); transition:background .2s ease;
+}
+.lb-close:hover, .lb-nav:hover{background:rgba(255,255,255,.22)}
+.lb-close{top:22px; right:22px; font-size:1.1rem}
+.lb-prev{left:22px} .lb-next{right:22px}
+.lb-count{
+  position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
+  color:rgba(255,255,255,.75); font-size:.76rem; letter-spacing:.2em;
+}
+@media (max-width:640px){
+  .lb-nav{width:44px; height:44px}
+  .lb-prev{left:10px} .lb-next{right:10px}
+}
+
+/* ===========================================================
+   RÉVÉLATION DES IMAGES PAR BALAYAGE
+   L'image se dévoile de bas en haut plutôt qu'en fondu.
+   =========================================================== */
+.card-media, .story-figure, .detail-media-main{
+  clip-path:inset(0 0 0 0);
+}
+.listing-card.reveal .card-media{
+  clip-path:inset(0 0 100% 0);
+  transition:clip-path 1s cubic-bezier(.16,1,.3,1);
+}
+.listing-card.reveal.is-in .card-media{clip-path:inset(0 0 0 0)}
+
+/* ===========================================================
+   CŒUR FAVORI — remplissage avec rebond
+   =========================================================== */
+.fav-toggle.just-faved{animation:favPop .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes favPop{
+  0%{transform:scale(1)} 40%{transform:scale(1.35)} 100%{transform:scale(1)}
+}
+.fav-toggle svg path{transition:fill .3s ease, stroke .3s ease}
+
+@media (prefers-reduced-motion: reduce){
+  .intro-screen{display:none}
+  .grain{animation:none}
+  .cursor{display:none}
+  .listing-card.reveal .card-media{clip-path:none; transition:none}
+  .fav-toggle.just-faved{animation:none}
 }
 
 /* ============ HERO ============
@@ -903,7 +1119,7 @@ input,select,textarea{font-family:inherit}
   margin-top:12px; padding:12px 16px; border-radius:var(--radius-md); font-size:.88rem; font-weight:600;
   background:var(--khaki-50); color:var(--khaki-700);
 }
-.ai-status.is-error{background:var(--sand-100); color:#3c452c}
+.ai-status.is-error{background:var(--sand-100); color:#22262A}
 .ai-status.is-loading{display:flex; align-items:center; gap:9px}
 .ai-status.is-loading::before{
   content:""; width:14px; height:14px; border-radius:50%;
@@ -1194,8 +1410,9 @@ input,select,textarea{font-family:inherit}
 /* ============ BOTTOM NAV — barre fixe façon Leboncoin ============ */
 .bottom-nav{
   position:fixed; bottom:0; left:0; right:0; z-index:60;
-  display:flex; align-items:flex-start; background:#fff; border-top:1px solid var(--line);
-  box-shadow:0 -2px 12px rgba(0,0,0,.06); padding-top:6px;
+  display:flex; align-items:flex-start; border-top:1px solid var(--line);
+  background:var(--glass-lighter); backdrop-filter:var(--blur); -webkit-backdrop-filter:var(--blur);
+  box-shadow:0 -2px 14px rgba(0,0,0,.05); padding-top:6px;
 }
 .bottom-nav-item{
   flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
@@ -1282,8 +1499,8 @@ input,select,textarea{font-family:inherit}
         <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
           <defs>
             <linearGradient id="logoGradient" x1="10" y1="10" x2="90" y2="90" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#a3b77c"/>
-              <stop offset="1" stop-color="#5a6b3f"/>
+              <stop offset="0" stop-color="#6E757C"/>
+              <stop offset="1" stop-color="#1E2226"/>
             </linearGradient>
           </defs>
           <!-- P : hampe + boucle haute, façon logo gravé sur bois -->
@@ -1329,6 +1546,32 @@ input,select,textarea{font-family:inherit}
 
 <div class="scroll-bar" id="scroll-bar" aria-hidden="true"></div>
 <div class="curtain" id="curtain" aria-hidden="true"></div>
+
+<!-- Écran d'ouverture : deux secondes qui donnent le ton, une seule
+     fois par visite. -->
+
+<div class="intro-screen" id="intro-screen">
+  <span class="intro-name">Club Country Village</span>
+  <span class="intro-line"></span>
+</div>
+
+<!-- Grain : texture très légère sur les fonds sombres -->
+
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Curseur personnalisé (ordinateur uniquement) -->
+
+<div class="cursor" id="cursor" aria-hidden="true"><span>Voir</span></div>
+
+<!-- Galerie plein écran -->
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Galerie photo">
+  <button class="lb-close" id="lb-close" aria-label="Fermer">✕</button>
+  <button class="lb-nav lb-prev" id="lb-prev" aria-label="Photo précédente">‹</button>
+  <img class="lb-img" id="lb-img" alt="">
+  <button class="lb-nav lb-next" id="lb-next" aria-label="Photo suivante">›</button>
+  <div class="lb-count" id="lb-count"></div>
+</div>
 
 <main id="app" class="app-root"></main>
 
@@ -1471,6 +1714,45 @@ input,select,textarea{font-family:inherit}
     <div class="figure"><span class="count" data-to="16">0</span><small>hectares de nature</small></div>
     <div class="figure"><span class="count" data-to="300">0</span><small>emplacements arborés</small></div>
     <div class="figure"><span class="count" data-to="45">0</span><small>minutes de Paris</small></div>
+  </section>
+
+  <!-- Texte piloté par le défilement : chaque mot s'éclaire à mesure
+       qu'on descend. Le rythme de lecture est donné par le scroll. -->
+
+  <section class="manifesto">
+    <p class="lit" data-lit>
+      Ici, on ne loue pas un emplacement. On choisit un endroit où revenir,
+      saison après saison, avec les mêmes voisins et les mêmes habitudes.
+      Un domaine de seize hectares, à quarante-cinq minutes de Paris.
+    </p>
+  </section>
+
+  <!-- Section figée : le visuel reste en place pendant que le texte
+       défile à côté, façon récit en trois temps. -->
+
+  <section class="pinned">
+    <div class="pinned-media">
+      <div class="pin-img" data-pin="0"></div>
+      <div class="pin-img" data-pin="1"></div>
+      <div class="pin-img" data-pin="2"></div>
+    </div>
+    <div class="pinned-steps">
+      <article class="pin-step" data-step="0">
+        <span class="pin-num">01</span>
+        <h2>Vous cherchez</h2>
+        <p>Mobil-homes et chalets à vendre ou à louer, tous situés sur le domaine.</p>
+      </article>
+      <article class="pin-step" data-step="1">
+        <span class="pin-num">02</span>
+        <h2>Vous visitez</h2>
+        <p>Demandez une visite en deux clics. On vous répond directement.</p>
+      </article>
+      <article class="pin-step" data-step="2">
+        <span class="pin-num">03</span>
+        <h2>Vous vous installez</h2>
+        <p>Et le parc devient votre seconde adresse.</p>
+      </article>
+    </div>
   </section>
 
   <div class="search-hero">
@@ -2434,10 +2716,19 @@ async function router() {
   // animations sur le nouveau contenu.
   playCurtain();
   window.scrollTo({ top: 0 });
+  if (!REDUCED_MOTION) {
+    app.classList.remove("page-in");
+    void app.offsetWidth;
+    app.classList.add("page-in");
+  }
   requestAnimationFrame(() => {
     observeReveals(document);
     setupMagnetic(document);
     setupParallax();
+    setupLitText();
+    setupPinned();
+    setupCursor();
+    setupLightbox();
   });
 
   if (path === "catalogue") return renderCatalogue(params);
@@ -2523,7 +2814,7 @@ async function loadProfile(authUser) {
   // admin resté en mémoire pourrait rester actif pour la personne
   // suivante qui se connecte.
   if (error || !data) {
-    if (error) console.error(error);
+    if (error) console.error("Lecture du profil impossible :", errMsg(error));
     state.user = {
       id: authUser.id, email: authUser.email,
       full_name: "", is_admin: false, profileFound: false
@@ -2898,7 +3189,7 @@ async function loadListings() {
     .from("listings")
     .select("*, parks(name, city, region, department)")
     .order("created_at", { ascending: false });
-  if (error) { console.error(error); return; }
+  if (error) { console.error("Chargement des favoris impossible :", errMsg(error)); return; }
   state.listings = data || [];
 }
 
@@ -3411,6 +3702,218 @@ function setupParallax() {
   onScroll();
 }
 
+// ===========================================================
+// DÉFILEMENT FLUIDE
+// La page suit le geste avec une légère inertie. On garde le
+// défilement natif du navigateur et on ne fait qu'amortir le
+// déplacement du contenu — plus léger et plus sûr qu'un moteur
+// de défilement complet.
+// ===========================================================
+function setupSmoothScroll() {
+  if (REDUCED_MOTION) return;
+  // Sur mobile, le défilement natif est déjà excellent et amortir
+  // dégraderait la fluidité : on n'active l'effet qu'à la souris.
+  if (!window.matchMedia?.("(hover:hover) and (pointer:fine)")?.matches) return;
+  if (window.__smoothOn) return;
+  window.__smoothOn = true;
+
+  let current = window.scrollY, target = window.scrollY, running = false;
+  const ease = 0.11;
+
+  const loop = () => {
+    target = window.scrollY;
+    current += (target - current) * ease;
+    if (Math.abs(target - current) < 0.15) current = target;
+    const offset = current - target;
+    app.style.transform = `translate3d(0, ${offset}px, 0)`;
+    if (Math.abs(offset) > 0.15) {
+      requestAnimationFrame(loop);
+    } else {
+      app.style.transform = "";
+      running = false;
+    }
+  };
+
+  window.addEventListener("scroll", () => {
+    if (!running) { running = true; requestAnimationFrame(loop); }
+  }, { passive: true });
+}
+
+// ===========================================================
+// ÉCRAN D'OUVERTURE — une seule fois par visite
+// ===========================================================
+function setupIntro() {
+  const intro = $("#intro-screen");
+  if (!intro) return;
+  const alreadySeen = sessionStorage.getItem("ccv-intro") === "1";
+  if (alreadySeen || REDUCED_MOTION) { intro.remove(); return; }
+  setTimeout(() => {
+    intro.classList.add("is-done");
+    setTimeout(() => intro.remove(), 900);
+    try { sessionStorage.setItem("ccv-intro", "1"); } catch (_) {}
+  }, 1900);
+}
+
+// ===========================================================
+// CURSEUR PERSONNALISÉ — grossit au survol des photos
+// ===========================================================
+function setupCursor() {
+  const cur = $("#cursor");
+  if (!cur || REDUCED_MOTION) return;
+  if (!window.matchMedia?.("(hover:hover) and (pointer:fine)")?.matches) return;
+  if (window.__cursorOn) return;
+  window.__cursorOn = true;
+
+  let x = 0, y = 0, cx = 0, cy = 0;
+  document.addEventListener("pointermove", (e) => {
+    if (e.pointerType !== "mouse") return;
+    x = e.clientX; y = e.clientY;
+    // Le curseur grossit au-dessus de tout ce qui est cliquable et visuel
+    const overMedia = e.target.closest?.(".card-media, .story-figure, .detail-media-main, .hero-media, .pin-img");
+    cur.classList.toggle("is-big", !!overMedia);
+  });
+  const follow = () => {
+    // Petit retard : le cercle suit la souris plutôt que de la coller
+    cx += (x - cx) * 0.2; cy += (y - cy) * 0.2;
+    cur.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+    requestAnimationFrame(follow);
+  };
+  follow();
+}
+
+// ===========================================================
+// GALERIE PLEIN ÉCRAN
+// ===========================================================
+const lightbox = { photos: [], index: 0 };
+
+function openLightbox(photos, startIndex) {
+  if (!photos?.length) return;
+  lightbox.photos = photos;
+  lightbox.index = startIndex || 0;
+  const box = $("#lightbox");
+  box.hidden = false;
+  document.body.style.overflow = "hidden";
+  renderLightbox();
+}
+
+function renderLightbox() {
+  const { photos, index } = lightbox;
+  $("#lb-img").src = photos[index];
+  $("#lb-count").textContent = `${index + 1} / ${photos.length}`;
+  const single = photos.length < 2;
+  $("#lb-prev").hidden = single;
+  $("#lb-next").hidden = single;
+}
+
+function moveLightbox(step) {
+  const n = lightbox.photos.length;
+  if (!n) return;
+  lightbox.index = (lightbox.index + step + n) % n;
+  renderLightbox();
+}
+
+function closeLightbox() {
+  $("#lightbox").hidden = true;
+  document.body.style.overflow = "";
+}
+
+function setupLightbox() {
+  if (window.__lightboxOn) return;
+  window.__lightboxOn = true;
+
+  $("#lb-close").addEventListener("click", closeLightbox);
+  $("#lb-prev").addEventListener("click", () => moveLightbox(-1));
+  $("#lb-next").addEventListener("click", () => moveLightbox(1));
+  $("#lightbox").addEventListener("click", (e) => {
+    if (e.target.id === "lightbox") closeLightbox();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if ($("#lightbox")?.hidden) return;
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") moveLightbox(-1);
+    if (e.key === "ArrowRight") moveLightbox(1);
+  });
+
+  // Balayage au doigt
+  let startX = null;
+  const box = $("#lightbox");
+  box.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+  box.addEventListener("touchend", (e) => {
+    if (startX === null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 45) moveLightbox(dx < 0 ? 1 : -1);
+    startX = null;
+  }, { passive: true });
+}
+
+// Découpe un texte en mots enveloppés, pour pouvoir les éclairer un
+// par un au défilement. Fait une seule fois par élément.
+function splitWords(el) {
+  if (!el || el.dataset.split) return;
+  el.dataset.split = "1";
+  const words = (el.textContent || "").trim().split(/\s+/);
+  el.innerHTML = words.map(w => `<w>${w}</w>`).join(" ");
+}
+
+// Éclaire les mots à mesure qu'ils traversent le milieu de l'écran.
+// C'est le défilement qui donne le rythme de lecture.
+function setupLitText() {
+  const el = $("[data-lit]");
+  if (!el) return;
+  splitWords(el);
+  if (REDUCED_MOTION) { $$("w", el).forEach(w => w.classList.add("on")); return; }
+
+  const words = $$("w", el);
+  const update = () => {
+    const vh = window.innerHeight;
+    words.forEach(w => {
+      const r = w.getBoundingClientRect();
+      // Le mot s'allume quand il monte au-dessus des deux tiers de l'écran
+      w.classList.toggle("on", r.top < vh * 0.72);
+    });
+  };
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update, { passive: true });
+  update();
+}
+
+// Section figée : le visuel change en fonction de l'étape du récit
+// qui occupe l'écran.
+function setupPinned() {
+  const section = $(".pinned");
+  if (!section) return;
+
+  // Les visuels reprennent les photos du parc déjà enregistrées
+  const park = state.parks[0];
+  const photos = [park?.photo_1, park?.photo_2, park?.photo_3, park?.photo_4,
+                  park?.photo_accueil].filter(Boolean);
+  $$(".pin-img", section).forEach((el, i) => {
+    el.style.backgroundImage = `url("${photos[i % (photos.length || 1)] || heroFallbackImg()}")`;
+  });
+
+  const steps = $$(".pin-step", section);
+  const imgs = $$(".pin-img", section);
+  const activate = (index) => {
+    steps.forEach((s, i) => s.classList.toggle("on", i === index));
+    imgs.forEach((im, i) => im.classList.toggle("on", i === index));
+  };
+  activate(0);
+
+  if (REDUCED_MOTION || !("IntersectionObserver" in window)) {
+    steps.forEach(s => s.classList.add("on"));
+    imgs[0]?.classList.add("on");
+    return;
+  }
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) activate(Number(e.target.dataset.step));
+    });
+  }, { rootMargin: "-45% 0px -45% 0px" });
+  steps.forEach(s => obs.observe(s));
+}
+
 // Boutons qui suivent légèrement le curseur : le survol devient vivant
 // sans être tape-à-l'œil. Sans effet au doigt (pas de curseur).
 function setupMagnetic(root) {
@@ -3510,6 +4013,9 @@ async function toggleFavorite(listingId, btnEl) {
     if (error) return toast("Erreur : " + errMsg(error));
     state.favorites.add(listingId);
     btnEl?.classList.add("is-fav");
+    // Rebond au moment de l'ajout, retiré ensuite pour pouvoir rejouer
+    btnEl?.classList.add("just-faved");
+    setTimeout(() => btnEl?.classList.remove("just-faved"), 520);
     toast("Ajouté aux favoris");
   }
 }
@@ -3520,8 +4026,8 @@ function placeholderImg() {
   // Aplat sobre aux couleurs du domaine, en attendant la vraie photo.
   return "data:image/svg+xml;utf8," + encodeURIComponent(
     `<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'>
-       <rect width='100%' height='100%' fill='#EEF3EF'/>
-       <path d='M0 430 L200 330 L360 420 L560 300 L800 400 L800 600 L0 600Z' fill='#DCE7E0'/>
+       <rect width='100%' height='100%' fill='#F3F4F5'/>
+       <path d='M0 430 L200 330 L360 420 L560 300 L800 400 L800 600 L0 600Z' fill='#E7E9EB'/>
      </svg>`);
 }
 
@@ -3533,20 +4039,20 @@ function heroFallbackImg() {
     `<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'>
       <defs>
         <linearGradient id='sky' x1='0' y1='0' x2='0' y2='1'>
-          <stop offset='0' stop-color='#2A5C46'/>
-          <stop offset='.55' stop-color='#1F4634'/>
-          <stop offset='1' stop-color='#0E2018'/>
+          <stop offset='0' stop-color='#3C4249'/>
+          <stop offset='.55' stop-color='#22262A'/>
+          <stop offset='1' stop-color='#0E1012'/>
         </linearGradient>
         <radialGradient id='sun' cx='.7' cy='.28' r='.42'>
-          <stop offset='0' stop-color='#C86A4F' stop-opacity='.55'/>
-          <stop offset='1' stop-color='#C86A4F' stop-opacity='0'/>
+          <stop offset='0' stop-color='#FFFFFF' stop-opacity='.55'/>
+          <stop offset='1' stop-color='#FFFFFF' stop-opacity='0'/>
         </radialGradient>
       </defs>
       <rect width='1600' height='900' fill='url(#sky)'/>
       <circle cx='1120' cy='250' r='420' fill='url(#sun)'/>
-      <path d='M0 640 C 260 590, 420 660, 660 620 C 900 580, 1120 650, 1360 610 L1600 630 L1600 900 L0 900Z' fill='#17352A'/>
-      <path d='M0 720 C 300 690, 520 750, 820 715 C 1120 680, 1340 740, 1600 710 L1600 900 L0 900Z' fill='#132A20'/>
-      <g fill='#0E2018' opacity='.9'>
+      <path d='M0 640 C 260 590, 420 660, 660 620 C 900 580, 1120 650, 1360 610 L1600 630 L1600 900 L0 900Z' fill='#1E2226'/>
+      <path d='M0 720 C 300 690, 520 750, 820 715 C 1120 680, 1340 740, 1600 710 L1600 900 L0 900Z' fill='#15181B'/>
+      <g fill='#0E1012' opacity='.9'>
         <path d='M180 640 l34 -170 l34 170 z'/><path d='M205 500 l9 -60 l9 60 z'/>
         <path d='M410 660 l28 -140 l28 140 z'/>
         <path d='M1290 650 l40 -200 l40 200 z'/><path d='M1320 470 l10 -70 l10 70 z'/>
@@ -3570,6 +4076,15 @@ async function renderListingDetail(id) {
 
   const photos = listingPhotos(l);
   $("#detail-main-img").src = photos[0] || placeholderImg();
+  // La photo principale ouvre la galerie plein écran
+  if (photos.length) {
+    const main = $("#detail-main-img");
+    main.style.cursor = "zoom-in";
+    main.addEventListener("click", () => {
+      const current = photos.indexOf(main.src);
+      openLightbox(photos, current >= 0 ? current : 0);
+    });
+  }
   const thumbs = $("#detail-thumbs");
   photos.forEach((src, i) => {
     const img = document.createElement("img");
@@ -4235,7 +4750,7 @@ async function uploadParkPhoto(file, parkId, slot) {
   const ext = file.name.split(".").pop();
   const path = `park/${parkId}/photo-${slot}.${ext}`;
   const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
-  if (error) { console.error(error); return null; }
+  if (error) { console.error("Envoi du fichier impossible (" + path + ") :", errMsg(error)); return null; }
   const { data } = sb.storage.from("listing-media").getPublicUrl(path);
   return data.publicUrl;
 }
@@ -4244,7 +4759,7 @@ async function uploadParkVideo(file, parkId) {
   const ext = file.name.split(".").pop();
   const path = `park/${parkId}/video.${ext}`;
   const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
-  if (error) { console.error(error); return null; }
+  if (error) { console.error("Envoi du fichier impossible (" + path + ") :", errMsg(error)); return null; }
   const { data } = sb.storage.from("listing-media").getPublicUrl(path);
   return data.publicUrl;
 }
@@ -4866,7 +5381,7 @@ async function uploadListingPhoto(file, listingId, index) {
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
   const path = `listing/${listingId}/${Date.now()}-${index}.${ext}`;
   const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
-  if (error) { console.error(error); return null; }
+  if (error) { console.error("Envoi du fichier impossible (" + path + ") :", errMsg(error)); return null; }
   const { data } = sb.storage.from("listing-media").getPublicUrl(path);
   return data.publicUrl;
 }
@@ -4996,6 +5511,10 @@ document.addEventListener("click", (e) => {
   } else if (SUPABASE_URL.includes("VOTRE-PROJET") || SUPABASE_ANON_KEY.includes("VOTRE_CLE")) {
     toast("⚠️ Configure tes clés Supabase en haut du script pour activer le site");
   }
+
+  // Effets globaux, mis en place une fois pour toute la visite
+  setupIntro();
+  setupSmoothScroll();
 
   router();
 })();
