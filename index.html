@@ -71,14 +71,20 @@
      peut agir : boutons, liens, états actifs, favoris. Deux versions,
      l'une pour les fonds clairs, l'autre pour les fonds sombres, afin
      que le texte reste lisible partout. */
-  --aqua-800:#0B6E73;
-  --aqua-700:#0B7A7E;
-  --aqua-600:#0E8C91;
-  --aqua-500:#14A8AC;
-  --aqua-400:#2CC3C4;
-  --aqua-300:#5ECFCE;
-  --aqua-100:#EFFAFA;
-  --aqua-glass:rgba(20,168,172,.14);
+  /* Orange Hermès. La teinte de marque exacte (#F37021) est
+     volontairement réservée aux aplats et aux éléments graphiques :
+     posée sous du texte blanc elle manque de contraste. Les nuances
+     plus soutenues prennent le relais partout où il faut lire. */
+  --aqua-900:#A34310;   /* survol des boutons */
+  --aqua-800:#B4480E;   /* petits textes : la seule nuance assez foncée */
+  --aqua-700:#C2530F;   /* fonds de boutons — le plus clair encore lisible en blanc */
+  --aqua-600:#DA6116;   /* grands aplats, dégradés */
+  --aqua-500:#F37021;   /* orange Hermès — graphismes, traits, repères */
+  --aqua-400:#FF8A3D;
+  --aqua-300:#FFA766;   /* sur fond sombre */
+  --aqua-200:#FFC79E;
+  --aqua-100:#FFF0E6;
+  --aqua-glass:rgba(243,112,33,.16);
 
   /* Anciens noms d'accent, redirigés vers le turquoise */
   --brick-700:var(--aqua-800);
@@ -98,7 +104,7 @@
 
   /* Rétro-compatibilité : d'anciens composants utilisent encore ces noms.
      Ils pointent désormais vers la nouvelle palette. */
-  --khaki-700:var(--aqua-800);
+  --khaki-700:var(--aqua-900);
   --khaki-600:var(--aqua-700);
   --khaki-500:var(--aqua-500);
   --khaki-200:var(--forest-100);
@@ -111,8 +117,8 @@
   --bg:var(--paper);
   --bg-card:#ffffff;
   --pink-500:var(--brick-600);
-  --gradient-primary:linear-gradient(135deg, var(--aqua-600), var(--aqua-800));
-  --gradient-primary-hover:linear-gradient(135deg, var(--aqua-700), var(--aqua-800));
+  --gradient-primary:linear-gradient(135deg, var(--aqua-500), var(--aqua-700));
+  --gradient-primary-hover:linear-gradient(135deg, var(--aqua-600), var(--aqua-900));
   --gradient-soft:linear-gradient(135deg, var(--forest-50), var(--stone-100));
 
   /* Rythme — arrondis francs mais discrets ; la douceur vient des images */
@@ -284,8 +290,8 @@ input,select,textarea{font-family:inherit}
 
 /* Micro-libellé : capitales espacées, sans filet ni ornement */
 .eyebrow{
-  display:block; font-family:var(--font-body); font-size:.68rem; font-weight:500;
-  text-transform:uppercase; letter-spacing:.22em; color:var(--ink-500); margin:0 0 14px;
+  display:block; font-family:var(--font-body); font-size:.68rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:.22em; color:var(--aqua-800); margin:0 0 14px;
 }
 .eyebrow-light{color:rgba(255,255,255,.7)}
 
@@ -317,9 +323,9 @@ input,select,textarea{font-family:inherit}
 
 .story-num{
   display:block; font-size:.66rem; font-weight:600;
-  text-transform:uppercase; letter-spacing:.22em; color:rgba(255,255,255,.72); margin:0 0 16px;
+  text-transform:uppercase; letter-spacing:.22em; color:var(--aqua-300); margin:0 0 16px;
 }
-.story-num-light{color:rgba(255,255,255,.72)}
+.story-num-light{color:var(--aqua-300)}
 
 .story-open-title, .story-title{
   font-family:var(--font-display); font-weight:600;
@@ -491,7 +497,7 @@ input,select,textarea{font-family:inherit}
 .figure .count{
   font-family:var(--font-display); font-weight:300;
   font-size:clamp(2.6rem,6vw,4.4rem); line-height:1; letter-spacing:-.03em;
-  color:var(--ink-900); font-variant-numeric:tabular-nums;
+  color:var(--aqua-600); font-variant-numeric:tabular-nums;
 }
 .figure small{
   font-size:.72rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-500);
@@ -527,8 +533,8 @@ input,select,textarea{font-family:inherit}
 /* Jauge de progression du défilement */
 .scroll-bar{
   position:fixed; top:0; left:0; height:2px; width:100%; z-index:150;
-  background:var(--paper); transform:scaleX(0); transform-origin:left;
-  mix-blend-mode:difference; pointer-events:none;
+  background:var(--aqua-500); transform:scaleX(0); transform-origin:left;
+  pointer-events:none;
 }
 
 @media (max-width:640px){
@@ -624,7 +630,7 @@ input,select,textarea{font-family:inherit}
   width:min(220px,42vw); height:1px; background:rgba(251,250,247,.28); position:relative; overflow:hidden;
 }
 .intro-line::after{
-  content:""; position:absolute; inset:0; background:var(--paper);
+  content:""; position:absolute; inset:0; background:var(--aqua-500);
   transform:scaleX(0); transform-origin:left;
   animation:introLine 1.25s cubic-bezier(.6,0,.2,1) .35s forwards;
 }
@@ -696,7 +702,7 @@ input,select,textarea{font-family:inherit}
 .lb-prev{left:22px} .lb-next{right:22px}
 .lb-count{
   position:absolute; bottom:26px; left:50%; transform:translateX(-50%);
-  color:rgba(255,255,255,.75); font-size:.76rem; letter-spacing:.2em;
+  color:var(--aqua-300); font-size:.76rem; letter-spacing:.2em; font-weight:600;
 }
 @media (max-width:640px){
   .lb-nav{width:44px; height:44px}
@@ -731,6 +737,349 @@ input,select,textarea{font-family:inherit}
   .cursor{display:none}
   .listing-card.reveal .card-media{clip-path:none; transition:none}
   .fav-toggle.just-faved{animation:none}
+}
+
+/* ===========================================================
+   ACTIONS DE LA FICHE — partager, imprimer, comparer
+   =========================================================== */
+.detail-actions-row{display:flex; gap:4px; flex-wrap:wrap; margin-top:10px}
+.detail-actions-row .btn{flex:1; min-width:110px}
+.detail-views{
+  margin:14px 0 0; font-size:.78rem; color:var(--ink-500); letter-spacing:.04em; text-align:center;
+}
+
+/* ===========================================================
+   COMPARATEUR
+   =========================================================== */
+.compare-bar{
+  position:fixed; left:50%; transform:translateX(-50%); bottom:86px; z-index:120;
+  display:flex; align-items:center; gap:16px; padding:12px 14px 12px 20px;
+  background:var(--glass-lighter); backdrop-filter:var(--blur); -webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--line); border-radius:var(--radius-pill);
+  box-shadow:0 12px 34px -14px rgba(0,0,0,.3);
+  animation:cbIn .35s cubic-bezier(.16,1,.3,1);
+}
+@keyframes cbIn{from{opacity:0; transform:translateX(-50%) translateY(14px)} to{opacity:1; transform:translateX(-50%)}}
+.cb-count{font-size:.8rem; font-weight:500; color:var(--ink-800); white-space:nowrap}
+.cb-thumbs{display:flex; gap:-6px}
+.cb-thumbs img{
+  width:34px; height:34px; border-radius:8px; object-fit:cover;
+  border:2px solid var(--paper); margin-left:-8px;
+}
+.cb-thumbs img:first-child{margin-left:0}
+.cb-clear{
+  background:none; border:none; color:var(--ink-500); font-size:1rem; cursor:pointer; padding:4px;
+}
+.cb-clear:hover{color:var(--ink-900)}
+
+.compare-page{max-width:1240px; margin:0 auto}
+.compare-grid{
+  display:grid; grid-template-columns:130px repeat(var(--cols,2), minmax(0,1fr));
+  gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-lg); overflow:hidden;
+}
+.cmp-head{
+  background:var(--paper); padding:16px; display:flex; flex-direction:column; gap:8px; align-items:flex-start;
+}
+.cmp-head img{width:100%; aspect-ratio:3/2; object-fit:cover; border-radius:var(--radius-sm)}
+.cmp-head strong{font-family:var(--font-display); font-weight:400; font-size:1rem; line-height:1.25}
+.cmp-label{
+  background:var(--paper-warm); padding:14px 16px; font-size:.78rem; font-weight:500;
+  color:var(--ink-500); display:flex; align-items:center;
+}
+.cmp-cell{
+  background:var(--paper); padding:14px 16px; font-size:.92rem; color:var(--ink-900);
+  display:flex; align-items:center;
+}
+
+@media (max-width:640px){
+  .compare-bar{bottom:80px; gap:10px; padding:10px 12px 10px 16px}
+  .cb-count{font-size:.72rem}
+  .compare-grid{grid-template-columns:100px repeat(var(--cols,2), minmax(120px,1fr)); font-size:.85rem}
+  .compare-page{overflow-x:auto}
+}
+
+/* ===========================================================
+   IMPRESSION — une fiche propre, sans interface
+   =========================================================== */
+@media print{
+  .site-header, .bottom-nav, .compare-bar, .detail-actions,
+  .marquee, .grain, .cursor, .scroll-bar, .curtain,
+  .site-footer, .detail-thumbs, .fav-toggle, .hero-scroll{
+    display:none !important;
+  }
+  body{background:#fff; color:#000}
+  .app-root{padding:0; max-width:none}
+  .detail-grid{grid-template-columns:1fr; gap:18px}
+  .detail-media-main{aspect-ratio:16/9; page-break-inside:avoid}
+  .detail-media-main img{max-height:11cm; object-fit:contain}
+  .reveal{opacity:1 !important; transform:none !important}
+  .listing-card .card-media{clip-path:none !important}
+  a[href]::after{content:""}
+  .page-title, .section-title-sm{color:#000}
+}
+
+/* ===========================================================
+   MODE SOMBRE
+   Suit le réglage du téléphone ou de l'ordinateur. On ne redéfinit
+   que les valeurs qui changent : tout le reste du site utilise les
+   mêmes variables et s'adapte automatiquement.
+   =========================================================== */
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#0F1113;
+    --paper-warm:#16191C;
+    --bg-card:#16191C;
+
+    --ink-900:#F2F4F5;
+    --ink-800:#DDE2E5;
+    --ink-700:#C3C9CD;
+    --ink-500:#8D959B;
+    --ink-300:#5E666C;
+    --line:#252A2E;
+
+    /* Le turquoise s'éclaircit pour rester lisible sur fond sombre */
+    --aqua-700:#FF9A55;
+    --aqua-600:#FFB07A;
+    --aqua-500:#FF8A3D;
+    --aqua-100:#3A1B0A;
+    --aqua-glass:rgba(255,138,61,.16);
+
+    /* Le verre devient sombre plutôt que clair */
+    --glass-light:rgba(22,25,28,.62);
+    --glass-lighter:rgba(15,17,19,.82);
+    --glass-border:rgba(255,255,255,.1);
+
+    --shadow-soft:0 1px 3px rgba(0,0,0,.4);
+    --shadow-card:0 12px 34px -18px rgba(0,0,0,.7);
+    --shadow-pop:0 24px 60px -20px rgba(0,0,0,.8);
+  }
+
+  /* Sur fond sombre, le bouton principal s'inverse : clair sur sombre */
+  .btn-primary{background:var(--ink-900); color:var(--paper)}
+  .btn-primary:hover{background:#fff}
+  .btn-cta{background:var(--aqua-700); color:var(--paper)}
+  .btn-cta:hover{background:var(--aqua-600)}
+  .btn-outline{background:rgba(255,255,255,.1); color:var(--ink-900)}
+  .btn-outline:hover{background:rgba(255,255,255,.2)}
+  .q-choices button.active{background:var(--aqua-700); border-color:var(--aqua-700); color:var(--paper)}
+  .main-nav a.active-nav{background:var(--aqua-700); color:var(--paper)}
+  .admin-card-primary{background:var(--aqua-700); border-color:var(--aqua-700)}
+  .admin-card-primary strong{color:var(--paper)}
+  .admin-card-primary .ac-desc{color:rgba(15,17,19,.75)}
+  .q-equip button.active::before{background-color:var(--aqua-700)}
+  .grain{opacity:.09}
+  .card-badge{color:var(--ink-500)}
+}
+
+/* ===========================================================
+   IMAGES QUI SE PRÉCISENT
+   Une version très floue s'affiche instantanément, puis la vraie
+   photo se superpose en fondu une fois chargée. Plus de blanc,
+   plus de saut brutal.
+   =========================================================== */
+.img-blur{
+  position:relative; overflow:hidden; background:var(--paper-warm);
+}
+.img-blur::before{
+  content:""; position:absolute; inset:0;
+  background:var(--placeholder, linear-gradient(120deg, var(--paper-warm), var(--line)));
+  background-size:cover; background-position:center;
+  filter:blur(18px); transform:scale(1.12);
+  transition:opacity .5s ease;
+}
+.img-blur.is-loaded::before{opacity:0}
+.img-blur img{
+  position:relative; z-index:1; opacity:0; transition:opacity .55s ease;
+}
+.img-blur.is-loaded img{opacity:1}
+
+/* ===========================================================
+   SQUELETTES DE CHARGEMENT
+   Des blocs à la forme exacte des cartes, plutôt qu'une page vide.
+   =========================================================== */
+.skeleton{
+  background:linear-gradient(100deg, var(--paper-warm) 30%, var(--line) 50%, var(--paper-warm) 70%);
+  background-size:220% 100%; animation:shimmer 1.4s linear infinite;
+  border-radius:var(--radius-md);
+}
+@keyframes shimmer{to{background-position:-120% 0}}
+.skel-card{display:flex; flex-direction:column; gap:12px}
+.skel-media{aspect-ratio:3/2; width:100%}
+.skel-line{height:13px; border-radius:5px}
+.skel-line.w70{width:70%; margin:0 auto}
+.skel-line.w45{width:45%; margin:0 auto}
+.skel-line.w30{width:30%; margin:0 auto}
+
+/* ===========================================================
+   APERÇU DES PHOTOS AU SURVOL D'UNE CARTE
+   Des traits indiquent le nombre de photos ; le déplacement du
+   doigt ou de la souris fait défiler les vues.
+   =========================================================== */
+.card-dots{
+  position:absolute; left:0; right:0; bottom:8px; z-index:2;
+  display:flex; gap:4px; justify-content:center; padding:0 12px;
+  opacity:0; transition:opacity .25s ease; pointer-events:none;
+}
+.listing-card:hover .card-dots, .card-media.is-touched .card-dots{opacity:1}
+.card-dots i{
+  flex:1; max-width:34px; height:2px; border-radius:2px;
+  background:rgba(255,255,255,.45); transition:background .2s ease;
+}
+.card-dots i.on{background:var(--aqua-500)}
+
+/* ===========================================================
+   TRANSITION PARTAGÉE CARTE → FICHE
+   La photo de la carte s'agrandit jusqu'à sa place sur la fiche.
+   Géré nativement par le navigateur quand il sait le faire.
+   =========================================================== */
+@view-transition{navigation:auto}
+::view-transition-old(root), ::view-transition-new(root){
+  animation-duration:.42s; animation-timing-function:cubic-bezier(.16,1,.3,1);
+}
+.vt-photo{view-transition-name:photo-active}
+
+
+@media (prefers-reduced-motion: reduce){
+  .skeleton{animation:none}
+  .img-blur img{opacity:1}
+  .img-blur::before{display:none}
+  ::view-transition-old(root), ::view-transition-new(root){animation:none}
+}
+
+/* ===========================================================
+   BARRE D'ACTION COLLANTE
+   Apparaît quand le bouton principal de la fiche sort de l'écran :
+   le prix et l'action restent toujours à portée.
+   =========================================================== */
+.sticky-buy{
+  position:fixed; left:0; right:0; bottom:0; z-index:70;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:12px 20px calc(12px + env(safe-area-inset-bottom, 0px));
+  background:var(--glass-lighter); backdrop-filter:var(--blur); -webkit-backdrop-filter:var(--blur);
+  border-top:1px solid var(--line);
+  transform:translateY(100%); transition:transform .38s cubic-bezier(.16,1,.3,1);
+}
+.sticky-buy.is-in{transform:none}
+.sb-info{display:flex; flex-direction:column; gap:2px; min-width:0}
+.sb-info strong{
+  font-size:.9rem; font-weight:500; color:var(--ink-900);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52vw;
+}
+.sb-info span{font-size:.82rem; color:var(--aqua-800); font-weight:600}
+/* Sur mobile, la barre du bas est déjà là : on la décale au-dessus */
+@media (max-width:900px){
+  .sticky-buy{bottom:64px}
+}
+
+/* ===========================================================
+   BIENS SIMILAIRES
+   =========================================================== */
+.similar{margin-top:clamp(60px,10vh,110px)}
+.similar-title{
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(1.4rem,2.6vw,2rem); letter-spacing:-.02em; margin:0 0 28px;
+}
+
+/* ===========================================================
+   IMAGE QUI GRANDIT AU DÉFILEMENT
+   Elle commence au format contenu et s'élargit jusqu'au plein
+   écran à mesure qu'on descend.
+   =========================================================== */
+.grow-section{
+  position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
+  height:190svh; background:var(--paper);
+}
+.grow-frame{
+  position:sticky; top:0; height:100svh; display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+.grow-frame img{
+  width:var(--w, 62%); height:var(--h, 62%); object-fit:cover;
+  border-radius:var(--r, 22px); transition:none;
+}
+.grow-caption{
+  position:absolute; bottom:8%; left:0; right:0; text-align:center; color:#fff;
+  opacity:var(--cap, 0); transition:opacity .3s ease; padding:0 24px;
+  text-shadow:0 2px 20px rgba(0,0,0,.5);
+}
+.grow-caption p{
+  font-family:var(--font-display); font-weight:300;
+  font-size:clamp(1.1rem,2.4vw,1.8rem); margin:8px 0 0;
+}
+
+/* ===========================================================
+   GALERIE HORIZONTALE AVEC ACCROCHE
+   =========================================================== */
+.hgal-section{padding:clamp(60px,9vh,100px) 0}
+.hgal-head{max-width:1240px; margin:0 auto clamp(24px,4vh,40px); padding:0 28px}
+.hgal{
+  display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory;
+  padding:0 28px 6px; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.hgal::-webkit-scrollbar{display:none}
+.hgal img{
+  flex:0 0 auto; width:min(78vw, 620px); aspect-ratio:4/3; object-fit:cover;
+  border-radius:var(--radius-lg); scroll-snap-align:center; background:var(--paper-warm);
+}
+.hgal-progress{
+  max-width:1240px; margin:20px auto 0; padding:0 28px; height:2px;
+}
+.hgal-progress i{
+  display:block; height:2px; background:var(--aqua-700); border-radius:2px;
+  width:20%; transition:width .15s linear, transform .15s linear;
+  transform-origin:left;
+}
+
+/* ===========================================================
+   BANDEAU DU HAUT QUI S'AFFINE
+   =========================================================== */
+.site-header{transition:background .3s ease, border-color .3s ease, padding .3s cubic-bezier(.16,1,.3,1)}
+.site-header .header-inner{transition:padding .3s cubic-bezier(.16,1,.3,1)}
+.site-header.is-condensed .header-inner{padding-top:9px; padding-bottom:9px}
+.site-header.is-condensed .brand-mark svg{width:30px; height:30px; transition:width .3s ease, height .3s ease}
+.brand-mark svg{transition:width .3s ease, height .3s ease}
+
+@media (prefers-reduced-motion: reduce){
+  .sticky-buy{transition:none}
+  .grow-frame img{width:100%; height:100%; border-radius:0}
+  .site-header, .site-header .header-inner{transition:none}
+}
+
+/* ===========================================================
+   FLUIDITÉ
+   Quelques réglages qui allègent le travail du navigateur au
+   défilement, sans rien changer à l'apparence.
+   =========================================================== */
+
+/* Le navigateur ne calcule pas la mise en page des sections encore
+   hors de l'écran. Sur une longue page, c'est le gain le plus net.
+   La hauteur estimée évite que la barre de défilement saute. */
+.story-chapter, .hgal-section, .figures, .manifesto, .similar{
+  content-visibility:auto;
+  contain-intrinsic-size:auto 700px;
+}
+
+/* Les images ne provoquent plus de recalcul du reste de la page */
+.card-media, .story-figure, .detail-media-main, .hgal img, .grow-frame{
+  contain:layout paint;
+}
+
+/* Les éléments animés en continu sont isolés sur leur propre couche */
+.marquee-track, .hero-img, .hero-video{ will-change:transform }
+
+/* Sur mobile, on allège les effets les plus coûteux : le flou de
+   verre et le grain animé sont ce qui pèse le plus sur un téléphone. */
+@media (max-width:900px){
+  :root{ --blur:blur(14px) }
+  .grain{ animation:none; opacity:.1 }
+  .img-blur::before{ filter:blur(12px) }
+}
+
+/* Sur les appareils qui annoncent peu de mémoire ou une connexion
+   limitée, on renonce simplement au grain. */
+@media (prefers-reduced-data:reduce){
+  .grain{ display:none }
 }
 
 /* ============ HERO ============
@@ -781,7 +1130,7 @@ input,select,textarea{font-family:inherit}
   display:inline-flex; flex-direction:column; align-items:center; gap:9px;
 }
 .hero-scroll::after{
-  content:""; width:1px; height:34px; background:rgba(255,255,255,.5);
+  content:""; width:2px; height:34px; background:var(--aqua-500);
   animation:scrollHint 2.4s ease-in-out infinite;
 }
 @keyframes scrollHint{
@@ -952,8 +1301,8 @@ input,select,textarea{font-family:inherit}
 }
 .card-meta{font-size:.78rem; color:var(--ink-500); margin:0; letter-spacing:.03em}
 .card-price{
-  font-family:var(--font-body); font-weight:500; font-size:.95rem;
-  color:var(--ink-900); margin-top:12px; letter-spacing:.01em;
+  font-family:var(--font-body); font-weight:600; font-size:.95rem;
+  color:var(--aqua-800); margin-top:12px; letter-spacing:.01em;
 }
 .card-price .price-suffix{color:var(--ink-500); font-weight:400; font-size:.85em}
 
@@ -983,7 +1332,7 @@ input,select,textarea{font-family:inherit}
   padding:7px 15px; border-radius:var(--radius-pill); margin-bottom:14px;
 }
 .detail-title{font-family:var(--font-display); font-size:1.7rem; font-weight:700; color:var(--ink-900); margin:0 0 8px}
-.detail-price{font-family:var(--font-display); font-size:1.5rem; font-weight:700; color:var(--khaki-700); margin:0 0 4px}
+.detail-price{font-family:var(--font-display); font-size:1.6rem; font-weight:700; color:var(--aqua-800); margin:0 0 4px}
 .detail-location{color:var(--ink-500); margin:0 0 22px; font-size:.94rem; font-weight:600}
 
 .detail-specs{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:24px}
@@ -1070,7 +1419,7 @@ input,select,textarea{font-family:inherit}
 .admin-card-primary{background:var(--aqua-700); border-color:var(--aqua-700)}
 .admin-card-primary strong{color:var(--paper)}
 .admin-card-primary .ac-desc{color:var(--aqua-100)}
-.admin-card-primary:hover{background:var(--aqua-800); border-color:var(--aqua-800)}
+.admin-card-primary:hover{background:var(--aqua-900); border-color:var(--aqua-900)}
 .ac-icon{
   width:38px; height:38px; border-radius:var(--radius-sm); background:var(--brick-600); color:#fff;
   display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:400; line-height:1;
@@ -1974,11 +2323,34 @@ input,select,textarea{font-family:inherit}
     <div class="detail-actions">
       <button class="btn btn-primary btn-block" id="btn-contact-owner">Demander une visite / des infos</button>
       <button class="btn btn-outline btn-block" id="btn-fav-detail">Ajouter aux favoris</button>
+      <div class="detail-actions-row">
+        <button class="btn btn-ghost btn-sm" id="btn-share">Partager</button>
+        <button class="btn btn-ghost btn-sm" id="btn-print">Imprimer la fiche</button>
+        <button class="btn btn-ghost btn-sm" id="btn-compare">Comparer</button>
+      </div>
+      <p class="detail-views" id="detail-views"></p>
     </div>
   </div>
 </div>
+
+<!-- Biens similaires : même type, gamme de prix proche -->
+<section class="similar" id="similar-block" hidden>
+  <h2 class="similar-title">Vous aimerez aussi</h2>
+  <div class="grid-listings" id="similar-grid"></div>
+</section>
 ```
 
+  </div>
+
+  <!-- Barre d'action collante : apparaît quand le bouton principal
+       sort de l'écran, comme la barre d'achat d'Apple. -->
+
+  <div class="sticky-buy" id="sticky-buy" hidden>
+    <div class="sb-info">
+      <strong id="sb-title"></strong>
+      <span id="sb-price"></span>
+    </div>
+    <button class="btn btn-primary btn-sm" id="sb-cta">Demander une visite</button>
   </div>
 </template>
 
@@ -2089,6 +2461,31 @@ input,select,textarea{font-family:inherit}
       </p>
       <div class="story-chips" id="park-profile-conditions"></div>
     </div>
+  </section>
+
+  <!-- Image qui s'élargit à mesure qu'on descend : elle passe du
+       format contenu au plein écran. -->
+
+  <section class="grow-section" id="grow-section">
+    <div class="grow-frame" id="grow-frame">
+      <img id="grow-img" alt="">
+      <div class="grow-caption">
+        <span class="story-num story-num-light">Le domaine</span>
+        <p>Seize hectares, trois cents emplacements, une seule adresse.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Galerie horizontale : on fait défiler au doigt, chaque photo
+       se cale nettement en place. -->
+
+  <section class="hgal-section">
+    <div class="hgal-head">
+      <span class="story-num">En images</span>
+      <h2 class="story-title">Le parc en quelques vues</h2>
+    </div>
+    <div class="hgal" id="hgal"></div>
+    <div class="hgal-progress"><i id="hgal-bar"></i></div>
   </section>
 
   <!-- 05 & 06 — SÉJOURNER / S'INSTALLER -->
@@ -2659,6 +3056,7 @@ const state = {
     brands: new Set(), yearMin: null, yearMax: null, surfaceMin: null,
     equipements: new Set(), selectionClub: false
   },
+  compare: (() => { try { return JSON.parse(localStorage.getItem("ccv-compare") || "[]"); } catch (_) { return []; } })(),
   wizard: { step: 1, photos: [], mode: null, editingId: null }
 };
 
@@ -2738,6 +3136,9 @@ async function router() {
     app.classList.add("page-in");
   }
   requestAnimationFrame(() => {
+    // On oublie les effets de la page précédente : sans ça, ils
+    // continueraient de tourner sur des éléments disparus.
+    clearPageScrollEffects();
     observeReveals(document);
     setupMagnetic(document);
     setupParallax();
@@ -2745,6 +3146,7 @@ async function router() {
     setupPinned();
     setupCursor();
     setupLightbox();
+    renderCompareBar();
   });
 
   if (path === "catalogue") return renderCatalogue(params);
@@ -2753,6 +3155,7 @@ async function router() {
   if (path.startsWith("listing/")) return renderListingDetail(path.split("/")[1]);
   if (path === "favoris") return renderFavoris();
   if (path === "messages") return renderMessages();
+  if (path === "comparer") return renderCompare();
   if (path === "parc") return renderParkProfile();
   if (path === "admin") return renderAdmin(params);
   return renderCatalogue(params);
@@ -2760,6 +3163,25 @@ async function router() {
 window.addEventListener("hashchange", router);
 
 function navigate(path) { location.hash = "#/" + path; }
+
+// Transition partagée : la photo de la carte s'agrandit jusqu'à sa
+// place sur la fiche. Le navigateur s'en charge nativement quand il
+// sait le faire ; sinon la navigation reste normale.
+function navigateWithPhoto(path, mediaEl) {
+  if (REDUCED_MOTION || !document.startViewTransition || !mediaEl) {
+    navigate(path);
+    return;
+  }
+  // On nomme la photo de départ ; la fiche nommera la sienne pareil.
+  document.querySelectorAll(".vt-photo").forEach(el => el.classList.remove("vt-photo"));
+  mediaEl.classList.add("vt-photo");
+
+  document.startViewTransition(() => {
+    navigate(path);
+    // Laisse le rendu s'effectuer avant de rendre la main
+    return new Promise(res => setTimeout(res, 60));
+  });
+}
 
 // Intercepteur global : prend le contrôle de tout lien interne
 // (href commençant par "#/") avant que le navigateur — ou un
@@ -3314,6 +3736,10 @@ function renderCatalogue(params) {
   app.innerHTML = "";
   app.appendChild($("#tpl-catalogue").content.cloneNode(true));
 
+  // Squelettes le temps que les annonces soient prêtes : la page ne
+  // paraît jamais vide.
+  if (!state.listings.length) renderSkeletons("#grid-listings", 6);
+
   // Le hero d'accueil : la vidéo prime sur la photo si elle existe —
   // c'est elle qui donne le plus de vie au premier écran. À défaut,
   // on reprend la photo d'accueil, puis les photos du parc, puis un
@@ -3605,6 +4031,46 @@ function renderFilterEquipChips() {
   });
 }
 
+// Affiche une photo en deux temps : d'abord une version très floue
+// (obtenue en réduisant l'image côté navigateur), puis la vraie photo
+// en fondu une fois chargée. Évite le blanc et le saut visuel.
+function applyProgressiveImage(container, img, src) {
+  if (!container || !img) return;
+  // Le décodage se fait en tâche de fond : une grande photo ne bloque
+  // plus l'affichage du reste de la page pendant qu'elle se prépare.
+  img.decoding = "async";
+  if (!img.loading) img.loading = "lazy";
+  container.classList.add("img-blur");
+  container.classList.remove("is-loaded");
+
+  // Le flou de départ reprend la photo elle-même, très réduite par le
+  // navigateur : aucun fichier supplémentaire à charger.
+  container.style.setProperty("--placeholder", `url("${src}")`);
+
+  const done = () => container.classList.add("is-loaded");
+  img.addEventListener("load", done, { once: true });
+  img.addEventListener("error", done, { once: true });
+  img.src = src;
+  if (img.complete) done();
+  // Filet de sécurité : si l'événement de chargement n'arrive jamais
+  // (cas rares de cache ou de navigateur capricieux), la photo ne doit
+  // pas rester invisible.
+  setTimeout(done, 3000);
+}
+
+// Squelettes affichés le temps que les annonces arrivent.
+function renderSkeletons(gridSelector, count) {
+  const grid = $(gridSelector);
+  if (!grid) return;
+  grid.innerHTML = Array.from({ length: count || 6 }, () => `
+    <div class="skel-card">
+      <div class="skeleton skel-media"></div>
+      <div class="skeleton skel-line w30"></div>
+      <div class="skeleton skel-line w70"></div>
+      <div class="skeleton skel-line w45"></div>
+    </div>`).join("");
+}
+
 function renderListingsGrid(listings, gridSelector) {
   const grid = $(gridSelector);
   if (!grid) return;
@@ -3628,9 +4094,54 @@ function syncHeaderOverHero() {
   const hasHero = !!document.querySelector(".hero, .story-open");
   header.classList.toggle("is-over-hero", hasHero && window.scrollY < 60);
 }
-window.addEventListener("scroll", syncHeaderOverHero, { passive: true });
 
 const REDUCED_MOTION = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+// ===========================================================
+// BOUCLE DE DÉFILEMENT UNIQUE
+// Tous les effets liés au défilement passent par ici plutôt que
+// d'installer chacun leur écouteur. Le navigateur n'a plus qu'un
+// seul rendez-vous par image affichée, au lieu de six calculs
+// concurrents — c'est ce qui rend le défilement franc sur mobile.
+// ===========================================================
+const scrollEffects = new Set();
+let scrollTicking = false;
+
+function onScrollFrame(fn) {
+  scrollEffects.add(fn);
+  fn();                       // premier calcul immédiat
+  return () => scrollEffects.delete(fn);
+}
+
+function runScrollEffects() {
+  scrollTicking = false;
+  const y = window.scrollY;
+  const vh = window.innerHeight;
+  scrollEffects.forEach(fn => { try { fn(y, vh); } catch (_) {} });
+}
+
+window.addEventListener("scroll", () => {
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(runScrollEffects);
+}, { passive: true });
+
+window.addEventListener("resize", () => {
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(runScrollEffects);
+}, { passive: true });
+
+// Les effets attachés à une page disparue doivent être oubliés,
+// sinon ils s'accumulent au fil de la navigation.
+function clearPageScrollEffects() {
+  scrollEffects.forEach(fn => { if (fn.__page) scrollEffects.delete(fn); });
+}
+
+// Effet permanent : le bandeau du haut suit l'état du défilement.
+onScrollFrame(syncHeaderOverHero);
+
+
 
 function observeReveals(root) {
   if (REDUCED_MOTION || !("IntersectionObserver" in window)) {
@@ -3688,12 +4199,9 @@ function observeCounters(root) {
 // s'assombrit doucement — sensation de profondeur au défilement.
 function setupParallax() {
   if (REDUCED_MOTION) return;
-  let ticking = false;
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      const y = window.scrollY;
+  const onScroll = (yArg) => {
+    {
+      const y = yArg ?? window.scrollY;
       const inner = $(".hero-inner");
       const parallaxed = `translate3d(0, ${y * 0.32}px, 0) scale(${1.06 - Math.min(y, 900) * 0.00006})`;
       const img = $("#hero-img");
@@ -3709,13 +4217,10 @@ function setupParallax() {
         const h = document.documentElement.scrollHeight - window.innerHeight;
         bar.style.transform = `scaleX(${h > 0 ? y / h : 0})`;
       }
-      ticking = false;
-    });
+    }
   };
-  window.removeEventListener("scroll", window.__ccvScroll || (() => {}));
-  window.__ccvScroll = onScroll;
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  onScroll.__page = true;
+  onScrollFrame(onScroll);
 }
 
 // ===========================================================
@@ -3745,13 +4250,20 @@ function setupSmoothScroll() {
     if (Math.abs(offset) > 0.15) {
       requestAnimationFrame(loop);
     } else {
+      // On rend la main au navigateur : garder une couche composite
+      // en permanence consomme de la mémoire vidéo pour rien.
       app.style.transform = "";
+      app.style.willChange = "";
       running = false;
     }
   };
 
   window.addEventListener("scroll", () => {
-    if (!running) { running = true; requestAnimationFrame(loop); }
+    if (!running) {
+      running = true;
+      app.style.willChange = "transform";
+      requestAnimationFrame(loop);
+    }
   }, { passive: true });
 }
 
@@ -3863,6 +4375,153 @@ function setupLightbox() {
   }, { passive: true });
 }
 
+// ===========================================================
+// BARRE D'ACTION COLLANTE
+// Apparaît dès que le bouton principal de la fiche sort de l'écran.
+// ===========================================================
+function setupStickyBuy(listing) {
+  const bar = $("#sticky-buy");
+  const trigger = $("#btn-contact-owner");
+  if (!bar || !trigger) return;
+
+  const isLoc = listing.transaction === "Location";
+  $("#sb-title").textContent = listing.title || listing.type_bien;
+  $("#sb-price").textContent = fmtEUR(listing.price) + (isLoc ? " / nuit" : "");
+  $("#sb-cta").textContent = isLoc ? "Réserver" : "Demander une visite";
+  $("#sb-cta").addEventListener("click", () => openContactModal(listing));
+
+  bar.hidden = false;
+
+  if (!("IntersectionObserver" in window)) return;
+  const obs = new IntersectionObserver(([e]) => {
+    // Visible tant que le bouton principal n'est pas à l'écran
+    bar.classList.toggle("is-in", !e.isIntersecting);
+  }, { rootMargin: "-80px 0px 0px 0px" });
+  obs.observe(trigger);
+}
+
+// ===========================================================
+// BIENS SIMILAIRES
+// Même type de transaction et de bien, prix proche.
+// ===========================================================
+function renderSimilar(listing) {
+  const block = $("#similar-block");
+  const grid = $("#similar-grid");
+  if (!block || !grid) return;
+
+  const prix = listing.price || 0;
+  const similaires = state.listings
+    .filter(l => l.id !== listing.id && l.status === "publie")
+    .filter(l => l.transaction === listing.transaction)
+    .map(l => {
+      // On classe par proximité : même type de bien d'abord, puis prix proche
+      const memeType = l.type_bien === listing.type_bien ? 0 : 1;
+      const ecart = prix ? Math.abs((l.price || 0) - prix) / prix : 1;
+      return { l, score: memeType * 10 + ecart };
+    })
+    .sort((a, b) => a.score - b.score)
+    .slice(0, 3)
+    .map(x => x.l);
+
+  if (!similaires.length) { block.hidden = true; return; }
+
+  block.hidden = false;
+  grid.innerHTML = "";
+  similaires.forEach(l => grid.appendChild(buildListingCard(l)));
+  observeReveals(grid);
+}
+
+// ===========================================================
+// IMAGE QUI GRANDIT AU DÉFILEMENT
+// Elle passe du format contenu au plein écran.
+// ===========================================================
+function setupGrowImage() {
+  const section = $("#grow-section");
+  const frame = $("#grow-frame");
+  const img = $("#grow-img");
+  if (!section || !frame || !img) return;
+
+  const park = state.parks[0];
+  const photos = [park?.photo_2, park?.photo_3, park?.photo_1, park?.photo_accueil].filter(Boolean);
+  img.src = photos[0] || heroFallbackImg();
+
+  if (REDUCED_MOTION) {
+    frame.style.setProperty("--w", "100%");
+    frame.style.setProperty("--h", "100%");
+    frame.style.setProperty("--r", "0px");
+    frame.style.setProperty("--cap", "1");
+    return;
+  }
+
+  const update = () => {
+    const r = section.getBoundingClientRect();
+    const total = section.offsetHeight - window.innerHeight;
+    const p = Math.min(1, Math.max(0, -r.top / (total || 1)));
+    // L'image s'élargit de 62% à 100%, et ses angles s'arrondissent moins
+    frame.style.setProperty("--w", (62 + 38 * p) + "%");
+    frame.style.setProperty("--h", (62 + 38 * p) + "%");
+    frame.style.setProperty("--r", (22 * (1 - p)) + "px");
+    frame.style.setProperty("--cap", String(Math.max(0, (p - 0.55) / 0.35)));
+  };
+  update.__page = true;
+  onScrollFrame(update);
+}
+
+// ===========================================================
+// GALERIE HORIZONTALE AVEC ACCROCHE
+// ===========================================================
+function setupHorizontalGallery() {
+  const gal = $("#hgal");
+  const bar = $("#hgal-bar");
+  if (!gal) return;
+
+  const park = state.parks[0];
+  const photos = [park?.photo_1, park?.photo_2, park?.photo_3, park?.photo_4, park?.photo_accueil]
+    .filter(Boolean);
+  if (!photos.length) { gal.closest(".hgal-section")?.remove(); return; }
+
+  gal.innerHTML = photos.map((src, i) =>
+    `<img src="${src}" alt="Vue ${i + 1} du parc" loading="lazy" decoding="async">`).join("");
+
+  // Ouvre la galerie plein écran au clic
+  $$("img", gal).forEach((im, i) => im.addEventListener("click", () => openLightbox(photos, i)));
+
+  // Barre de progression sous la galerie
+  const update = () => {
+    if (!bar) return;
+    // Tant que les dimensions ne sont pas connues (images en cours de
+    // chargement), on affiche une barre neutre plutôt que rien.
+    const total = gal.scrollWidth || 1;
+    const visible = gal.clientWidth || total;
+    const max = total - visible;
+    const p = max > 0 ? gal.scrollLeft / max : 0;
+    const w = Math.min(1, Math.max(0.15, visible / total));
+    bar.style.width = (w * 100) + "%";
+    bar.style.transform = `translateX(${(p * (1 - w) * 100 / w)}%)`;
+  };
+  // Les dimensions changent quand les photos arrivent : on recalcule.
+  $$("img", gal).forEach(im => im.addEventListener("load", update, { once: true }));
+  gal.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update, { passive: true });
+  update();
+}
+
+// ===========================================================
+// BANDEAU DU HAUT QUI S'AFFINE
+// ===========================================================
+function setupCondensedHeader() {
+  const header = $(".site-header");
+  if (!header) return;
+  let condensed = null;
+  const update = (y) => {
+    const next = (y ?? window.scrollY) > 90;
+    if (next === condensed) return;     // on ne touche au DOM qu'au changement
+    condensed = next;
+    header.classList.toggle("is-condensed", next);
+  };
+  onScrollFrame(update);
+}
+
 // Découpe un texte en mots enveloppés, pour pouvoir les éclairer un
 // par un au défilement. Fait une seule fois par élément.
 function splitWords(el) {
@@ -3881,17 +4540,37 @@ function setupLitText() {
   if (REDUCED_MOTION) { $$("w", el).forEach(w => w.classList.add("on")); return; }
 
   const words = $$("w", el);
-  const update = () => {
-    const vh = window.innerHeight;
-    words.forEach(w => {
-      const r = w.getBoundingClientRect();
-      // Le mot s'allume quand il monte au-dessus des deux tiers de l'écran
-      w.classList.toggle("on", r.top < vh * 0.72);
-    });
+
+  // Les positions des mots ne changent pas pendant le défilement :
+  // on les mesure UNE fois, puis on ne compare que des nombres.
+  // Auparavant on interrogeait la position de chaque mot à chaque
+  // pixel parcouru, ce qui forçait le navigateur à tout recalculer.
+  let tops = [];
+  const measure = () => {
+    const base = window.scrollY;
+    tops = words.map(w => w.getBoundingClientRect().top + base);
   };
-  window.addEventListener("scroll", update, { passive: true });
-  window.addEventListener("resize", update, { passive: true });
-  update();
+  measure();
+  window.addEventListener("resize", measure, { passive: true });
+  // Les polices arrivent parfois après : on remesure alors.
+  document.fonts?.ready?.then(measure);
+
+  let lastLit = -1;
+  const update = (y, vh) => {
+    const seuil = (y ?? window.scrollY) + (vh ?? window.innerHeight) * 0.72;
+    // Les mots sont dans l'ordre : on cherche juste le dernier allumé
+    let n = 0;
+    while (n < tops.length && tops[n] < seuil) n++;
+    if (n === lastLit) return;          // rien de neuf, on ne touche pas au DOM
+    if (n > lastLit) {
+      for (let i = Math.max(0, lastLit); i < n; i++) words[i].classList.add("on");
+    } else {
+      for (let i = n; i < lastLit; i++) words[i].classList.remove("on");
+    }
+    lastLit = n;
+  };
+  update.__page = true;
+  onScrollFrame(update);
 }
 
 // Section figée : le visuel change en fonction de l'étape du récit
@@ -3973,13 +4652,47 @@ function buildListingCard(l) {
   card.classList.add("reveal");
   card.addEventListener("click", (e) => {
     if (e.target.closest(".fav-toggle")) return;
-    navigate("listing/" + l.id);
+    navigateWithPhoto("listing/" + l.id, $(".card-media", card));
   });
 
   const photos = listingPhotos(l);
+  const media = $(".card-media", node);
   const img = $("img", node);
-  img.src = photos[0] || placeholderImg();
   img.alt = l.title || "";
+
+  // La photo se précise au chargement au lieu d'apparaître d'un coup
+  applyProgressiveImage(media, img, photos[0] || placeholderImg());
+
+  // Aperçu des autres photos au survol : des traits en bas de l'image,
+  // et la vue change selon la position du doigt ou de la souris.
+  if (photos.length > 1) {
+    const dots = document.createElement("div");
+    dots.className = "card-dots";
+    dots.innerHTML = photos.map((_, i) => `<i class="${i === 0 ? "on" : ""}"></i>`).join("");
+    media.appendChild(dots);
+
+    let shown = 0;
+    const showAt = (ratio) => {
+      const i = Math.min(photos.length - 1, Math.max(0, Math.floor(ratio * photos.length)));
+      if (i === shown) return;
+      shown = i;
+      img.src = photos[i];
+      $$("i", dots).forEach((d, k) => d.classList.toggle("on", k === i));
+    };
+
+    media.addEventListener("pointermove", (e) => {
+      const r = media.getBoundingClientRect();
+      showAt((e.clientX - r.left) / r.width);
+      if (e.pointerType !== "mouse") media.classList.add("is-touched");
+    });
+    media.addEventListener("pointerleave", () => {
+      media.classList.remove("is-touched");
+      shown = -1; showAt(0);
+    });
+  }
+
+  // Repère pour la transition partagée vers la fiche
+  media.dataset.listingId = l.id;
 
   const badge = $(".card-badge", node);
   if (l.status === "vendu") {
@@ -4091,7 +4804,12 @@ async function renderListingDetail(id) {
   app.appendChild($("#tpl-listing-detail").content.cloneNode(true));
 
   const photos = listingPhotos(l);
-  $("#detail-main-img").src = photos[0] || placeholderImg();
+  const detailMedia = $(".detail-media-main");
+  applyProgressiveImage(detailMedia, $("#detail-main-img"), photos[0] || placeholderImg());
+  // Reçoit le même repère que la carte d'origine : la photo semble
+  // s'agrandir d'un écran à l'autre plutôt que de réapparaître.
+  detailMedia?.classList.add("vt-photo");
+
   // La photo principale ouvre la galerie plein écran
   if (photos.length) {
     const main = $("#detail-main-img");
@@ -4178,7 +4896,175 @@ async function renderListingDetail(id) {
     await toggleFavorite(l.id);
     const nowFav = state.favorites.has(l.id);
     favBtn.textContent = nowFav ? "Retirer des favoris" : "Ajouter aux favoris";
+    favBtn.classList.toggle("is-fav", nowFav);
   });
+
+  // Partage : on utilise le partage natif du téléphone quand il existe
+  // (WhatsApp, SMS, mail…), sinon on copie le lien.
+  $("#btn-share").addEventListener("click", async () => {
+    const url = location.href;
+    const title = l.title || "Club Country Village";
+    const text = `${title} — ${fmtEUR(l.price)}${l.transaction === "Location" ? " / nuit" : ""}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, text, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast("Lien copié");
+      }
+    } catch (_) { /* partage annulé par la personne : rien à signaler */ }
+  });
+
+  $("#btn-print").addEventListener("click", () => window.print());
+
+  // Comparateur
+  const compareBtn = $("#btn-compare");
+  const syncCompareBtn = () => {
+    const inList = state.compare.includes(l.id);
+    compareBtn.textContent = inList ? "Retirer du comparateur" : "Comparer";
+  };
+  syncCompareBtn();
+  compareBtn.addEventListener("click", () => { toggleCompare(l.id); syncCompareBtn(); });
+
+  // Nombre de vues : on compte la visite, puis on l'affiche.
+  countListingView(l);
+
+  // Barre d'action toujours accessible, et suggestions en bas de page
+  setupStickyBuy(l);
+  renderSimilar(l);
+}
+
+// Prévient l'administrateur par e-mail qu'une demande vient d'arriver.
+// Silencieux en cas d'échec : la demande est de toute façon visible
+// dans l'espace de gestion.
+async function notifierAdmin(demande) {
+  try {
+    const { error } = await sb.functions.invoke("alerte-message", { body: demande });
+    if (error) console.warn("Alerte e-mail non envoyée :", errMsg(error));
+  } catch (err) {
+    console.warn("Alerte e-mail non envoyée :", err);
+  }
+}
+
+// ===========================================================
+// COMPTEUR DE VUES
+// Une seule visite comptée par annonce et par session, sinon un
+// simple rafraîchissement gonflerait le chiffre.
+// ===========================================================
+async function countListingView(l) {
+  const viewsEl = $("#detail-views");
+  const shown = (l.views || 0);
+  if (viewsEl) viewsEl.textContent = shown > 4 ? `${shown} personnes ont consulté ce bien` : "";
+
+  try {
+    const seen = JSON.parse(sessionStorage.getItem("ccv-seen") || "[]");
+    if (seen.includes(l.id)) return;
+    seen.push(l.id);
+    sessionStorage.setItem("ccv-seen", JSON.stringify(seen));
+  } catch (_) { /* stockage indisponible : on compte quand même */ }
+
+  const { error } = await sb.rpc("increment_listing_views", { listing: l.id });
+  if (error) console.warn("Comptage de la vue impossible :", errMsg(error));
+  else l.views = shown + 1;
+}
+
+// ===========================================================
+// COMPARATEUR — jusqu'à trois biens côte à côte
+// ===========================================================
+function toggleCompare(id) {
+  const i = state.compare.indexOf(id);
+  if (i >= 0) {
+    state.compare.splice(i, 1);
+  } else {
+    if (state.compare.length >= 3) return toast("Trois biens au maximum dans le comparateur");
+    state.compare.push(id);
+  }
+  try { localStorage.setItem("ccv-compare", JSON.stringify(state.compare)); } catch (_) {}
+  renderCompareBar();
+}
+
+function renderCompareBar() {
+  let bar = $("#compare-bar");
+  if (!state.compare.length) { bar?.remove(); return; }
+
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.className = "compare-bar";
+    bar.id = "compare-bar";
+    document.body.appendChild(bar);
+  }
+
+  const items = state.compare
+    .map(id => state.listings.find(x => x.id === id))
+    .filter(Boolean);
+
+  bar.innerHTML = `
+    <span class="cb-count">${items.length} bien${items.length > 1 ? "s" : ""} à comparer</span>
+    <div class="cb-thumbs">
+      ${items.map(l => `<img src="${listingPhotos(l)[0] || placeholderImg()}" alt="" title="${l.title || ""}">`).join("")}
+    </div>
+    <button class="btn btn-cta btn-sm" id="cb-open">Comparer</button>
+    <button class="cb-clear" id="cb-clear" aria-label="Vider le comparateur">✕</button>
+  `;
+  $("#cb-open").addEventListener("click", () => navigate("comparer"));
+  $("#cb-clear").addEventListener("click", () => {
+    state.compare = [];
+    try { localStorage.setItem("ccv-compare", "[]"); } catch (_) {}
+    renderCompareBar();
+  });
+}
+
+function renderCompare() {
+  app.innerHTML = "";
+  const items = state.compare
+    .map(id => state.listings.find(x => x.id === id))
+    .filter(Boolean);
+
+  if (items.length < 2) {
+    app.innerHTML = `<div class="simple-layout"><h1 class="page-title">Comparateur</h1>
+      <p class="muted">Ajoutez au moins deux biens depuis leur fiche pour les comparer.</p>
+      <p style="margin-top:24px"><a class="btn btn-outline" href="#/catalogue">Voir les biens</a></p></div>`;
+    return;
+  }
+
+  const isLoc = (l) => l.transaction === "Location";
+  const rows = [
+    ["Prix", l => fmtEUR(l.price) + (isLoc(l) ? " / nuit" : "")],
+    ["Type", l => l.type_bien],
+    ["Chambres", l => l.chambres ?? "—"],
+    ["Capacité", l => l.capacite_max ?? l.couchages ?? "—"],
+    ["Surface", l => l.surface ? l.surface + " m²" : "—"],
+    ["Année", l => l.year ?? "—"],
+    ["Marque", l => l.brand ?? "—"],
+    ["Salles de bain", l => l.nb_salles_bain ?? "—"],
+  ];
+
+  // Les équipements de tous les biens comparés, pour voir qui a quoi
+  const allEquip = [...new Set(items.flatMap(l => l.equipements || []))];
+
+  app.innerHTML = `
+    <div class="compare-page">
+      <h1 class="page-title">Comparateur</h1>
+      <p class="muted" style="margin-bottom:28px">${items.length} biens côte à côte.</p>
+      <div class="compare-grid" style="--cols:${items.length}">
+        <div class="cmp-head"></div>
+        ${items.map(l => `
+          <div class="cmp-head">
+            <img src="${listingPhotos(l)[0] || placeholderImg()}" alt="">
+            <strong>${l.title || l.type_bien}</strong>
+            <a class="link-btn" href="#/listing/${l.id}">Voir la fiche</a>
+          </div>`).join("")}
+        ${rows.map(([label, fn]) => `
+          <div class="cmp-label">${label}</div>
+          ${items.map(l => `<div class="cmp-cell">${fn(l)}</div>`).join("")}
+        `).join("")}
+        ${allEquip.map(e => `
+          <div class="cmp-label">${EQUIP_LABELS[e] || e}</div>
+          ${items.map(l => `<div class="cmp-cell">${(l.equipements || []).includes(e) ? "✓" : "—"}</div>`).join("")}
+        `).join("")}
+      </div>
+      <p style="margin-top:32px"><a class="btn btn-outline" href="#/catalogue">← Retour aux biens</a></p>
+    </div>`;
 }
 
 
@@ -4212,15 +5098,26 @@ function openContactModal(listing) {
   $("#form-contact", overlay).addEventListener("submit", async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    const { error } = await sb.from("messages").insert({
+    const demande = {
       listing_id: listing.id,
       user_id: state.user?.id || null,
       name: fd.get("name"), email: fd.get("email"), phone: fd.get("phone"),
       request_type: requestType, message: fd.get("message")
-    });
+    };
+
+    const { error } = await sb.from("messages").insert(demande);
     if (error) return toast("Erreur : " + errMsg(error));
+
     toast("Votre demande a été envoyée !");
     overlay.remove();
+
+    // Alerte e-mail à l'administrateur. Volontairement en second plan :
+    // la demande est déjà enregistrée, donc un échec de l'e-mail ne doit
+    // ni bloquer ni inquiéter le visiteur.
+    notifierAdmin({
+      ...demande,
+      bien: listing.title || `${listing.type_bien} ${listing.brand || ""}`.trim(),
+    });
   });
 }
 
@@ -4353,6 +5250,9 @@ function renderParkProfile() {
   $("#count-ventes").textContent = dispoVente
     ? `${dispoVente} bien${dispoVente > 1 ? "s" : ""} à vendre`
     : "Bientôt disponible";
+
+  setupGrowImage();
+  setupHorizontalGallery();
 }
 
 
@@ -4763,7 +5663,8 @@ function renderAdminParks(panel) {
 }
 
 async function uploadParkPhoto(file, parkId, slot) {
-  const ext = file.name.split(".").pop();
+  file = await compressImage(file);
+  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
   const path = `park/${parkId}/photo-${slot}.${ext}`;
   const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
   if (error) { console.error("Envoi du fichier impossible (" + path + ") :", errMsg(error)); return null; }
@@ -5393,7 +6294,47 @@ function fillWizardFrom(panel, l) {
   renderCalendar(panel);
 }
 
+// ===========================================================
+// COMPRESSION DES PHOTOS
+// Une photo prise au téléphone pèse souvent 4 à 8 Mo. Envoyée telle
+// quelle, elle rend la page insupportable sur réseau mobile. On la
+// redimensionne et on la recompresse avant l'envoi : la qualité
+// perçue reste identique, le poids est divisé par dix environ.
+// ===========================================================
+const PHOTO_MAX_SIDE = 2000;   // suffisant pour un plein écran, même sur grand moniteur
+const PHOTO_QUALITY = 0.82;    // au-delà, le gain visuel est nul
+
+async function compressImage(file) {
+  // Les formats non gérés (ou déjà légers) partent tels quels.
+  if (!file.type.startsWith("image/") || file.type === "image/gif") return file;
+  if (file.size < 400 * 1024) return file;
+
+  try {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, PHOTO_MAX_SIDE / Math.max(bitmap.width, bitmap.height));
+    const w = Math.round(bitmap.width * scale);
+    const h = Math.round(bitmap.height * scale);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(bitmap, 0, 0, w, h);
+    bitmap.close?.();
+
+    const blob = await new Promise(res => canvas.toBlob(res, "image/jpeg", PHOTO_QUALITY));
+    if (!blob || blob.size >= file.size) return file;   // aucun gain : on garde l'original
+
+    const name = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+    return new File([blob], name, { type: "image/jpeg" });
+  } catch (err) {
+    // En cas d'échec, mieux vaut envoyer l'original que rien du tout.
+    console.warn("Compression impossible, envoi de l'original :", err);
+    return file;
+  }
+}
+
 async function uploadListingPhoto(file, listingId, index) {
+  file = await compressImage(file);
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
   const path = `listing/${listingId}/${Date.now()}-${index}.${ext}`;
   const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
@@ -5531,6 +6472,7 @@ document.addEventListener("click", (e) => {
   // Effets globaux, mis en place une fois pour toute la visite
   setupIntro();
   setupSmoothScroll();
+  setupCondensedHeader();
 
   router();
 })();
