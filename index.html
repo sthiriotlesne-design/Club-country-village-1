@@ -186,6 +186,12 @@ input,select,textarea{font-family:inherit}
 .site-header.is-over-hero .btn-icon{color:#fff}
 .site-header.is-over-hero .main-nav a:hover{background:rgba(255,255,255,.16)}
 .site-header.is-over-hero .btn-outline{border-color:rgba(255,255,255,.6); color:#fff}
+/* Posé sur une photographie, le logo garde sa couleur : c'est une
+   ombre portée plus marquée — et non un éclaircissement — qui le
+   détache du fond, pour que l'orange reste franc partout. */
+.site-header.is-over-hero .brand-mark svg{
+  filter:drop-shadow(0 2px 10px rgba(0,0,0,.65)) drop-shadow(0 0 2px rgba(0,0,0,.4));
+}
 .site-header.is-over-hero .btn-outline:hover{background:#fff; color:var(--ink-900); border-color:#fff}
 
 .header-inner{
@@ -572,7 +578,7 @@ input,select,textarea{font-family:inherit}
    =========================================================== */
 .pinned{
   position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
-  background:var(--forest-950); color:var(--paper);
+  background:var(--paper); color:var(--ink-900);
   display:grid; grid-template-columns:1fr 1fr;
 }
 .pinned-media{
@@ -591,14 +597,14 @@ input,select,textarea{font-family:inherit}
 }
 .pin-step.on{opacity:1}
 .pin-num{
-  font-size:.68rem; letter-spacing:.28em; text-transform:uppercase;
-  color:var(--aqua-300); margin-bottom:20px;
+  font-size:.68rem; font-weight:600; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--aqua-800); margin-bottom:20px;
 }
 .pin-step h2{
   font-family:var(--font-display); font-weight:400;
   font-size:clamp(1.9rem,4vw,3.2rem); line-height:1.06; letter-spacing:-.03em; margin-bottom:16px;
 }
-.pin-step p{color:rgba(251,250,247,.72); font-size:1.02rem; line-height:1.6; max-width:34ch}
+.pin-step p{color:var(--ink-700); font-size:1.02rem; line-height:1.6; max-width:34ch}
 
 @media (max-width:860px){
   .pinned{grid-template-columns:1fr}
@@ -838,9 +844,15 @@ input,select,textarea{font-family:inherit}
     --line:#252A2E;
 
     /* Le turquoise s'éclaircit pour rester lisible sur fond sombre */
-    --aqua-700:#FF9A55;
-    --aqua-600:#FFB07A;
+    /* Sur fond sombre, toutes les nuances doivent s'éclaircir —
+       y compris celles des petits textes (prix, numéros, libellés),
+       sinon l'orange soutenu devient illisible. */
+    --aqua-900:#FFB07A;
+    --aqua-800:#FF9A55;
+    --aqua-700:#FF8A3D;
+    --aqua-600:#FFA766;
     --aqua-500:#FF8A3D;
+    --aqua-300:#FFC79E;
     --aqua-100:#3A1B0A;
     --aqua-glass:rgba(255,138,61,.16);
 
@@ -1863,9 +1875,11 @@ input,select,textarea{font-family:inherit}
       <span class="brand-mark" aria-hidden="true">
         <svg width="36" height="36" viewBox="0 0 100 100" fill="none">
           <defs>
+            <!-- Orange Hermès : plus lumineux en haut à gauche,
+                 plus soutenu en bas à droite -->
             <linearGradient id="logoGradient" x1="10" y1="10" x2="90" y2="90" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stop-color="#6E757C"/>
-              <stop offset="1" stop-color="#1E2226"/>
+              <stop offset="0" stop-color="#FF8A3D"/>
+              <stop offset="1" stop-color="#E5651A"/>
             </linearGradient>
           </defs>
           <!-- P : hampe + boucle haute, façon logo gravé sur bois -->
