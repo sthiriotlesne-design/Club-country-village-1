@@ -198,17 +198,50 @@ input,select,textarea{font-family:inherit}
   max-width:1280px; margin:0 auto;
   display:flex; align-items:center; gap:14px;
   padding:16px 28px;
+  /* Encoches et barres système des iPhone */
+  padding-left:max(28px, env(safe-area-inset-left));
+  padding-right:max(28px, env(safe-area-inset-right));
 }
-.brand{display:flex; align-items:center; gap:10px; flex:1 1 0; min-width:0}
-.brand-text{display:flex; flex-direction:column; line-height:1.15; min-width:0}
+
+/* Le nom de marque ne doit JAMAIS être tronqué. Plutôt que de le
+   couper avec des points de suspension quand la place manque, sa
+   taille suit la largeur de l'écran et son interlettrage se resserre.
+   La marque ne s'écrase pas non plus : c'est la navigation qui cède
+   l'espace en premier. */
+.brand{display:flex; align-items:center; gap:10px; flex:0 1 auto; min-width:0}
+.brand-text{display:flex; flex-direction:column; line-height:1.12; min-width:0}
 .brand-text strong{
   font-family:var(--font-display);
-  font-weight:600; font-size:.94rem; letter-spacing:.04em; text-transform:uppercase;
-  color:var(--ink-900); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  font-weight:600; text-transform:uppercase;
+  font-size:clamp(.66rem, 3.1vw, .94rem);
+  letter-spacing:clamp(.005em, .5vw, .04em);
+  color:var(--ink-900);
+  white-space:nowrap;          /* reste sur une ligne… */
+  overflow:visible;            /* …mais n'est jamais rogné */
 }
 .brand-text em{
-  font-style:normal; font-size:.6rem; letter-spacing:.16em; text-transform:uppercase;
-  color:var(--ink-500); font-weight:500; white-space:nowrap;
+  font-style:normal; font-weight:500; text-transform:uppercase;
+  font-size:clamp(.5rem, 2vw, .6rem);
+  letter-spacing:clamp(.06em, .4vw, .16em);
+  color:var(--ink-500); white-space:nowrap;
+}
+
+/* Écrans très étroits (320 px) : on compacte encore, sans rien couper */
+@media (max-width:360px){
+  .header-inner{padding:12px 14px; gap:9px}
+  .brand{gap:7px}
+  .brand-mark svg{width:28px; height:28px}
+}
+@media (max-width:330px){
+  .brand-text strong{font-size:.6rem; letter-spacing:0}
+  .brand-text em{font-size:.46rem; letter-spacing:.04em}
+}
+
+/* Mode paysage sur téléphone : le bandeau s'aplatit pour laisser
+   de la hauteur au contenu */
+@media (max-height:480px) and (orientation:landscape){
+  .header-inner{padding-top:8px; padding-bottom:8px}
+  .brand-mark svg{width:26px; height:26px}
 }
 
 .main-nav{display:flex; gap:2px; align-items:center; flex-shrink:0}
@@ -1094,6 +1127,538 @@ input,select,textarea{font-family:inherit}
   .grain{ display:none }
 }
 
+/* ===========================================================
+   TITRES DE SECTION
+   =========================================================== */
+.section-title{
+  font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.5rem, 4.4vw, 2.4rem); line-height:1.1; letter-spacing:-.025em;
+  color:var(--ink-900); margin:0;
+}
+
+/* ===========================================================
+   RECHERCHE — "Vous cherchez quoi ?"
+   =========================================================== */
+.find{max-width:1240px; margin:0 auto; padding:clamp(48px,7vh,84px) 0 clamp(28px,4vh,44px)}
+.find-head{margin-bottom:clamp(20px,3vh,30px)}
+
+.find-tiles{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;
+}
+.tile{
+  display:flex; flex-direction:column; align-items:flex-start; gap:5px;
+  padding:18px 16px; border-radius:var(--radius-lg);
+  border:1px solid var(--line); background:var(--bg-card);
+  text-align:left; cursor:pointer; min-height:104px;
+  transition:border-color .2s ease, transform .18s ease, box-shadow .2s ease;
+}
+.tile:hover{border-color:var(--aqua-500); transform:translateY(-3px); box-shadow:var(--shadow-card)}
+.tile:active{transform:translateY(0) scale(.985)}
+.tile-ic{font-size:1.4rem; line-height:1}
+.tile strong{font-size:.96rem; font-weight:600; color:var(--ink-900)}
+.tile-sub{font-size:.76rem; color:var(--ink-500)}
+
+/* Barre de recherche */
+.searchbar{
+  display:flex; align-items:stretch; gap:0; margin-top:16px;
+  background:var(--bg-card); border:1px solid var(--line);
+  border-radius:var(--radius-pill); padding:6px 6px 6px 8px;
+  box-shadow:var(--shadow-soft);
+}
+.sb-field{
+  flex:1 1 0; min-width:0; background:none; border:none; cursor:pointer;
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+  padding:10px 16px; border-radius:var(--radius-pill); text-align:left;
+  transition:background .18s ease;
+}
+.sb-field:hover{background:var(--paper-warm)}
+.sb-label{
+  font-size:.62rem; font-weight:700; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--aqua-800);
+}
+.sb-value{
+  font-size:.86rem; color:var(--ink-700); white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; max-width:100%;
+}
+.sb-sep{width:1px; background:var(--line); margin:10px 0; flex:0 0 1px}
+.sb-go{
+  flex:0 0 auto; display:inline-flex; align-items:center; gap:9px;
+  padding:0 24px; border:none; border-radius:var(--radius-pill);
+  background:var(--aqua-700); color:#fff; cursor:pointer;
+  font-family:var(--font-body); font-weight:600; font-size:.8rem;
+  text-transform:uppercase; letter-spacing:.1em;
+  transition:background .2s ease, transform .12s ease;
+}
+.sb-go:hover{background:var(--aqua-900)}
+.sb-go:active{transform:scale(.97)}
+
+/* Sur mobile la barre devient un seul bouton, et les critères
+   s'ouvrent dans un panneau qui remonte du bas. */
+@media (max-width:820px){
+  .find-tiles{grid-template-columns:repeat(2,1fr)}
+  .searchbar{
+    border-radius:var(--radius-lg); padding:6px; flex-wrap:wrap;
+  }
+  .sb-field{flex:1 1 44%; padding:11px 13px}
+  .sb-sep{display:none}
+  .sb-go{flex:1 1 100%; justify-content:center; padding:15px; margin-top:4px}
+}
+
+/* Panneau de critères qui remonte du bas */
+.sheet-backdrop{
+  position:fixed; inset:0; z-index:190; background:rgba(10,12,14,.55);
+  opacity:0; transition:opacity .3s ease;
+}
+.sheet-backdrop.is-in{opacity:1}
+.sheet{
+  position:fixed; left:0; right:0; bottom:0; z-index:191;
+  background:var(--bg-card); border-radius:22px 22px 0 0;
+  padding:10px 20px calc(24px + env(safe-area-inset-bottom, 0px));
+  transform:translateY(100%); transition:transform .38s cubic-bezier(.16,1,.3,1);
+  max-height:82svh; overflow-y:auto;
+}
+.sheet.is-in{transform:none}
+.sheet-grip{
+  width:38px; height:4px; border-radius:4px; background:var(--line);
+  margin:6px auto 16px;
+}
+.sheet h3{
+  font-family:var(--font-display); font-weight:500; font-size:1.2rem;
+  margin:0 0 16px; color:var(--ink-900);
+}
+.sheet-options{display:flex; flex-direction:column; gap:8px}
+.sheet-options button{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 18px; border-radius:var(--radius-md);
+  border:1.5px solid var(--line); background:var(--bg-card);
+  font-size:.98rem; color:var(--ink-900); cursor:pointer; min-height:56px;
+  font-family:var(--font-body); text-align:left;
+  transition:border-color .18s ease, background .18s ease;
+}
+.sheet-options button:hover{border-color:var(--aqua-500)}
+.sheet-options button.on{
+  border-color:var(--aqua-700); background:var(--aqua-glass); font-weight:600;
+}
+.sheet-options button.on::after{content:"✓"; color:var(--aqua-800); font-weight:700}
+
+/* ===========================================================
+   POURQUOI NOUS
+   =========================================================== */
+.trust{max-width:1240px; margin:0 auto; padding:clamp(52px,8vh,96px) 0}
+.trust-head{margin-bottom:clamp(24px,4vh,38px)}
+.trust-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
+.trust-card{
+  padding:24px 22px; border-radius:var(--radius-lg);
+  border:1px solid var(--line); background:var(--bg-card);
+  transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.trust-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-card); border-color:var(--aqua-200)}
+.tc-ic{
+  display:flex; align-items:center; justify-content:center;
+  width:44px; height:44px; border-radius:12px;
+  background:var(--aqua-glass); font-size:1.2rem; margin-bottom:16px;
+}
+.trust-card h3{
+  font-family:var(--font-display); font-weight:500; font-size:1.05rem;
+  margin:0 0 8px; color:var(--ink-900);
+}
+.trust-card p{font-size:.88rem; line-height:1.6; color:var(--ink-500); margin:0}
+
+@media (max-width:820px){
+  .trust-grid{grid-template-columns:1fr 1fr; gap:11px}
+  .trust-card{padding:18px 16px}
+  .tc-ic{width:38px; height:38px; margin-bottom:12px}
+}
+@media (max-width:400px){
+  .trust-grid{grid-template-columns:1fr}
+}
+
+/* ===========================================================
+   APPEL FINAL
+   =========================================================== */
+.final-cta{
+  position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
+  min-height:clamp(340px,46vh,460px); display:flex; align-items:center; justify-content:center;
+  overflow:hidden; background:var(--forest-950); text-align:center;
+}
+.fc-media{position:absolute; inset:0}
+.fc-img{position:absolute; inset:0; background-size:cover; background-position:center}
+.fc-media::after{content:""; position:absolute; inset:0; background:rgba(8,10,12,.56)}
+.fc-inner{position:relative; z-index:1; padding:40px 24px; max-width:760px}
+.fc-inner h2{
+  font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.5rem,4.2vw,2.6rem); line-height:1.12; letter-spacing:-.025em;
+  color:#fff; margin:0 0 28px;
+}
+.fc-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+@media (max-width:520px){
+  .fc-actions{flex-direction:column}
+  .fc-actions .btn{width:100%}
+}
+
+/* Bouton en verre, posé sur une photographie */
+.btn-glass{
+  background:rgba(255,255,255,.14); color:#fff;
+  border:1px solid rgba(255,255,255,.45);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+}
+.btn-glass:hover{background:rgba(255,255,255,.26)}
+
+/* ===========================================================
+   NOS BIENS — en-tête de section
+   =========================================================== */
+.homes-head, .results-head{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:16px; flex-wrap:wrap; margin-bottom:clamp(20px,3vh,30px);
+}
+
+/* ===========================================================
+   SYSTÈME D'ANIMATION
+   Une seule grammaire pour tout le site : trois durées, deux
+   courbes, un décalage. Les effets se ressemblent d'une page à
+   l'autre au lieu d'être inventés au cas par cas.
+   =========================================================== */
+:root{
+  --t-fast:.18s;      /* réactions au doigt : pression, bascule */
+  --t-base:.34s;      /* entrées et sorties courantes */
+  --t-slow:.72s;      /* apparitions au défilement, images */
+  --ease-out:cubic-bezier(.16,1,.3,1);   /* démarre vite, s'installe */
+  --ease-in-out:cubic-bezier(.4,0,.2,1); /* va-et-vient */
+  --stagger:70ms;     /* décalage entre voisins */
+}
+
+/* Apparition au défilement — la classe de base de tout le site */
+.reveal{
+  opacity:0; transform:translateY(24px);
+  transition:opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out);
+}
+.reveal.is-in{opacity:1; transform:none}
+
+/* Toute action tactile donne une réponse immédiate */
+.btn, .tile, .trust-card, .listing-card, .sheet-options button,
+.q-choices button, .admin-card, .bottom-nav-item{
+  -webkit-tap-highlight-color:transparent;
+}
+.btn:active, .sheet-options button:active, .q-choices button:active{transform:scale(.97)}
+
+/* ===========================================================
+   MENU MOBILE — plein écran, apparition en cascade
+   =========================================================== */
+.mobile-nav-panel{display:none}
+@media (max-width:900px){
+  .mobile-nav-panel{
+    position:fixed; inset:0; z-index:100;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:calc(84px + env(safe-area-inset-top,0px)) 28px calc(40px + env(safe-area-inset-bottom,0px));
+    background:var(--forest-950);
+    opacity:0; visibility:hidden;
+    transition:opacity var(--t-base) var(--ease-in-out), visibility var(--t-base);
+  }
+  .site-header.mobile-menu-open .mobile-nav-panel{opacity:1; visibility:visible}
+
+  .mnav-main{display:flex; flex-direction:column; gap:2px}
+  .mnav-main a{
+    font-family:var(--font-display); font-weight:500;
+    font-size:clamp(1.5rem, 7vw, 2.2rem); line-height:1.28; letter-spacing:-.02em;
+    color:#fff; padding:6px 0;
+    opacity:0; transform:translateY(18px);
+  }
+  .mnav-second{
+    display:flex; flex-direction:column; gap:3px;
+    margin-top:34px; padding-top:26px;
+    border-top:1px solid rgba(255,255,255,.14);
+  }
+  .mnav-second a{
+    font-size:.92rem; color:rgba(255,255,255,.62); padding:7px 0;
+    opacity:0; transform:translateY(14px);
+  }
+  /* Chaque entrée arrive après la précédente */
+  .site-header.mobile-menu-open .mnav-main a,
+  .site-header.mobile-menu-open .mnav-second a{
+    animation:mnavIn .5s var(--ease-out) forwards;
+    animation-delay:calc(90ms + var(--i, 0) * var(--stagger));
+  }
+  @keyframes mnavIn{to{opacity:1; transform:none}}
+
+  .mnav-main a.active-nav{color:var(--aqua-300)}
+  .mnav-main a:active{opacity:.6}
+
+  /* Le bouton devient une croix quand le menu est ouvert */
+  .site-header.mobile-menu-open .nav-toggle svg{transform:rotate(90deg)}
+  .nav-toggle svg{transition:transform var(--t-base) var(--ease-out)}
+}
+
+/* ===========================================================
+   BARRE DE NAVIGATION DU BAS
+   L'onglet actif s'agrandit légèrement, passe en orange et
+   reçoit un petit repère.
+   =========================================================== */
+.bottom-nav-item{transition:color var(--t-base) var(--ease-out)}
+.bottom-nav-item svg{
+  transition:transform var(--t-base) var(--ease-out), stroke var(--t-base) var(--ease-out);
+}
+.bottom-nav-item.active-nav svg{transform:translateY(-2px) scale(1.14)}
+.bottom-nav-item{position:relative}
+.bottom-nav-item.active-nav::after{
+  content:""; position:absolute; top:2px; left:50%; width:4px; height:4px;
+  margin-left:-2px; border-radius:50%; background:var(--aqua-700);
+  animation:dotIn .34s var(--ease-out);
+}
+@keyframes dotIn{from{transform:scale(0); opacity:0} to{transform:scale(1); opacity:1}}
+.bottom-nav-item:active svg{transform:scale(.9)}
+
+/* ===========================================================
+   IMAGES — révélation et survol
+   =========================================================== */
+.card-media, .tile, .trust-card, .fc-img, .hgal img{
+  transition:transform var(--t-base) var(--ease-out), box-shadow var(--t-base) var(--ease-out);
+}
+
+/* Voile + icône au survol, sur ordinateur seulement */
+@media (hover:hover) and (pointer:fine){
+  .card-media::after{
+    content:""; position:absolute; inset:0; z-index:1;
+    background:linear-gradient(to top, rgba(8,10,12,.42), transparent 55%);
+    opacity:0; transition:opacity var(--t-base) var(--ease-out);
+    pointer-events:none;
+  }
+  .listing-card:hover .card-media::after{opacity:1}
+  .listing-card{transition:transform var(--t-base) var(--ease-out)}
+  .listing-card:hover{transform:translateY(-6px)}
+  .listing-card:hover .card-media{box-shadow:var(--shadow-card)}
+}
+
+/* Sur téléphone : réaction au toucher, sans animation lourde */
+@media (hover:none){
+  .listing-card:active{transform:scale(.985); transition:transform var(--t-fast) ease}
+  .tile:active{transform:scale(.97)}
+}
+
+/* ===========================================================
+   FOOTER
+   =========================================================== */
+.site-footer{
+  position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
+  background:var(--forest-950); color:rgba(255,255,255,.72);
+  padding:clamp(48px,7vh,76px) 0 calc(28px + env(safe-area-inset-bottom,0px));
+  margin-top:clamp(56px,8vh,100px);
+}
+.footer-inner{max-width:1240px; margin:0 auto; padding:0 28px}
+.footer-top{
+  display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:36px;
+  padding-bottom:36px; border-bottom:1px solid rgba(255,255,255,.12);
+}
+.footer-brand strong{
+  display:block; font-family:var(--font-display); font-weight:500;
+  font-size:1.1rem; color:#fff; letter-spacing:.02em; margin-bottom:8px;
+}
+.footer-brand p{font-size:.86rem; line-height:1.6; margin:0; max-width:32ch}
+.footer-col h4{
+  font-size:.68rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase;
+  color:var(--aqua-300); margin:0 0 14px;
+}
+.footer-col a{
+  display:block; font-size:.9rem; padding:5px 0; color:rgba(255,255,255,.72);
+  transition:color var(--t-fast) ease;
+}
+.footer-col a:hover{color:#fff}
+.footer-bottom{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  flex-wrap:wrap; padding-top:24px; font-size:.8rem; color:rgba(255,255,255,.5);
+}
+@media (max-width:820px){
+  .footer-top{grid-template-columns:1fr 1fr; gap:28px}
+  .footer-brand{grid-column:1/-1}
+}
+@media (max-width:420px){
+  .footer-top{grid-template-columns:1fr}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .mnav-main a, .mnav-second a{animation:none !important; opacity:1 !important; transform:none !important}
+  .bottom-nav-item.active-nav::after{animation:none}
+  .bottom-nav-item.active-nav svg{transform:none}
+  .listing-card:hover{transform:none}
+}
+
+/* Onde au clic : réponse immédiate à toute action */
+.ripple{
+  position:absolute; border-radius:50%; pointer-events:none;
+  background:rgba(255,255,255,.34); transform:scale(0); opacity:.9;
+  animation:ripple .6s var(--ease-out) forwards;
+}
+.btn-glass .ripple, .btn-outline .ripple, .tile .ripple,
+.sheet-options button .ripple, .q-choices button .ripple{background:rgba(243,112,33,.22)}
+@keyframes ripple{to{transform:scale(1); opacity:0}}
+
+/* Le message de confirmation prend la couleur de l'action */
+.toast.is-ok{border-left:3px solid var(--aqua-500)}
+.toast.is-warn{border-left:3px solid #C9A227}
+
+/* ===========================================================
+   LES ÉQUIPEMENTS DU PARC
+   =========================================================== */
+.equip-section{
+  position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
+  background:var(--paper); padding:clamp(56px,9vh,110px) 28px;
+}
+.equip-head{max-width:1240px; margin:0 auto clamp(28px,4vh,44px)}
+.equip-grid{
+  max-width:1240px; margin:0 auto;
+  display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+}
+.equip-card{
+  padding:24px 20px; border-radius:var(--radius-lg);
+  border:1px solid var(--line); background:var(--bg-card);
+  transition:transform var(--t-base) var(--ease-out),
+             box-shadow var(--t-base) var(--ease-out),
+             border-color var(--t-base) var(--ease-out);
+}
+.equip-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-card); border-color:var(--aqua-200)}
+.eq-ic{
+  display:flex; align-items:center; justify-content:center;
+  width:46px; height:46px; border-radius:13px;
+  background:var(--aqua-glass); font-size:1.3rem; margin-bottom:15px;
+}
+.equip-card h3{
+  font-family:var(--font-display); font-weight:500; font-size:1.02rem;
+  margin:0 0 7px; color:var(--ink-900);
+}
+.equip-card p{font-size:.86rem; line-height:1.55; color:var(--ink-500); margin:0}
+
+@media (max-width:900px){
+  .equip-grid{grid-template-columns:1fr 1fr; gap:11px}
+  .equip-card{padding:18px 15px}
+  .eq-ic{width:38px; height:38px; font-size:1.1rem; margin-bottom:11px}
+}
+@media (max-width:400px){
+  .equip-grid{grid-template-columns:1fr}
+}
+
+/* ===========================================================
+   GALERIE DE LA FICHE
+   Ordinateur : une grande image et des vues secondaires.
+   Téléphone : la même série défile au doigt, avec pagination.
+   =========================================================== */
+.dgal{display:grid; grid-template-columns:2fr 1fr; gap:10px}
+.dgal .detail-media-main{
+  aspect-ratio:4/3; border-radius:var(--radius-lg); overflow:hidden;
+  background:var(--paper-warm); cursor:zoom-in; position:relative;
+}
+.dgal .detail-media-main img{width:100%; height:100%; object-fit:cover; display:block}
+.dgal-side{display:grid; grid-template-rows:1fr 1fr; gap:10px}
+.dgal-side img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  border-radius:var(--radius-lg); background:var(--paper-warm); cursor:zoom-in;
+  transition:opacity var(--t-base) var(--ease-out);
+}
+.dgal-side img:hover{opacity:.88}
+.dgal-side:empty{display:none}
+.dgal:has(.dgal-side:empty){grid-template-columns:1fr}
+
+.dgal-all{
+  display:inline-flex; align-items:center; gap:9px; margin-top:12px;
+  padding:11px 20px; border-radius:var(--radius-pill);
+  border:1px solid var(--line); background:var(--bg-card);
+  font-family:var(--font-body); font-size:.78rem; font-weight:600;
+  text-transform:uppercase; letter-spacing:.1em; color:var(--ink-900); cursor:pointer;
+  transition:border-color var(--t-fast) ease, background var(--t-fast) ease;
+}
+.dgal-all:hover{border-color:var(--aqua-500); background:var(--aqua-glass)}
+
+.dgal-dots{display:none}
+
+@media (max-width:900px){
+  /* La galerie devient une bande qui défile au doigt */
+  .dgal{
+    display:flex; gap:8px; overflow-x:auto; scroll-snap-type:x mandatory;
+    scrollbar-width:none; margin:0 -16px; padding:0 16px;
+  }
+  .dgal::-webkit-scrollbar{display:none}
+  .dgal .detail-media-main,
+  .dgal-side{
+    flex:0 0 88%; scroll-snap-align:center; aspect-ratio:4/3; height:auto;
+  }
+  .dgal-side{display:flex; gap:8px; grid-template-rows:none}
+  .dgal-side img{flex:0 0 88vw; aspect-ratio:4/3; scroll-snap-align:center}
+
+  /* Pagination sous la galerie */
+  .dgal-dots{
+    display:flex; gap:5px; justify-content:center; margin-top:12px;
+  }
+  .dgal-dots i{
+    width:6px; height:6px; border-radius:50%; background:var(--line);
+    transition:background var(--t-base) ease, transform var(--t-base) ease;
+  }
+  .dgal-dots i.on{background:var(--aqua-700); transform:scale(1.35)}
+  .dgal-all{width:100%; justify-content:center}
+}
+
+/* ===========================================================
+   GARDE-FOUS RESPONSIVE
+   Le site ne doit JAMAIS défiler horizontalement, et aucun contenu
+   ne doit dépasser de l'écran, quelle que soit la largeur.
+   =========================================================== */
+html, body{overflow-x:hidden; max-width:100%}
+
+/* Les sections pleine largeur utilisent 100vw, qui inclut la barre de
+   défilement sur ordinateur et provoque un débordement de quelques
+   pixels. On les borne à la largeur réellement disponible. */
+.hero, .final-cta, .site-footer, .story-open, .story-chapter,
+.pinned, .grow-section, .marquee, .story-choice{
+  max-width:100vw;
+}
+
+/* Aucun média ne dépasse de son conteneur */
+img, video, svg, canvas, iframe{max-width:100%}
+
+/* Un mot très long (adresse, référence) ne pousse pas la mise en page */
+p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
+  overflow-wrap:anywhere;
+}
+
+/* Zones tactiles : 44px minimum, recommandation Apple */
+.bottom-nav-item, .btn-icon, .fav-toggle, .lb-nav, .lb-close, .cal-day{
+  min-width:44px; min-height:44px;
+}
+
+/* Les tableaux larges défilent dans leur cadre plutôt que de pousser
+   la page entière */
+.compare-page{overflow-x:auto; -webkit-overflow-scrolling:touch}
+
+/* ===========================================================
+   ZONES TACTILES
+   Au doigt, une cible doit mesurer au moins 44 px. Les petits
+   boutons sont donc agrandis sur écran tactile seulement.
+   =========================================================== */
+@media (hover:none) and (pointer:coarse){
+  .btn-sm{min-height:44px; padding-top:12px; padding-bottom:12px}
+  .btn-publish-quick{min-height:44px}
+  .cal-day{min-height:46px}
+  .lb-close, .lb-nav{width:48px; height:48px}
+  .footer-col a{padding:9px 0}
+  .thumb-remove{width:32px; height:32px}
+}
+
+/* ===========================================================
+   TRÈS GRANDS ÉCRANS
+   Au-delà de 1600 px, une ligne de texte devient trop longue pour
+   être lue confortablement. On élargit les conteneurs sans excès
+   et on augmente légèrement les respirations.
+   =========================================================== */
+@media (min-width:1600px){
+  .app-root, .find, .trust, .homes, .footer-inner,
+  .compare-page, .equip-grid, .hgal-head{max-width:1440px}
+  .header-inner{max-width:1440px}
+  .story-text{max-width:820px}
+  .grid-listings{grid-template-columns:repeat(auto-fill, minmax(340px,1fr))}
+}
+@media (min-width:1900px){
+  .app-root, .find, .trust, .homes, .footer-inner{max-width:1560px}
+  .header-inner{max-width:1560px}
+  .hero-inner{max-width:1040px}
+}
+
 /* ============ HERO ============
    Plein écran, texte centré, deux actions. Aucun cadre, aucun aplat
    de couleur — juste un voile sombre très léger pour garantir la
@@ -1410,7 +1975,8 @@ input,select,textarea{font-family:inherit}
 .admin-stat{background:var(--paper); padding:20px 22px; display:flex; flex-direction:column; gap:4px}
 .admin-stat.is-alert .stat-num{color:var(--aqua-700)}
 .stat-num{
-  font-family:var(--font-display); font-weight:400; font-size:2.3rem; line-height:1;
+  font-family:var(--font-display); font-weight:400; line-height:1;
+  font-size:clamp(1.7rem, 5vw, 2.3rem);
   color:var(--aqua-700); letter-spacing:-.02em;
 }
 .stat-label{font-size:.82rem; color:var(--ink-500)}
@@ -1828,15 +2394,6 @@ input,select,textarea{font-family:inherit}
   .nav-toggle{display:flex}
   .footer-columns{grid-template-columns:1fr 1fr}
 
-  .mobile-nav-panel{
-    display:none; flex-direction:column; gap:2px; padding:10px 20px 20px;
-    border-top:2px solid var(--khaki-100); background:var(--bg);
-  }
-  .site-header.mobile-menu-open .mobile-nav-panel{display:flex}
-  .mobile-nav-panel a{
-    padding:14px 12px; border-radius:var(--radius-md); font-size:1rem; font-weight:700; color:var(--ink-700);
-  }
-  .mobile-nav-panel a:hover, .mobile-nav-panel a.active-nav{background:var(--khaki-50)}
 }
 @media (max-width:640px){
   .header-inner{padding:14px 18px}
@@ -1913,11 +2470,19 @@ input,select,textarea{font-family:inherit}
 
   </div>
   <nav class="mobile-nav-panel" aria-label="Navigation mobile">
-    <a href="#/catalogue?transaction=Vente" data-nav="acheter">Acheter</a>
-    <a href="#/catalogue?transaction=Location" data-nav="location">Louer</a>
-    <a href="#/parc" data-nav="parc">Découvrir le parc</a>
-    <a href="#/favoris" data-nav="favoris">Favoris</a>
-    <a href="#/messages" data-nav="messages">Messages</a>
+    <div class="mnav-main">
+      <a href="#/catalogue?transaction=Vente" data-nav="acheter" style="--i:0">Acheter</a>
+      <a href="#/catalogue?transaction=Location" data-nav="location" style="--i:1">Louer</a>
+      <a href="#/parc" data-nav="parc" style="--i:2">Découvrir le parc</a>
+      <a href="#/favoris" data-nav="favoris" style="--i:3">Favoris</a>
+      <a href="#/messages" data-nav="messages" style="--i:4">Messages</a>
+      <a href="#/connexion" data-nav="connexion" style="--i:5" id="mnav-login">Se connecter</a>
+    </div>
+    <div class="mnav-second">
+      <a href="#/aide" style="--i:6">Centre d'aide</a>
+      <a href="#/securite" style="--i:7">Sécurité &amp; confiance</a>
+      <a href="#/parc" style="--i:8">Contact</a>
+    </div>
   </nav>
 </header>
 
@@ -1958,40 +2523,44 @@ input,select,textarea{font-family:inherit}
 
 <footer class="site-footer">
   <div class="footer-inner">
-    <div class="footer-columns">
-      <div class="footer-col">
-        <h4>Assistance</h4>
-        <ul>
-          <li><a href="#/messages">Centre d'aide</a></li>
-          <li><a href="#/catalogue">Options de visite</a></li>
-          <li><a href="#/catalogue">Sécurité &amp; confiance</a></li>
-        </ul>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <strong>Club Country Village</strong>
+        <p>
+          Mobil-homes et chalets à vendre ou à louer au Parc de la Chesnaie,
+          seize hectares de nature à quarante-cinq minutes de Paris.
+        </p>
       </div>
-      <div class="footer-col">
-        <h4>Le Club</h4>
-        <ul>
-          <li><a href="#/parc">Le Parc de la Chesnaie</a></li>
-          <li><a href="#/catalogue?transaction=Location">Louer un bien</a></li>
-          <li><a href="#/catalogue">Vendre ou déposer une annonce</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>La Chesnaie</h4>
-        <ul>
-          <li><a href="https://chesnaie.eu" target="_blank" rel="noopener">Site du camping</a></li>
-          <li><a href="#/login">Espace membre</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="footer-bottom-left">
-        <span>© 2026 Club Country Village by La Chesnaie</span>
-      </div>
-      <div class="footer-bottom-right">
-        <span>Français (FR)</span>
-        <span>€ EUR</span>
-      </div>
-    </div>
+
+```
+  <div class="footer-col">
+    <h4>Club Country Village</h4>
+    <a href="#/catalogue?transaction=Vente">Acheter</a>
+    <a href="#/catalogue?transaction=Location">Louer</a>
+    <a href="#/parc">Découvrir le parc</a>
+  </div>
+
+  <div class="footer-col">
+    <h4>Assistance</h4>
+    <a href="#/messages">Centre d'aide</a>
+    <a href="#/parc">Contact</a>
+    <a href="#/parc">Sécurité &amp; confiance</a>
+  </div>
+
+  <div class="footer-col">
+    <h4>La Chesnaie</h4>
+    <a href="#/parc">Le parc</a>
+    <a href="https://chesnaie.eu" target="_blank" rel="noopener">Site du camping</a>
+    <a href="tel:0238393939">02 38 39 39 39</a>
+  </div>
+</div>
+
+<div class="footer-bottom">
+  <span>© 2026 Club Country Village by La Chesnaie</span>
+  <span>Autruy-sur-Juine · Loiret · Français (FR) · € EUR</span>
+</div>
+```
+
   </div>
 </footer>
 
@@ -2049,89 +2618,88 @@ input,select,textarea{font-family:inherit}
 
 <template id="tpl-catalogue">
   <!-- ============ HERO ============
-       Écran plein, photographie à fond perdu, texte centré, deux
-       actions. Rien d'autre. -->
+       Photographie plein écran, promesse claire, deux actions. -->
   <section class="hero">
     <div class="hero-media">
       <div class="hero-img" id="hero-img"></div>
       <video class="hero-video" id="hero-video" muted loop autoplay playsinline hidden></video>
     </div>
     <div class="hero-inner">
-      <!-- Chaque mot est enveloppé : il monte depuis sous une ligne de
-           masquage, légèrement décalé du précédent. -->
       <h1 class="hero-title">
-        <span class="line"><i style="--d:.05s">Club</i></span>
-        <span class="line"><i style="--d:.13s">Country</i></span>
-        <span class="line"><i style="--d:.21s">Village</i></span>
+        <span class="line"><i style="--d:.06s">Votre nouvelle vie</i></span>
+        <span class="line"><i style="--d:.17s">commence à La&nbsp;Chesnaie.</i></span>
       </h1>
-      <p class="hero-claim rise" style="--d:.42s">Seize hectares de nature, à 45 minutes de Paris</p>
-      <div class="hero-actions rise" style="--d:.54s">
-        <a class="btn btn-outline magnetic" href="#/catalogue?transaction=Vente">Acheter</a>
-        <a class="btn btn-outline magnetic" href="#/catalogue?transaction=Location">Séjourner</a>
+      <p class="hero-claim rise" style="--d:.36s">
+        Mobil-homes et chalets à vendre ou à louer,
+        au cœur d'un environnement naturel.
+      </p>
+      <div class="hero-actions rise" style="--d:.48s">
+        <a class="btn btn-cta magnetic" href="#/catalogue?transaction=Vente">Acheter</a>
+        <a class="btn btn-glass magnetic" href="#/catalogue?transaction=Location">Louer</a>
       </div>
-      <a class="hero-scroll rise" style="--d:.66s" href="#/parc">Découvrir le parc</a>
     </div>
+    <span class="hero-scroll rise" style="--d:.62s" aria-hidden="true"></span>
   </section>
 
-  <!-- Bandeau défilant : donne immédiatement une sensation de mouvement
-       et rappelle les repères du domaine. -->
+  <!-- ============ RECHERCHE ============ -->
 
-  <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>16 hectares</span><i>◦</i><span>300 emplacements</span><i>◦</i>
-      <span>45 minutes de Paris</span><i>◦</i><span>Piscine chauffée</span><i>◦</i>
-      <span>Ouvert à l'année</span><i>◦</i>
-      <span>16 hectares</span><i>◦</i><span>300 emplacements</span><i>◦</i>
-      <span>45 minutes de Paris</span><i>◦</i><span>Piscine chauffée</span><i>◦</i>
-      <span>Ouvert à l'année</span><i>◦</i>
+  <section class="find">
+    <div class="find-head reveal">
+      <p class="eyebrow">Trouver un bien</p>
+      <h2 class="section-title">Vous cherchez quoi ?</h2>
     </div>
-  </div>
 
-  <!-- Chiffres qui s'incrémentent quand ils entrent à l'écran -->
+```
+<div class="find-tiles reveal" id="find-tiles">
+  <button class="tile" data-find-transaction="Vente">
+    <span class="tile-ic" aria-hidden="true">🏷️</span>
+    <strong>Acheter</strong>
+    <span class="tile-sub" data-count="vente"></span>
+  </button>
+  <button class="tile" data-find-transaction="Location">
+    <span class="tile-ic" aria-hidden="true">🗓️</span>
+    <strong>Louer</strong>
+    <span class="tile-sub" data-count="location"></span>
+  </button>
+  <button class="tile" data-find-type="Mobil-home">
+    <span class="tile-ic" aria-hidden="true">⌂</span>
+    <strong>Mobil-home</strong>
+    <span class="tile-sub" data-count="mobil"></span>
+  </button>
+  <button class="tile" data-find-type="Chalet">
+    <span class="tile-ic" aria-hidden="true">▲</span>
+    <strong>Chalet</strong>
+    <span class="tile-sub" data-count="chalet"></span>
+  </button>
+</div>
 
-  <section class="figures reveal">
-    <div class="figure"><span class="count" data-to="16">0</span><small>hectares de nature</small></div>
-    <div class="figure"><span class="count" data-to="300">0</span><small>emplacements arborés</small></div>
-    <div class="figure"><span class="count" data-to="45">0</span><small>minutes de Paris</small></div>
-  </section>
+<div class="searchbar reveal" id="searchbar">
+  <button class="sb-field" data-sheet="transaction">
+    <span class="sb-label">Projet</span>
+    <span class="sb-value" id="sbv-transaction">Acheter ou louer</span>
+  </button>
+  <span class="sb-sep" aria-hidden="true"></span>
+  <button class="sb-field" data-sheet="type">
+    <span class="sb-label">Bien</span>
+    <span class="sb-value" id="sbv-type">Tous</span>
+  </button>
+  <span class="sb-sep" aria-hidden="true"></span>
+  <button class="sb-field" data-sheet="capacite">
+    <span class="sb-label">Personnes</span>
+    <span class="sb-value" id="sbv-capacite">Peu importe</span>
+  </button>
+  <span class="sb-sep" aria-hidden="true"></span>
+  <button class="sb-field" data-sheet="budget">
+    <span class="sb-label">Budget</span>
+    <span class="sb-value" id="sbv-budget">Tous les prix</span>
+  </button>
+  <button class="sb-go" id="sb-go">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <span>Rechercher</span>
+  </button>
+</div>
+```
 
-  <!-- Texte piloté par le défilement : chaque mot s'éclaire à mesure
-       qu'on descend. Le rythme de lecture est donné par le scroll. -->
-
-  <section class="manifesto">
-    <p class="lit" data-lit>
-      Ici, on ne loue pas un emplacement. On choisit un endroit où revenir,
-      saison après saison, avec les mêmes voisins et les mêmes habitudes.
-      Un domaine de seize hectares, à quarante-cinq minutes de Paris.
-    </p>
-  </section>
-
-  <!-- Section figée : le visuel reste en place pendant que le texte
-       défile à côté, façon récit en trois temps. -->
-
-  <section class="pinned">
-    <div class="pinned-media">
-      <div class="pin-img" data-pin="0"></div>
-      <div class="pin-img" data-pin="1"></div>
-      <div class="pin-img" data-pin="2"></div>
-    </div>
-    <div class="pinned-steps">
-      <article class="pin-step" data-step="0">
-        <span class="pin-num">01</span>
-        <h2>Vous cherchez</h2>
-        <p>Mobil-homes et chalets à vendre ou à louer, tous situés sur le domaine.</p>
-      </article>
-      <article class="pin-step" data-step="1">
-        <span class="pin-num">02</span>
-        <h2>Vous visitez</h2>
-        <p>Demandez une visite en deux clics. On vous répond directement.</p>
-      </article>
-      <article class="pin-step" data-step="2">
-        <span class="pin-num">03</span>
-        <h2>Vous vous installez</h2>
-        <p>Et le parc devient votre seconde adresse.</p>
-      </article>
-    </div>
   </section>
 
   <div class="search-hero">
@@ -2291,12 +2859,56 @@ input,select,textarea{font-family:inherit}
 ```
 
   </div>
+
+  <!-- ============ POURQUOI NOUS ============ -->
+
+  <section class="trust">
+    <div class="trust-head reveal">
+      <p class="eyebrow">Ce qui nous distingue</p>
+      <h2 class="section-title">Pourquoi choisir Club Country Village ?</h2>
+    </div>
+    <div class="trust-grid">
+      <article class="trust-card reveal">
+        <span class="tc-ic" aria-hidden="true">🌳</span>
+        <h3>Un cadre naturel</h3>
+        <p>Seize hectares de verdure et d'allées arborées, à quarante-cinq minutes de Paris.</p>
+      </article>
+      <article class="trust-card reveal">
+        <span class="tc-ic" aria-hidden="true">✓</span>
+        <h3>Des biens sélectionnés</h3>
+        <p>Chaque mobil-home et chaque chalet est vu et validé avant d'être publié.</p>
+      </article>
+      <article class="trust-card reveal">
+        <span class="tc-ic" aria-hidden="true">💬</span>
+        <h3>Un accompagnement direct</h3>
+        <p>Vous parlez à l'équipe du parc, sans intermédiaire.</p>
+      </article>
+      <article class="trust-card reveal">
+        <span class="tc-ic" aria-hidden="true">🏊</span>
+        <h3>Un environnement privilégié</h3>
+        <p>Piscine chauffée, tennis, terrains de jeu et animations toute la saison.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ APPEL FINAL ============ -->
+
+  <section class="final-cta reveal">
+    <div class="fc-media"><div class="fc-img" id="fc-img"></div></div>
+    <div class="fc-inner">
+      <h2>Trouvez votre prochain chez-vous à La Chesnaie.</h2>
+      <div class="fc-actions">
+        <a class="btn btn-cta" href="#/catalogue">Voir les biens</a>
+        <a class="btn btn-glass" href="#/parc">Découvrir le parc</a>
+      </div>
+    </div>
+  </section>
 </template>
 
 <template id="tpl-listing-card">
   <article class="listing-card">
     <div class="card-media">
-      <img loading="lazy">
+      <img loading="lazy" decoding="async" alt="">
       <button class="fav-toggle" aria-label="Ajouter aux favoris">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
       </button>
@@ -2315,10 +2927,20 @@ input,select,textarea{font-family:inherit}
     <a href="#/catalogue" class="back-link">← Retour au catalogue</a>
     <div class="detail-grid">
       <div class="detail-media">
-        <div class="detail-media-main"><img id="detail-main-img"></div>
-        <div class="detail-thumbs" id="detail-thumbs"></div>
+        <!-- Ordinateur : une grande image + des vues secondaires.
+             Téléphone : la même galerie défile au doigt avec accroche. -->
+        <div class="dgal" id="dgal">
+          <div class="detail-media-main reveal"><img id="detail-main-img" alt=""></div>
+          <div class="dgal-side" id="dgal-side"></div>
+        </div>
+        <div class="dgal-dots" id="dgal-dots" aria-hidden="true"></div>
+        <button class="dgal-all" id="dgal-all" hidden>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <span id="dgal-all-label">Voir les photos</span>
+        </button>
+        <div class="detail-thumbs" id="detail-thumbs" hidden></div>
       </div>
-      <div class="detail-info">
+      <div class="detail-info reveal">
         <span class="detail-badge" id="detail-badge"></span>
         <h1 class="detail-title" id="detail-title"></h1>
         <p class="detail-price" id="detail-price"></p>
@@ -2474,6 +3096,57 @@ input,select,textarea{font-family:inherit}
         emplacement comme on retrouve une maison.
       </p>
       <div class="story-chips" id="park-profile-conditions"></div>
+    </div>
+  </section>
+
+  <!-- LES ÉQUIPEMENTS — une carte par installation -->
+
+  <section class="equip-section">
+    <div class="equip-head reveal">
+      <span class="story-num">Sur place</span>
+      <h2 class="story-title">Tout est là, sans quitter le parc</h2>
+    </div>
+    <div class="equip-grid">
+      <article class="equip-card reveal">
+        <span class="eq-ic" aria-hidden="true">🏊</span>
+        <h3>Piscine chauffée</h3>
+        <p>Bassin extérieur chauffé, toboggan aquatique et pataugeoire sécurisée.</p>
+      </article>
+      <article class="equip-card reveal">
+        <span class="eq-ic" aria-hidden="true">🎾</span>
+        <h3>Sports</h3>
+        <p>Deux courts de tennis, terrain multisport, pétanque et ping-pong.</p>
+      </article>
+      <article class="equip-card reveal">
+        <span class="eq-ic" aria-hidden="true">⛳</span>
+        <h3>Mini-golf</h3>
+        <p>Un parcours ombragé, accessible à tous les âges.</p>
+      </article>
+      <article class="equip-card reveal">
+        <span class="eq-ic" aria-hidden="true">🐐</span>
+        <h3>Mini-ferme</h3>
+        <p>Les animaux du parc, à quelques pas des emplacements.</p>
+      </article>
+      <article class="equip-card reveal">
+        <span class="eq-ic" aria-hidden="true">🎲</span>
+        <h3>Salle de jeux</h3>
+        <p>Un espace couvert pour les enfants, quel que soit le temps.</p>
+      </article>
+      <article class="equip-card reveal">
+        <span class="eq-ic" aria-hidden="true">💪</span>
+        <h3>Fitness</h3>
+        <p>Une salle équipée et un espace d'entraînement en plein air.</p>
+      </article>
+      <article class="equip-card reveal">
+        <span class="eq-ic" aria-hidden="true">🎪</span>
+        <h3>Animations</h3>
+        <p>Soirées à thème, concerts et événements tout au long de la saison.</p>
+      </article>
+      <article class="equip-card reveal">
+        <span class="eq-ic" aria-hidden="true">🐾</span>
+        <h3>Animaux acceptés</h3>
+        <p>Vos compagnons sont les bienvenus sur les emplacements.</p>
+      </article>
     </div>
   </section>
 
@@ -3082,12 +3755,37 @@ const app = $("#app");
 // TOAST
 // ===========================================================
 let toastTimeout;
-function toast(msg) {
+function toast(msg, type) {
   const el = $("#toast");
   el.textContent = msg;
+  el.classList.remove("is-ok", "is-warn");
+  if (type) el.classList.add(type === "ok" ? "is-ok" : "is-warn");
   el.classList.add("show");
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => el.classList.remove("show"), 5200);
+}
+
+// Réponse visuelle immédiate au clic : une onde part du point touché.
+// C'est ce qui fait qu'une action paraît « prise en compte » avant même
+// que le résultat arrive.
+function setupRipples() {
+  if (window.__ripplesOn || REDUCED_MOTION) return;
+  window.__ripplesOn = true;
+  document.addEventListener("pointerdown", (e) => {
+    const target = e.target.closest?.(".btn, .tile, .sb-go, .sheet-options button, .q-choices button");
+    if (!target) return;
+    const r = target.getBoundingClientRect();
+    const onde = document.createElement("span");
+    onde.className = "ripple";
+    const taille = Math.max(r.width, r.height) * 1.6;
+    onde.style.width = onde.style.height = taille + "px";
+    onde.style.left = (e.clientX - r.left - taille / 2) + "px";
+    onde.style.top = (e.clientY - r.top - taille / 2) + "px";
+    if (getComputedStyle(target).position === "static") target.style.position = "relative";
+    target.style.overflow = "hidden";
+    target.appendChild(onde);
+    setTimeout(() => onde.remove(), 620);
+  }, { passive: true });
 }
 
 // Extrait un message lisible depuis n'importe quelle forme d'erreur.
@@ -3209,6 +3907,12 @@ document.addEventListener("click", (e) => {
   if (!link) return;
   e.preventDefault();
   e.stopPropagation();
+
+  // Cet intercepteur s'exécute en capture et coupe la propagation :
+  // les écouteurs posés plus bas ne verront jamais ce clic. C'est donc
+  // ici qu'on referme le menu mobile lorsqu'on suit un de ses liens.
+  if (link.closest(".mobile-nav-panel")) setMobileMenu(false);
+
   const target = link.getAttribute("href").slice(1); // enlève le premier "#"
   if (location.hash === "#" + target) {
     router(); // même route : forcer un nouveau rendu
@@ -3746,6 +4450,173 @@ function syncFilterControlsFromState() {
   }
 }
 
+// ===========================================================
+// TUILES DE RECHERCHE — "Vous cherchez quoi ?"
+// Un choix visuel qui applique directement le filtre correspondant.
+// ===========================================================
+function setupFindTiles() {
+  const wrap = $("#find-tiles");
+  if (!wrap) return;
+
+  // Nombre de biens derrière chaque choix : on annonce ce qui existe
+  const publies = state.listings.filter(l => l.status === "publie");
+  const compte = {
+    vente: publies.filter(l => l.transaction !== "Location").length,
+    location: publies.filter(l => l.transaction === "Location").length,
+    mobil: publies.filter(l => l.type_bien === "Mobil-home").length,
+    chalet: publies.filter(l => l.type_bien === "Chalet").length,
+  };
+  $$("[data-count]", wrap).forEach(el => {
+    const n = compte[el.dataset.count] ?? 0;
+    el.textContent = n ? `${n} bien${n > 1 ? "s" : ""}` : "Bientôt";
+  });
+
+  $$(".tile", wrap).forEach(tile => {
+    tile.addEventListener("click", () => {
+      if (tile.dataset.findTransaction) {
+        state.filters.transaction = tile.dataset.findTransaction;
+        state.filters.typeBien = "";
+      } else if (tile.dataset.findType) {
+        state.filters.typeBien = tile.dataset.findType;
+      }
+      syncFilterControlsFromState();
+      applyFilters();
+      openFiltersPanel();
+      scrollToResults();
+    });
+  });
+}
+
+// Ramène la vue sur les résultats après une recherche. Certaines
+// implémentations n'exposent pas scrollIntoView : on retombe alors sur
+// un défilement calculé.
+function scrollToResults() {
+  const cible = $("#grid-listings");
+  if (!cible) return;
+  if (typeof cible.scrollIntoView === "function") {
+    cible.scrollIntoView({ behavior: REDUCED_MOTION ? "auto" : "smooth", block: "start" });
+  } else if (typeof cible.getBoundingClientRect === "function") {
+    const y = cible.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top: y, behavior: REDUCED_MOTION ? "auto" : "smooth" });
+  }
+}
+
+// ===========================================================
+// BARRE DE RECHERCHE
+// Sur grand écran les critères s'ouvrent au clic ; sur téléphone
+// ils remontent dans un panneau, plus confortable au pouce.
+// ===========================================================
+const SHEETS = {
+  transaction: {
+    titre: "Votre projet",
+    options: [["", "Acheter ou louer"], ["Vente", "Acheter"], ["Location", "Louer"]],
+    lire: () => state.filters.transaction,
+    ecrire: (v) => { state.filters.transaction = v; },
+    cible: "#sbv-transaction",
+  },
+  type: {
+    titre: "Type de bien",
+    options: [["", "Tous"], ["Mobil-home", "Mobil-home"], ["Chalet", "Chalet"], ["Parcelle", "Parcelle"]],
+    lire: () => state.filters.typeBien,
+    ecrire: (v) => { state.filters.typeBien = v; },
+    cible: "#sbv-type",
+  },
+  capacite: {
+    titre: "Combien de personnes ?",
+    options: [["", "Peu importe"], ["2", "2 personnes"], ["4", "4 personnes"],
+              ["6", "6 personnes"], ["8", "8 et plus"]],
+    lire: () => state.filters.voyageurs,
+    ecrire: (v) => { state.filters.voyageurs = v; state.filters.couchages = v; },
+    cible: "#sbv-capacite",
+  },
+  budget: {
+    titre: "Votre budget",
+    options: [["", "Tous les prix"], ["20000", "Jusqu'à 20 000 €"], ["40000", "Jusqu'à 40 000 €"],
+              ["60000", "Jusqu'à 60 000 €"], ["100000", "Jusqu'à 100 000 €"]],
+    lire: () => state.filters.budgetMax ? String(state.filters.budgetMax) : "",
+    ecrire: (v) => { state.filters.budgetMax = v ? Number(v) : null; },
+    cible: "#sbv-budget",
+  },
+};
+
+function syncSearchBarLabels() {
+  Object.values(SHEETS).forEach(s => {
+    const el = $(s.cible);
+    if (!el) return;
+    const courant = s.lire() || "";
+    const trouve = s.options.find(([v]) => v === String(courant));
+    el.textContent = trouve ? trouve[1] : s.options[0][1];
+    el.classList.toggle("is-set", !!courant);
+  });
+}
+
+function setupSearchBar() {
+  const bar = $("#searchbar");
+  if (!bar) return;
+
+  syncSearchBarLabels();
+
+  $$(".sb-field", bar).forEach(f => {
+    f.addEventListener("click", () => openSheet(f.dataset.sheet));
+  });
+
+  $("#sb-go")?.addEventListener("click", () => {
+    applyFilters();
+    openFiltersPanel();
+    toast("Recherche appliquée", "ok");
+    scrollToResults();
+  });
+}
+
+function openSheet(nom) {
+  const s = SHEETS[nom];
+  if (!s) return;
+
+  const backdrop = document.createElement("div");
+  backdrop.className = "sheet-backdrop";
+  const sheet = document.createElement("div");
+  sheet.className = "sheet";
+  sheet.setAttribute("role", "dialog");
+  sheet.setAttribute("aria-label", s.titre);
+
+  const courant = String(s.lire() || "");
+  sheet.innerHTML = `
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <h3>${s.titre}</h3>
+    <div class="sheet-options">
+      ${s.options.map(([v, label]) =>
+        `<button data-v="${v}" class="${v === courant ? "on" : ""}">${label}</button>`).join("")}
+    </div>`;
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(sheet);
+  document.body.style.overflow = "hidden";
+  requestAnimationFrame(() => {
+    backdrop.classList.add("is-in");
+    sheet.classList.add("is-in");
+  });
+
+  const fermer = () => {
+    backdrop.classList.remove("is-in");
+    sheet.classList.remove("is-in");
+    document.body.style.overflow = "";
+    setTimeout(() => { backdrop.remove(); sheet.remove(); }, 380);
+  };
+
+  backdrop.addEventListener("click", fermer);
+  $$("button", sheet).forEach(b => b.addEventListener("click", () => {
+    s.ecrire(b.dataset.v);
+    syncSearchBarLabels();
+    syncFilterControlsFromState();
+    applyFilters();
+    fermer();
+  }));
+
+  // Fermeture au clavier
+  const onKey = (e) => { if (e.key === "Escape") { fermer(); document.removeEventListener("keydown", onKey); } };
+  document.addEventListener("keydown", onKey);
+}
+
 function renderCatalogue(params) {
   app.innerHTML = "";
   app.appendChild($("#tpl-catalogue").content.cloneNode(true));
@@ -3753,6 +4624,9 @@ function renderCatalogue(params) {
   // Squelettes le temps que les annonces soient prêtes : la page ne
   // paraît jamais vide.
   if (!state.listings.length) renderSkeletons("#grid-listings", 6);
+
+  setupFindTiles();
+  setupSearchBar();
 
   // Le hero d'accueil : la vidéo prime sur la photo si elle existe —
   // c'est elle qui donne le plus de vie au premier écran. À défaut,
@@ -3796,8 +4670,19 @@ function renderCatalogue(params) {
     heroEl.style.backgroundImage = `url("${heroSrc}")`;
   }
 
-  if (params?.get("transaction")) state.filters.transaction = params.get("transaction");
-  if (params?.get("type")) state.filters.typeBien = params.get("type");
+  // Photo de l'appel final : on prend une vue différente du hero
+  const fc = $("#fc-img");
+  if (fc) {
+    const alt = park?.photo_3 || park?.photo_2 || park?.photo_1 || heroFallbackImg();
+    fc.style.backgroundImage = `url("${alt}")`;
+  }
+
+  // L'adresse fait autorité sur ces deux filtres : si elle ne précise
+  // rien, on les remet à zéro. Sans cela, revenir à l'accueil depuis
+  // "Louer" conservait le filtre et la page semblait vide alors que
+  // des biens existaient.
+  state.filters.transaction = params?.get("transaction") || "";
+  state.filters.typeBien = params?.get("type") || "";
 
   // Marques connues, proposées en filtre (vente uniquement)
   const brandWrap = $("#filter-brands");
@@ -4807,6 +5692,51 @@ function heroFallbackImg() {
 // ===========================================================
 // LISTING DETAIL
 // ===========================================================
+// ===========================================================
+// GALERIE DE LA FICHE
+// Sur ordinateur : une grande image et deux vues secondaires.
+// Sur téléphone : la même série défile au doigt, avec pagination.
+// Dans les deux cas, un clic ouvre la galerie plein écran.
+// ===========================================================
+function setupDetailGallery(photos) {
+  const gal = $("#dgal");
+  const side = $("#dgal-side");
+  const dots = $("#dgal-dots");
+  const bouton = $("#dgal-all");
+  const main = $("#detail-main-img");
+  if (!gal || !photos.length) return;
+
+  // Vues secondaires : les deux suivantes sur ordinateur, toutes en
+  // défilement horizontal sur téléphone.
+  side.innerHTML = photos.slice(1).map((src, i) =>
+    `<img src="${src}" alt="Vue ${i + 2}" loading="lazy" decoding="async">`).join("");
+
+  main?.addEventListener("click", () => openLightbox(photos, 0));
+  $$("img", side).forEach((im, i) =>
+    im.addEventListener("click", () => openLightbox(photos, i + 1)));
+
+  // Bouton "voir toutes les photos", utile dès qu'il y en a plusieurs
+  if (photos.length > 1) {
+    bouton.hidden = false;
+    $("#dgal-all-label").textContent = `Voir les ${photos.length} photos`;
+    bouton.addEventListener("click", () => openLightbox(photos, 0));
+  }
+
+  // Pagination : elle suit la position du défilement horizontal
+  if (photos.length > 1) {
+    dots.innerHTML = photos.map((_, i) => `<i class="${i === 0 ? "on" : ""}"></i>`).join("");
+    let dernier = 0;
+    const suivre = () => {
+      const largeur = gal.clientWidth || 1;
+      const index = Math.min(photos.length - 1, Math.round(gal.scrollLeft / (largeur * 0.9)));
+      if (index === dernier) return;
+      dernier = index;
+      $$("i", dots).forEach((d, k) => d.classList.toggle("on", k === index));
+    };
+    gal.addEventListener("scroll", suivre, { passive: true });
+  }
+}
+
 async function renderListingDetail(id) {
   let l = state.listings.find(x => x.id === id);
   if (!l) {
@@ -4824,26 +5754,7 @@ async function renderListingDetail(id) {
   // s'agrandir d'un écran à l'autre plutôt que de réapparaître.
   detailMedia?.classList.add("vt-photo");
 
-  // La photo principale ouvre la galerie plein écran
-  if (photos.length) {
-    const main = $("#detail-main-img");
-    main.style.cursor = "zoom-in";
-    main.addEventListener("click", () => {
-      const current = photos.indexOf(main.src);
-      openLightbox(photos, current >= 0 ? current : 0);
-    });
-  }
-  const thumbs = $("#detail-thumbs");
-  photos.forEach((src, i) => {
-    const img = document.createElement("img");
-    img.src = src; if (i === 0) img.classList.add("active");
-    img.addEventListener("click", () => {
-      $("#detail-main-img").src = src;
-      $$("img", thumbs).forEach(t => t.classList.remove("active"));
-      img.classList.add("active");
-    });
-    thumbs.appendChild(img);
-  });
+  setupDetailGallery(photos);
 
   $("#detail-badge").textContent = l.status === "vendu"
     ? "Vendu"
@@ -6437,6 +7348,8 @@ function setMobileMenu(open) {
   header.classList.toggle("mobile-menu-open", open);
   toggle.setAttribute("aria-expanded", String(open));
   toggle.querySelector("svg").innerHTML = open ? ICON_CLOSE : ICON_HAMBURGER;
+  // Le menu occupe tout l'écran : la page derrière ne doit pas défiler.
+  document.body.style.overflow = open ? "hidden" : "";
 }
 
 $("#nav-toggle").addEventListener("click", (e) => {
@@ -6445,13 +7358,23 @@ $("#nav-toggle").addEventListener("click", (e) => {
   setMobileMenu(!isOpen);
 });
 
-// Le menu se referme au clic sur un lien qu'il contient…
-$$(".mobile-nav-panel a").forEach(a => {
-  a.addEventListener("click", () => setMobileMenu(false));
-});
-// …ou au clic n'importe où ailleurs sur la page.
+// Le menu se referme au clic sur un lien qu'il contient. On écoute le
+// panneau lui-même plutôt que chaque lien : les entrées peuvent être
+// ajoutées ou modifiées ensuite, l'écouteur reste valable.
 document.addEventListener("click", (e) => {
+  if (e.target.closest(".mobile-nav-panel a")) {
+    setMobileMenu(false);
+    return;
+  }
+  // …ou au clic n'importe où en dehors du menu.
   if (!e.target.closest(".mobile-nav-panel") && !e.target.closest("#nav-toggle")) {
+    setMobileMenu(false);
+  }
+});
+
+// Fermeture au clavier, pour ne pas piéger la navigation
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && $(".site-header")?.classList.contains("mobile-menu-open")) {
     setMobileMenu(false);
   }
 });
@@ -6487,6 +7410,7 @@ document.addEventListener("click", (e) => {
   setupIntro();
   setupSmoothScroll();
   setupCondensedHeader();
+  setupRipples();
 
   router();
 })();
