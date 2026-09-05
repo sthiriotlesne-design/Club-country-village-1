@@ -427,6 +427,7 @@ input,select,textarea{font-family:inherit}
 }
 
 /* 05 & 06 — les deux issues, côte à côte en plein écran */
+.story-choice-single{grid-template-columns:1fr}
 .story-choice{
   position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
   display:grid; grid-template-columns:1fr 1fr; background:var(--forest-950); min-height:60svh;
@@ -1541,18 +1542,28 @@ input,select,textarea{font-family:inherit}
   display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
 }
 .equip-card{
-  padding:24px 20px; border-radius:var(--radius-lg);
+  position:relative; overflow:hidden;
+  padding:26px 22px; border-radius:var(--radius-lg);
   border:1px solid var(--line); background:var(--bg-card);
   transition:transform var(--t-base) var(--ease-out),
              box-shadow var(--t-base) var(--ease-out),
              border-color var(--t-base) var(--ease-out);
 }
+/* Un filet orange se trace en haut de la carte au survol : plus
+   discret qu'un changement de fond, et cela guide l'œil. */
+.equip-card::before{
+  content:""; position:absolute; left:0; right:0; top:0; height:2px;
+  background:var(--aqua-500); transform:scaleX(0); transform-origin:left;
+  transition:transform var(--t-base) var(--ease-out);
+}
+.equip-card:hover::before{transform:scaleX(1)}
 .equip-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-card); border-color:var(--aqua-200)}
 .eq-ic{
-  display:flex; align-items:center; justify-content:center;
-  width:46px; height:46px; border-radius:13px;
-  background:var(--aqua-glass); font-size:1.3rem; margin-bottom:15px;
+  width:48px; height:48px; border-radius:14px;
+  background:var(--aqua-glass); margin-bottom:16px;
+  transition:background var(--t-base) ease, transform var(--t-base) var(--ease-out);
 }
+.equip-card:hover .eq-ic{background:var(--aqua-700); color:#fff; transform:scale(1.05)}
 .equip-card h3{
   font-family:var(--font-display); font-weight:500; font-size:1.02rem;
   margin:0 0 7px; color:var(--ink-900);
@@ -1745,6 +1756,228 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
   border:1px dashed var(--line); background:var(--paper-warm);
 }
 .fav-orphans p{margin:0; font-size:.92rem; color:var(--ink-700)}
+
+
+/* Repères chiffrés de la page du parc */
+.park-figures{
+  max-width:1240px; margin:0 auto clamp(30px,5vh,52px);
+  display:grid; grid-template-columns:repeat(4,1fr);
+  border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+}
+.pf{
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  padding:26px 12px; text-align:center;
+  border-right:1px solid var(--line);
+}
+.pf:last-child{border-right:none}
+.pf-n{
+  font-family:var(--font-display); font-weight:300;
+  font-size:clamp(1.9rem,4.4vw,3rem); line-height:1; letter-spacing:-.03em;
+  color:var(--aqua-600); font-variant-numeric:tabular-nums;
+}
+.pf-l{
+  font-size:.68rem; font-weight:600; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-500);
+}
+@media (max-width:700px){
+  .park-figures{grid-template-columns:1fr 1fr}
+  .pf{padding:20px 10px}
+  .pf:nth-child(2){border-right:none}
+  .pf:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+
+/* ===========================================================
+   SIMULATION DE FINANCEMENT
+   =========================================================== */
+.finance{
+  margin:0 0 26px; padding:22px; border-radius:var(--radius-lg);
+  border:1px solid var(--line); background:var(--paper-warm);
+}
+.fin-tabs{display:flex; gap:4px; margin-bottom:20px; background:var(--bg-card);
+  border-radius:var(--radius-pill); padding:4px; border:1px solid var(--line)}
+.fin-tab{
+  flex:1; padding:10px 12px; border:none; background:none; cursor:pointer;
+  border-radius:var(--radius-pill); font-family:var(--font-body);
+  font-size:.8rem; font-weight:600; color:var(--ink-500);
+  transition:background var(--t-fast) ease, color var(--t-fast) ease;
+}
+.fin-tab.active{background:var(--aqua-700); color:#fff}
+
+.fin-panel{display:none}
+.fin-panel.active{display:block; animation:finIn .3s var(--ease-out)}
+@keyframes finIn{from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none}}
+
+.fin-line{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  margin:16px 0 8px; font-size:.86rem; color:var(--ink-700);
+}
+.fin-line output{font-weight:600; color:var(--ink-900); font-variant-numeric:tabular-nums}
+
+/* Curseurs : assez épais pour être manipulés au doigt */
+.finance input[type="range"]{
+  width:100%; height:34px; -webkit-appearance:none; appearance:none;
+  background:transparent; cursor:pointer;
+}
+.finance input[type="range"]::-webkit-slider-runnable-track{
+  height:5px; border-radius:3px; background:var(--line);
+}
+.finance input[type="range"]::-moz-range-track{
+  height:5px; border-radius:3px; background:var(--line);
+}
+.finance input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:26px; height:26px; border-radius:50%;
+  background:var(--aqua-700); border:3px solid var(--bg-card);
+  box-shadow:0 2px 8px rgba(0,0,0,.22); margin-top:-11px;
+  transition:transform var(--t-fast) ease;
+}
+.finance input[type="range"]::-moz-range-thumb{
+  width:26px; height:26px; border-radius:50%; border:3px solid var(--bg-card);
+  background:var(--aqua-700); box-shadow:0 2px 8px rgba(0,0,0,.22);
+}
+.finance input[type="range"]:active::-webkit-slider-thumb{transform:scale(1.14)}
+
+.fin-result{
+  margin-top:22px; padding:18px 20px; border-radius:var(--radius-md);
+  background:var(--bg-card); border:1px solid var(--line);
+  display:flex; flex-direction:column; gap:4px;
+}
+.fin-r-label{
+  font-size:.66rem; font-weight:700; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink-500);
+}
+.fin-result strong{
+  font-family:var(--font-display); font-weight:500;
+  font-size:clamp(1.5rem,4.6vw,2rem); line-height:1.1;
+  color:var(--aqua-800); font-variant-numeric:tabular-nums;
+}
+.fin-r-sub{font-size:.82rem; color:var(--ink-500); line-height:1.5}
+
+.fin-taux{
+  display:flex; align-items:center; gap:8px; margin-top:18px;
+  font-size:.82rem; color:var(--ink-500);
+}
+.fin-taux input{
+  width:74px; padding:8px 10px; border:1px solid var(--line);
+  border-radius:var(--radius-sm); font-family:var(--font-body);
+  font-size:.88rem; color:var(--ink-900); background:var(--bg-card);
+}
+.fin-warn{
+  margin:16px 0 0; font-size:.74rem; line-height:1.55; color:var(--ink-500);
+  padding-top:14px; border-top:1px solid var(--line);
+}
+
+@media print{ .finance{display:none} }
+
+/* ===========================================================
+   TRI DES RÉSULTATS
+   =========================================================== */
+.sort-wrap{display:inline-flex}
+.sort-select{
+  appearance:none; -webkit-appearance:none;
+  padding:9px 34px 9px 14px; border-radius:var(--radius-pill);
+  border:1px solid var(--line); background:var(--bg-card); color:var(--ink-800);
+  font-family:var(--font-body); font-size:.82rem; font-weight:500; cursor:pointer;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2368746C' stroke-width='2' stroke-linecap='round'><path d='m6 9 6 6 6-6'/></svg>");
+  background-repeat:no-repeat; background-position:right 12px center; background-size:14px;
+}
+.sort-select:hover{border-color:var(--aqua-500)}
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;
+}
+
+/* ===========================================================
+   BADGE "NOUVEAU"
+   =========================================================== */
+.card-new{
+  position:absolute; left:10px; top:10px; z-index:3;
+  background:var(--aqua-700); color:#fff;
+  font-size:.62rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  padding:6px 11px; border-radius:var(--radius-pill);
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+
+/* ===========================================================
+   ALERTE NOUVEAUX BIENS
+   =========================================================== */
+.alerte{
+  position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
+  background:var(--forest-950); color:var(--paper);
+  padding:clamp(46px,7vh,80px) 24px; margin-top:clamp(50px,7vh,90px);
+}
+.al-inner{max-width:760px; margin:0 auto; text-align:center}
+.alerte .eyebrow{color:var(--aqua-300)}
+.alerte .section-title{color:#fff}
+.al-sub{color:rgba(255,255,255,.74); font-size:.98rem; line-height:1.6; margin:14px 0 28px}
+.al-form{
+  display:grid; grid-template-columns:1.6fr 1fr 1fr auto; gap:8px;
+  background:rgba(255,255,255,.08); padding:8px; border-radius:var(--radius-pill);
+  border:1px solid rgba(255,255,255,.16);
+}
+.al-form input, .al-form select{
+  padding:13px 16px; border:none; border-radius:var(--radius-pill);
+  background:rgba(255,255,255,.94); color:var(--ink-900);
+  font-family:var(--font-body); font-size:.88rem; min-width:0;
+}
+.al-form input:focus, .al-form select:focus{outline:2px solid var(--aqua-500); outline-offset:1px}
+.al-note{margin:16px 0 0; font-size:.76rem; color:rgba(255,255,255,.5)}
+@media (max-width:820px){
+  .al-form{grid-template-columns:1fr; border-radius:var(--radius-lg); gap:7px}
+  .al-form input, .al-form select{border-radius:var(--radius-md)}
+  .al-form .btn{width:100%}
+}
+
+/* ===========================================================
+   VUES RÉCEMMENT
+   =========================================================== */
+.recent-seen{max-width:1240px; margin:clamp(50px,7vh,90px) auto 0}
+
+/* ===========================================================
+   FIL DE DISCUSSION
+   =========================================================== */
+.thread{
+  border:1px solid var(--line); border-radius:var(--radius-lg);
+  background:var(--bg-card); margin-bottom:16px; overflow:hidden;
+}
+.th-head{
+  display:flex; align-items:center; gap:14px; padding:16px 18px;
+  border-bottom:1px solid var(--line); background:var(--paper-warm);
+}
+.th-head img{width:52px; height:40px; object-fit:cover; border-radius:var(--radius-sm); flex:0 0 auto}
+.th-head > div{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px}
+.th-head strong{font-size:.94rem; color:var(--ink-900); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.th-head span{font-size:.78rem; color:var(--ink-500)}
+
+.th-body{padding:18px; display:flex; flex-direction:column; gap:10px; max-height:420px; overflow-y:auto}
+.bulle{max-width:78%; padding:11px 15px; border-radius:16px; position:relative}
+.bulle p{margin:0; font-size:.9rem; line-height:1.5; white-space:pre-wrap}
+.bulle time{display:block; margin-top:5px; font-size:.68rem; opacity:.62}
+/* Ce que j'écris : aligné à droite, en orange */
+.bulle.de-moi{
+  align-self:flex-end; background:var(--aqua-700); color:#fff;
+  border-bottom-right-radius:5px;
+}
+/* Ce que l'autre écrit : aligné à gauche, en gris */
+.bulle.de-vendeur, .bulle.de-client{
+  align-self:flex-start; background:var(--paper-warm); color:var(--ink-900);
+  border-bottom-left-radius:5px;
+}
+
+.th-reply{display:flex; gap:8px; padding:14px 18px; border-top:1px solid var(--line)}
+.th-reply input{
+  flex:1; min-width:0; padding:12px 16px; border-radius:var(--radius-pill);
+  border:1px solid var(--line); background:var(--paper-warm);
+  font-family:var(--font-body); font-size:.9rem; color:var(--ink-900);
+}
+.th-reply input:focus{outline:none; border-color:var(--aqua-500); background:var(--bg-card)}
+.th-note{
+  margin:0; padding:0 18px 14px; font-size:.72rem; color:var(--ink-500);
+}
+@media (max-width:520px){
+  .bulle{max-width:88%}
+  .th-reply{flex-wrap:wrap}
+  .th-reply .btn{width:100%}
+}
 
 /* ============ HERO ============
    Plein écran, texte centré, deux actions. Aucun cadre, aucun aplat
@@ -2223,29 +2456,7 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
 
 .autofill-hint{color:var(--khaki-700); font-size:.86rem; font-weight:700; margin:9px 0 0}
 
-.ai-status{
-  margin-top:12px; padding:12px 16px; border-radius:var(--radius-md); font-size:.88rem; font-weight:600;
-  background:var(--khaki-50); color:var(--khaki-700);
-}
-.ai-status.is-error{background:var(--sand-100); color:#22262A}
-.ai-status.is-loading{display:flex; align-items:center; gap:9px}
-.ai-status.is-loading::before{
-  content:""; width:14px; height:14px; border-radius:50%;
-  border:2px solid var(--khaki-200); border-top-color:var(--khaki-600);
-  animation:aiSpin .7s linear infinite; flex-shrink:0;
-}
-@keyframes aiSpin{to{transform:rotate(360deg)}}
 
-.ai-variant-picker{
-  margin-top:12px; display:flex; flex-direction:column; gap:10px;
-}
-.ai-variant-card{
-  border:2px solid var(--khaki-200); border-radius:var(--radius-md); padding:14px 16px;
-  background:#fff; cursor:pointer; transition:border-color .12s, background .12s;
-}
-.ai-variant-card:hover{border-color:var(--khaki-600); background:var(--khaki-50)}
-.ai-variant-card strong{display:block; font-size:.92rem; color:var(--ink-900); margin-bottom:4px}
-.ai-variant-card span{font-size:.82rem; color:var(--ink-500)}
 
 
 .chip-toggle-group{display:flex; flex-wrap:wrap; gap:9px; margin-top:11px}
@@ -2408,7 +2619,6 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
 .wizard[data-mode="Location"] .mode-location{display:block}
 .wizard[data-mode="Location"] [data-vente-only]{display:none}
 
-.btn-ai{margin-top:6px}
 
 /* Zone de dépôt des photos */
 .photo-dropzone{
@@ -2620,8 +2830,7 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
 
 ```
 <nav class="main-nav" aria-label="Navigation principale">
-  <a href="#/catalogue?transaction=Vente" data-nav="acheter">Acheter</a>
-  <a href="#/catalogue?transaction=Location" data-nav="location">Louer</a>
+  <a href="#/catalogue" data-nav="acheter">Les biens</a>
   <a href="#/parc" data-nav="parc">Découvrir le parc</a>
 </nav>
 
@@ -2636,8 +2845,7 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
   </div>
   <nav class="mobile-nav-panel" aria-label="Navigation mobile">
     <div class="mnav-main">
-      <a href="#/catalogue?transaction=Vente" data-nav="acheter" style="--i:0">Acheter</a>
-      <a href="#/catalogue?transaction=Location" data-nav="location" style="--i:1">Louer</a>
+      <a href="#/catalogue" data-nav="acheter" style="--i:0">Les biens à vendre</a>
       <a href="#/parc" data-nav="parc" style="--i:2">Découvrir le parc</a>
       <a href="#/favoris" data-nav="favoris" style="--i:3">Favoris</a>
       <a href="#/messages" data-nav="messages" style="--i:4">Messages</a>
@@ -2692,7 +2900,7 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
       <div class="footer-brand">
         <strong>Club Country Village</strong>
         <p>
-          Mobil-homes et chalets à vendre ou à louer au Parc de la Chesnaie,
+          Mobil-homes et chalets à vendre au Parc de la Chesnaie,
           seize hectares de nature à quarante-cinq minutes de Paris.
         </p>
       </div>
@@ -2700,8 +2908,7 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
 ```
   <div class="footer-col">
     <h4>Club Country Village</h4>
-    <a href="#/catalogue?transaction=Vente">Acheter</a>
-    <a href="#/catalogue?transaction=Location">Louer</a>
+    <a href="#/catalogue">Les biens à vendre</a>
     <a href="#/parc">Découvrir le parc</a>
   </div>
 
@@ -2795,12 +3002,12 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
         <span class="line"><i style="--d:.17s">commence à La&nbsp;Chesnaie.</i></span>
       </h1>
       <p class="hero-claim rise" style="--d:.36s">
-        Mobil-homes et chalets à vendre ou à louer,
+        Mobil-homes et chalets à vendre,
         au cœur d'un environnement naturel.
       </p>
       <div class="hero-actions rise" style="--d:.48s">
         <a class="btn btn-cta magnetic" href="#/catalogue?transaction=Vente">Acheter</a>
-        <a class="btn btn-glass magnetic" href="#/catalogue?transaction=Location">Louer</a>
+        <a class="btn btn-glass magnetic" href="#/parc">Découvrir le parc</a>
       </div>
     </div>
     <span class="hero-scroll rise" style="--d:.62s" aria-hidden="true"></span>
@@ -2821,11 +3028,11 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
 
 ```
 <div class="category-rail" id="category-rail">
-  <div class="category-pill" data-cat-type=""><span class="cat-icon">✺</span>Tous les biens</div>
-  <div class="category-pill" data-cat-type="Mobil-home"><span class="cat-icon">⌂</span>Mobil-homes</div>
-  <div class="category-pill" data-cat-type="Chalet"><span class="cat-icon">▲</span>Chalets</div>
-  <div class="category-pill" data-cat-type="Parcelle"><span class="cat-icon">⬚</span>Parcelles</div>
-  <div class="category-pill" data-cat-club="1"><span class="cat-icon">★</span>Sélection Club</div>
+  <div class="category-pill" data-cat-type=""><span class="cat-icon" data-ic="tout"></span>Tous les biens</div>
+  <div class="category-pill" data-cat-type="Mobil-home"><span class="cat-icon" data-ic="maison"></span>Mobil-homes</div>
+  <div class="category-pill" data-cat-type="Chalet"><span class="cat-icon" data-ic="chalet"></span>Chalets</div>
+  <div class="category-pill" data-cat-type="Parcelle"><span class="cat-icon" data-ic="parcelle"></span>Parcelles</div>
+  <div class="category-pill" data-cat-club="1"><span class="cat-icon" data-ic="etoile"></span>Sélection Club</div>
 </div>
 ```
 
@@ -2839,15 +3046,6 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
       </div>
 
 ```
-  <div class="filter-group">
-    <span class="filter-label">Je souhaite</span>
-    <div class="segmented" data-filter="transaction">
-      <button data-value="">Tout voir</button>
-      <button data-value="Vente">Acheter</button>
-      <button data-value="Location">Louer</button>
-    </div>
-  </div>
-
   <div class="filter-group">
     <span class="filter-label">Type de bien</span>
     <div class="segmented" data-filter="typeBien">
@@ -2955,6 +3153,15 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
     <h1 class="page-title">Le catalogue du Club</h1>
     <div class="results-head-right">
       <p class="results-count" id="results-count"></p>
+      <label class="sort-wrap">
+        <span class="sr-only">Trier les résultats</span>
+        <select id="sort-select" class="sort-select">
+          <option value="recent">Plus récentes</option>
+          <option value="prix-asc">Prix croissant</option>
+          <option value="prix-desc">Prix décroissant</option>
+          <option value="surface-desc">Plus grandes</option>
+        </select>
+      </label>
       <button class="btn btn-outline btn-sm" id="btn-toggle-filters">Filtres</button>
     </div>
   </div>
@@ -3003,26 +3210,69 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
     </div>
     <div class="trust-grid">
       <article class="trust-card reveal">
-        <span class="tc-ic" aria-hidden="true">🌳</span>
+        <span class="tc-ic" data-ic="arbre" aria-hidden="true"></span>
         <h3>Un cadre naturel</h3>
         <p>Seize hectares de verdure et d'allées arborées, à quarante-cinq minutes de Paris.</p>
       </article>
       <article class="trust-card reveal">
-        <span class="tc-ic" aria-hidden="true">✓</span>
+        <span class="tc-ic" data-ic="controle" aria-hidden="true"></span>
         <h3>Des biens sélectionnés</h3>
         <p>Chaque mobil-home et chaque chalet est vu et validé avant d'être publié.</p>
       </article>
       <article class="trust-card reveal">
-        <span class="tc-ic" aria-hidden="true">💬</span>
+        <span class="tc-ic" data-ic="parole" aria-hidden="true"></span>
         <h3>Un accompagnement direct</h3>
         <p>Vous parlez à l'équipe du parc, sans intermédiaire.</p>
       </article>
       <article class="trust-card reveal">
-        <span class="tc-ic" aria-hidden="true">🏊</span>
+        <span class="tc-ic" data-ic="piscine" aria-hidden="true"></span>
         <h3>Un environnement privilégié</h3>
         <p>Piscine chauffée, tennis, terrains de jeu et animations toute la saison.</p>
       </article>
     </div>
+  </section>
+
+  <!-- ============ ALERTE NOUVEAUX BIENS ============ -->
+
+  <section class="alerte reveal">
+    <div class="al-inner">
+      <p class="eyebrow">Ne rien manquer</p>
+      <h2 class="section-title">Soyez prévenu des nouveaux biens</h2>
+      <p class="al-sub">
+        Laissez votre adresse : vous recevrez un message dès qu'un bien
+        correspondant à vos critères est mis en ligne.
+      </p>
+      <form class="al-form" id="form-alerte">
+        <input type="email" name="email" placeholder="Votre adresse e-mail" required>
+        <select name="type_bien" aria-label="Type de bien">
+          <option value="">Tous les biens</option>
+          <option value="Mobil-home">Mobil-home</option>
+          <option value="Chalet">Chalet</option>
+          <option value="Parcelle">Parcelle</option>
+        </select>
+        <select name="budget_max" aria-label="Budget maximum">
+          <option value="">Tous les prix</option>
+          <option value="20000">Jusqu'à 20 000 €</option>
+          <option value="40000">Jusqu'à 40 000 €</option>
+          <option value="60000">Jusqu'à 60 000 €</option>
+          <option value="100000">Jusqu'à 100 000 €</option>
+        </select>
+        <button type="submit" class="btn btn-cta">Me prévenir</button>
+      </form>
+      <p class="al-note">Une seule adresse suffit. Vous pouvez vous désinscrire à tout moment.</p>
+    </div>
+  </section>
+
+  <!-- ============ VUES RÉCEMMENT ============ -->
+
+  <section class="recent-seen" id="recent-block" hidden>
+    <div class="homes-head reveal">
+      <div>
+        <p class="eyebrow">Vous les avez consultées</p>
+        <h2 class="section-title">Reprendre où vous en étiez</h2>
+      </div>
+    </div>
+    <div class="grid-listings" id="recent-grid"></div>
   </section>
 
   <!-- ============ APPEL FINAL ============ -->
@@ -3091,6 +3341,70 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
       <h2 class="section-title-sm">Description</h2>
       <p id="detail-description"></p>
     </div>
+
+    <!-- Simulation de financement -->
+    <section class="finance" id="finance-block">
+      <h2 class="section-title-sm">Estimer une mensualité</h2>
+
+      <div class="fin-tabs" role="tablist">
+        <button class="fin-tab active" data-fin="mensualite">Quelle mensualité ?</button>
+        <button class="fin-tab" data-fin="budget">Quel budget ?</button>
+      </div>
+
+      <!-- Sens 1 : le prix du bien donne la mensualité -->
+      <div class="fin-panel active" data-fin-panel="mensualite">
+        <label class="fin-line">
+          <span>Apport</span>
+          <output id="fin-apport-val"></output>
+        </label>
+        <input type="range" id="fin-apport" min="0" max="100" step="5" value="20">
+
+        <label class="fin-line">
+          <span>Durée</span>
+          <output id="fin-duree-val">12 ans</output>
+        </label>
+        <input type="range" id="fin-duree" min="2" max="12" step="1" value="12">
+
+        <div class="fin-result">
+          <span class="fin-r-label">Mensualité estimée</span>
+          <strong id="fin-mensualite">—</strong>
+          <span class="fin-r-sub" id="fin-detail"></span>
+        </div>
+      </div>
+
+      <!-- Sens 2 : la mensualité donne le budget atteignable -->
+      <div class="fin-panel" data-fin-panel="budget">
+        <label class="fin-line">
+          <span>Ce que je peux consacrer par mois</span>
+          <output id="fin-budget-val">300 €</output>
+        </label>
+        <input type="range" id="fin-budget" min="50" max="1200" step="25" value="300">
+
+        <label class="fin-line">
+          <span>Durée</span>
+          <output id="fin-duree2-val">12 ans</output>
+        </label>
+        <input type="range" id="fin-duree2" min="2" max="12" step="1" value="12">
+
+        <div class="fin-result">
+          <span class="fin-r-label">Budget atteignable</span>
+          <strong id="fin-capacite">—</strong>
+          <span class="fin-r-sub" id="fin-detail2"></span>
+        </div>
+      </div>
+
+      <label class="fin-taux">
+        Taux annuel utilisé
+        <input type="number" id="fin-taux" value="5.5" step="0.1" min="0" max="20"> %
+      </label>
+
+      <p class="fin-warn">
+        Simulation indicative, hors assurance et frais de dossier. Elle ne
+        constitue ni une offre ni un accord de financement. Un crédit vous
+        engage et doit être remboursé&nbsp;: vérifiez votre capacité de
+        remboursement avant de vous engager.
+      </p>
+    </section>
 
     <div class="detail-actions">
       <button class="btn btn-primary btn-block" id="btn-contact-owner">Demander une visite / des infos</button>
@@ -3242,48 +3556,59 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
       <span class="story-num">Sur place</span>
       <h2 class="story-title">Tout est là, sans quitter le parc</h2>
     </div>
-    <div class="equip-grid">
-      <article class="equip-card reveal">
-        <span class="eq-ic" aria-hidden="true">🏊</span>
-        <h3>Piscine chauffée</h3>
-        <p>Bassin extérieur chauffé, toboggan aquatique et pataugeoire sécurisée.</p>
-      </article>
-      <article class="equip-card reveal">
-        <span class="eq-ic" aria-hidden="true">🎾</span>
-        <h3>Sports</h3>
-        <p>Deux courts de tennis, terrain multisport, pétanque et ping-pong.</p>
-      </article>
-      <article class="equip-card reveal">
-        <span class="eq-ic" aria-hidden="true">⛳</span>
-        <h3>Mini-golf</h3>
-        <p>Un parcours ombragé, accessible à tous les âges.</p>
-      </article>
-      <article class="equip-card reveal">
-        <span class="eq-ic" aria-hidden="true">🐐</span>
-        <h3>Mini-ferme</h3>
-        <p>Les animaux du parc, à quelques pas des emplacements.</p>
-      </article>
-      <article class="equip-card reveal">
-        <span class="eq-ic" aria-hidden="true">🎲</span>
-        <h3>Salle de jeux</h3>
-        <p>Un espace couvert pour les enfants, quel que soit le temps.</p>
-      </article>
-      <article class="equip-card reveal">
-        <span class="eq-ic" aria-hidden="true">💪</span>
-        <h3>Fitness</h3>
-        <p>Une salle équipée et un espace d'entraînement en plein air.</p>
-      </article>
-      <article class="equip-card reveal">
-        <span class="eq-ic" aria-hidden="true">🎪</span>
-        <h3>Animations</h3>
-        <p>Soirées à thème, concerts et événements tout au long de la saison.</p>
-      </article>
-      <article class="equip-card reveal">
-        <span class="eq-ic" aria-hidden="true">🐾</span>
-        <h3>Animaux acceptés</h3>
-        <p>Vos compagnons sont les bienvenus sur les emplacements.</p>
-      </article>
-    </div>
+
+```
+<!-- Repères chiffrés : ce que le visiteur retient vraiment -->
+<div class="park-figures reveal">
+  <div class="pf"><span class="pf-n">16</span><span class="pf-l">hectares</span></div>
+  <div class="pf"><span class="pf-n">300</span><span class="pf-l">emplacements</span></div>
+  <div class="pf"><span class="pf-n">45</span><span class="pf-l">minutes de Paris</span></div>
+  <div class="pf"><span class="pf-n">12</span><span class="pf-l">mois d'ouverture</span></div>
+</div>
+<div class="equip-grid">
+  <article class="equip-card reveal">
+    <span class="eq-ic" data-ic="piscine" aria-hidden="true"></span>
+    <h3>Piscine chauffée</h3>
+    <p>Bassin extérieur chauffé, toboggan aquatique et pataugeoire sécurisée.</p>
+  </article>
+  <article class="equip-card reveal">
+    <span class="eq-ic" data-ic="tennis" aria-hidden="true"></span>
+    <h3>Sports</h3>
+    <p>Deux courts de tennis, terrain multisport, pétanque et ping-pong.</p>
+  </article>
+  <article class="equip-card reveal">
+    <span class="eq-ic" data-ic="golf" aria-hidden="true"></span>
+    <h3>Mini-golf</h3>
+    <p>Un parcours ombragé, accessible à tous les âges.</p>
+  </article>
+  <article class="equip-card reveal">
+    <span class="eq-ic" data-ic="ferme" aria-hidden="true"></span>
+    <h3>Mini-ferme</h3>
+    <p>Les animaux du parc, à quelques pas des emplacements.</p>
+  </article>
+  <article class="equip-card reveal">
+    <span class="eq-ic" data-ic="jeux" aria-hidden="true"></span>
+    <h3>Salle de jeux</h3>
+    <p>Un espace couvert pour les enfants, quel que soit le temps.</p>
+  </article>
+  <article class="equip-card reveal">
+    <span class="eq-ic" data-ic="fitness" aria-hidden="true"></span>
+    <h3>Fitness</h3>
+    <p>Une salle équipée et un espace d'entraînement en plein air.</p>
+  </article>
+  <article class="equip-card reveal">
+    <span class="eq-ic" data-ic="animation" aria-hidden="true"></span>
+    <h3>Animations</h3>
+    <p>Soirées à thème, concerts et événements tout au long de la saison.</p>
+  </article>
+  <article class="equip-card reveal">
+    <span class="eq-ic" data-ic="animaux" aria-hidden="true"></span>
+    <h3>Animaux acceptés</h3>
+    <p>Vos compagnons sont les bienvenus sur les emplacements.</p>
+  </article>
+</div>
+```
+
   </section>
 
   <!-- Image qui s'élargit à mesure qu'on descend : elle passe du
@@ -3311,18 +3636,12 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
     <div class="hgal-progress"><i id="hgal-bar"></i></div>
   </section>
 
-  <!-- 05 & 06 — SÉJOURNER / S'INSTALLER -->
+  <!-- 05 — S'INSTALLER -->
 
-  <section class="story-choice">
-    <a class="story-door" href="#/catalogue?transaction=Location">
-      <span class="story-num story-num-light">05 — Séjourner</span>
-      <strong>Réserver un séjour</strong>
-      <span class="story-door-count" id="count-locations"></span>
-      <span class="story-door-arrow" aria-hidden="true">→</span>
-    </a>
-    <a class="story-door" href="#/catalogue?transaction=Vente">
-      <span class="story-num story-num-light">06 — S'installer</span>
-      <strong>Acheter son mobil-home</strong>
+  <section class="story-choice story-choice-single">
+    <a class="story-door" href="#/catalogue">
+      <span class="story-num story-num-light">05 — S'installer</span>
+      <strong>Découvrir les mobil-homes à vendre</strong>
       <span class="story-door-count" id="count-ventes"></span>
       <span class="story-door-arrow" aria-hidden="true">→</span>
     </a>
@@ -3497,28 +3816,56 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
 
 ```
 <!-- CHOIX INITIAL -->
-<section class="wizard-choice" data-panel="0">
-  <p class="eyebrow">Nouvelle annonce</p>
-  <h2 class="page-title">Que souhaitez-vous publier ?</h2>
-  <div class="choice-cards">
-    <button type="button" class="choice-card" data-choice="Vente">
-      <span class="choice-icon">🏷️</span>
-      <strong>Vendre un bien</strong>
-      <span>Un mobil-home, un chalet ou une parcelle à vendre</span>
-    </button>
-    <button type="button" class="choice-card" data-choice="Location">
-      <span class="choice-icon">🗓️</span>
-      <strong>Mettre en location</strong>
-      <span>Un logement à louer pour des séjours</span>
-    </button>
-  </div>
-</section>
+<section class="wizard-choice" data-panel="0" hidden></section>
 
 <div class="wizard-body" hidden>
   <div class="wizard-progress" id="wizard-progress"></div>
 
-  <!-- ÉTAPE 1 — LE BIEN -->
+  <!-- ÉTAPE 1 — PHOTOS ET PIÈCES
+       On commence par ce que l'administrateur a sous la main en
+       arrivant : les photos. L'assistant les analyse ensuite pour
+       proposer marque, modèle et année. -->
   <section class="wizard-panel active" data-panel="1">
+    <div class="q">
+      <label class="q-label">Ajoutez les photos du mobil-home</label>
+      <p class="q-hint">Sélectionnez toutes vos photos d'un coup. Glissez les vignettes pour changer l'ordre : la première sera la photo principale.</p>
+      <label class="photo-dropzone" id="photo-dropzone">
+        <input type="file" id="w-photos-input" accept="image/*" multiple>
+        <span class="dz-icon" data-ic="photo"></span>
+        <strong>Choisir des photos</strong>
+        <span class="muted">Ou glissez vos fichiers ici</span>
+      </label>
+      <div class="photo-sortable" id="photo-sortable"></div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">Combien de chambres ?</label>
+      <div class="q-choices" data-field="chambres">
+        <button type="button" data-value="0">Aucune</button>
+        <button type="button" data-value="1">1</button>
+        <button type="button" data-value="2">2</button>
+        <button type="button" data-value="3">3</button>
+        <button type="button" data-value="4">4</button>
+        <button type="button" data-value="5">5 et plus</button>
+      </div>
+    </div>
+
+    <div class="q">
+      <label class="q-label">Combien de salles de bain ?</label>
+      <div class="q-choices" data-field="sdb">
+        <button type="button" data-value="1">1</button>
+        <button type="button" data-value="2">2</button>
+        <button type="button" data-value="3">3 et plus</button>
+      </div>
+    </div>
+
+    <div class="wizard-nav">
+      <button type="button" class="btn btn-primary btn-block" data-next="2">Continuer →</button>
+    </div>
+  </section>
+
+  <!-- ÉTAPE 2 — IDENTITÉ DU BIEN -->
+  <section class="wizard-panel" data-panel="2">
     <div class="q">
       <label class="q-label" id="q-type">Quel type de bien souhaitez-vous mettre en vente ?</label>
       <div class="q-choices" data-field="type_bien">
@@ -3548,9 +3895,6 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
         <label class="q-label" for="w-year">De quelle année est-il ?</label>
         <input type="number" id="w-year" class="q-input q-input-short" min="1980" max="2030" placeholder="2020">
       </div>
-      <button type="button" class="btn btn-secondary btn-block" id="btn-ai-lookup">✨ Compléter automatiquement d'après la marque et le modèle</button>
-      <div id="ai-lookup-status" class="ai-status" hidden></div>
-      <div id="ai-variant-picker" class="ai-variant-picker" hidden></div>
     </div>
 
     <div class="q">
@@ -3562,23 +3906,12 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
     </div>
 
     <div class="wizard-nav">
-      <button type="button" class="btn btn-primary btn-block" data-next="2">Continuer →</button>
+      <button type="button" class="btn btn-primary btn-block" data-next="3">Continuer →</button>
     </div>
   </section>
 
-  <!-- ÉTAPE 2 — LES CARACTÉRISTIQUES -->
-  <section class="wizard-panel" data-panel="2">
-    <div class="q">
-      <label class="q-label" id="q-chambres">Combien possède-t-il de chambres ?</label>
-      <div class="q-choices" data-field="chambres">
-        <button type="button" data-value="0">Aucune</button>
-        <button type="button" data-value="1">1</button>
-        <button type="button" data-value="2">2</button>
-        <button type="button" data-value="3">3</button>
-        <button type="button" data-value="4">4</button>
-        <button type="button" data-value="5">5 et plus</button>
-      </div>
-    </div>
+  <!-- ÉTAPE 3 — LES CARACTÉRISTIQUES -->
+  <section class="wizard-panel" data-panel="3">
 
     <div class="q">
       <label class="q-label" id="q-capacite">Combien de personnes peuvent y dormir ?</label>
@@ -3602,15 +3935,6 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
       </div>
     </div>
 
-    <div class="q">
-      <label class="q-label">Combien possède-t-il de salles de bain ?</label>
-      <div class="q-choices" data-field="sdb">
-        <button type="button" data-value="1">1</button>
-        <button type="button" data-value="2">2</button>
-        <button type="button" data-value="3">3 et plus</button>
-      </div>
-    </div>
-
     <div class="q mode-vente">
       <label class="q-label">Combien possède-t-il de WC séparés ?</label>
       <div class="q-choices" data-field="wc">
@@ -3629,13 +3953,13 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
     </div>
 
     <div class="wizard-nav">
-      <button type="button" class="btn btn-ghost" data-next="1">← Retour</button>
-      <button type="button" class="btn btn-primary" data-next="3">Continuer →</button>
+      <button type="button" class="btn btn-ghost" data-next="2">← Retour</button>
+      <button type="button" class="btn btn-primary" data-next="4">Continuer →</button>
     </div>
   </section>
 
-  <!-- ÉTAPE 3 — LES ÉQUIPEMENTS -->
-  <section class="wizard-panel" data-panel="3">
+  <!-- ÉTAPE 4 — LES ÉQUIPEMENTS -->
+  <section class="wizard-panel" data-panel="4">
     <div class="q">
       <label class="q-label">Quels équipements possède ce bien ?</label>
       <p class="q-hint">Touchez tout ce qui s'applique. Vous pourrez détailler le reste dans la description.</p>
@@ -3651,13 +3975,13 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
     </div>
 
     <div class="wizard-nav">
-      <button type="button" class="btn btn-ghost" data-next="2">← Retour</button>
-      <button type="button" class="btn btn-primary" data-next="4">Continuer →</button>
+      <button type="button" class="btn btn-ghost" data-next="3">← Retour</button>
+      <button type="button" class="btn btn-primary" data-next="5">Continuer →</button>
     </div>
   </section>
 
-  <!-- ÉTAPE 4 — LA DESCRIPTION -->
-  <section class="wizard-panel" data-panel="4">
+  <!-- ÉTAPE 5 — LA DESCRIPTION -->
+  <section class="wizard-panel" data-panel="5">
     <div class="q">
       <label class="q-label" id="q-desc">Décrivez votre bien</label>
       <p class="q-hint" id="q-desc-hint"></p>
@@ -3674,28 +3998,8 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
     </div>
 
     <div class="wizard-nav">
-      <button type="button" class="btn btn-ghost" data-next="3">← Retour</button>
-      <button type="button" class="btn btn-primary" data-next="5">Continuer →</button>
-    </div>
-  </section>
-
-  <!-- ÉTAPE 5 — LES PHOTOS -->
-  <section class="wizard-panel" data-panel="5">
-    <div class="q">
-      <label class="q-label">Ajoutez les photos du bien</label>
-      <p class="q-hint">Sélectionnez toutes vos photos d'un coup. Glissez les vignettes pour changer l'ordre : la première sera la photo principale.</p>
-      <label class="photo-dropzone" id="photo-dropzone">
-        <input type="file" id="w-photos-input" accept="image/*" multiple>
-        <span class="dz-icon">📷</span>
-        <strong>Choisir des photos</strong>
-        <span class="muted">Ou glissez vos fichiers ici</span>
-      </label>
-      <div class="photo-sortable" id="photo-sortable"></div>
-    </div>
-
-    <div class="wizard-nav">
       <button type="button" class="btn btn-ghost" data-next="4">← Retour</button>
-      <button type="button" class="btn btn-primary" data-next="6">Continuer →</button>
+      <button type="button" class="btn btn-primary" data-next="5">Continuer →</button>
     </div>
   </section>
 
@@ -3879,6 +4183,7 @@ const state = {
     brands: new Set(), yearMin: null, yearMax: null, surfaceMin: null,
     equipements: new Set(), selectionClub: false
   },
+  tri: (() => { try { return localStorage.getItem("ccv-tri") || "recent"; } catch (_) { return "recent"; } })(),
   compare: (() => { try { return JSON.parse(localStorage.getItem("ccv-compare") || "[]"); } catch (_) { return []; } })(),
   wizard: { step: 1, photos: [], mode: null, editingId: null }
 };
@@ -3891,6 +4196,54 @@ const app = $("#app");
 // TOAST
 // ===========================================================
 let toastTimeout;
+// ===========================================================
+// JEU D'ICÔNES
+// Des tracés dessinés au même trait plutôt que des emojis : ils
+// prennent la couleur du texte, restent nets à toute taille et
+// s'accordent au reste du site.
+// ===========================================================
+const ICONES = {
+  arbre:    '<path d="M12 22v-6"/><path d="M12 16 6.5 9h3L12 2l2.5 7h3L12 16Z"/>',
+  controle: '<path d="M4 12.5 9 17.5 20 6.5"/>',
+  parole:   '<path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8Z"/>',
+  piscine:  '<path d="M2 17c2 0 2 1.5 4 1.5S8 17 10 17s2 1.5 4 1.5S16 17 18 17s2 1.5 4 1.5"/><path d="M7 15V5a2 2 0 0 1 4 0"/><path d="M15 15V5a2 2 0 0 1 4 0"/><path d="M7 9h4M15 9h4"/>',
+  tennis:   '<circle cx="12" cy="12" r="9"/><path d="M5.6 5.6a9 9 0 0 0 12.8 12.8M18.4 5.6A9 9 0 0 0 5.6 18.4"/>',
+  golf:     '<path d="M12 19V3l7 4-7 4"/><path d="M6 21h12"/>',
+  ferme:    '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+  jeux:     '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.2"/><circle cx="15.5" cy="15.5" r="1.2"/><circle cx="15.5" cy="8.5" r="1.2"/><circle cx="8.5" cy="15.5" r="1.2"/>',
+  fitness:  '<path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/>',
+  animation:'<path d="M4 20 8 6l4 5 4-5 4 14"/><path d="M4 20h16"/>',
+  animaux:  '<circle cx="7" cy="9" r="2"/><circle cx="17" cy="9" r="2"/><circle cx="10" cy="5" r="1.8"/><circle cx="14" cy="5" r="1.8"/><path d="M12 12c3 0 5 2.4 5 4.5S15 20 12 20s-5-1.4-5-3.5S9 12 12 12Z"/>',
+  photo:    '<path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><circle cx="12" cy="13" r="3.5"/>',
+  etincelle:'<path d="M12 3v5M12 16v5M3 12h5M16 12h5"/><path d="m6.5 6.5 3 3M14.5 14.5l3 3M17.5 6.5l-3 3M9.5 14.5l-3 3"/>',
+  crayon:   '<path d="M4 20h4L19 9a2.5 2.5 0 0 0-3.5-3.5L4 16.5V20Z"/><path d="m14.5 6.5 3.5 3.5"/>',
+  corbeille:'<path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7v13a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7"/><path d="M10 11v6M14 11v6"/>',
+  coeur:    '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>',
+  alerte:   '<path d="M12 3 2 20h20L12 3Z"/><path d="M12 9v5M12 17.5v.5"/>',
+  maison:   '<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',
+  chalet:   '<path d="M12 3 3 12h3v9h12v-9h3L12 3Z"/>',
+  parcelle: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 11h18M9 6v13"/>',
+  etoile:   '<path d="m12 3 2.7 5.9 6.3.7-4.7 4.3 1.3 6.1L12 17l-5.6 3 1.3-6.1L3 9.6l6.3-.7L12 3Z"/>',
+  tout:     '<circle cx="12" cy="12" r="9"/><path d="M12 7v10M7 12h10"/>',
+};
+
+// Fabrique une icône : même trait, même taille, prend la couleur du texte
+// Remplit tous les repères data-ic présents dans la page
+function poserIcones(racine) {
+  $$("[data-ic]", racine || document).forEach(el => {
+    if (el.dataset.icDone) return;
+    el.dataset.icDone = "1";
+    el.innerHTML = ic(el.dataset.ic, Number(el.dataset.icSize) || 22) + el.innerHTML;
+  });
+}
+
+function ic(nom, taille) {
+  const t = taille || 22;
+  return `<svg class="ic" width="${t}" height="${t}" viewBox="0 0 24 24" fill="none"
+    stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+    aria-hidden="true">${ICONES[nom] || ""}</svg>`;
+}
+
 function toast(msg, type) {
   const el = $("#toast");
   el.textContent = msg;
@@ -3942,19 +4295,6 @@ function errMsg(err) {
   return "Impossible de contacter le serveur (vérifie ta connexion et la configuration Supabase dans le fichier)";
 }
 
-// ===========================================================
-// ASSISTANT IA (Supabase Edge Function "ai-assist")
-// ===========================================================
-// Appelle la fonction serveur qui elle-même appelle l'IA — la clé API
-// n'est jamais présente dans ce fichier, uniquement côté serveur.
-async function callAIAssist(mode, payload) {
-  const { data, error } = await sb.functions.invoke("swift-worker", {
-    body: { mode, ...payload }
-  });
-  if (error) throw new Error(errMsg(error));
-  if (data?.error) throw new Error(data.error);
-  return data;
-}
 
 // ===========================================================
 // ROUTER
@@ -3992,6 +4332,7 @@ async function router() {
     setupParallax();
     setupLitText();
     setupPinned();
+    poserIcones(document);
     setupCursor();
     setupLightbox();
     renderCompareBar();
@@ -4492,61 +4833,76 @@ async function loadFavorites() {
 }
 
 // ===========================================================
-// RECHERCHE INTELLIGENTE (IA)
+// RECHERCHE
 // ===========================================================
-// Le champ de recherche reste un simple filtre texte pendant la
-// frappe (résultat instantané), mais valider (clic ou Entrée) envoie
-// la phrase à l'IA pour comprendre l'intention complète (budget,
-// chambres, équipements…) et appliquer les bons filtres d'un coup.
-async function runAISearch() {
+// Recherche par mots-clés, effectuée directement dans le navigateur.
+// Elle porte sur le titre, la marque, le modèle et la description, et
+// reconnaît quelques formulations courantes (nombre de chambres,
+// budget, type de bien) sans dépendre d'un service extérieur.
+function runSearch() {
   const input = $("#quick-search-location");
-  const query = input.value.trim();
-  if (!query) { applyFilters(); return; }
+  const query = (input?.value || "").trim();
 
-  const btn = $("#btn-quick-search");
-  btn.disabled = true;
-  const originalHTML = btn.innerHTML;
-  btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="animation:aiSpin .8s linear infinite"><circle cx="12" cy="12" r="8" stroke-dasharray="30 20"/></svg>';
-
-  try {
-    const result = await callAIAssist("search", { query });
-
-    state.filters.transaction = result.transaction || "";
-    if (result.type_bien) state.filters.typeBien = result.type_bien;
-    if (result.budget_max != null) state.filters.budgetMax = result.budget_max;
-    if (result.chambres_min != null) {
-      state.filters.chambres = result.chambres_min >= 4 ? "4" : String(result.chambres_min);
-    }
-    if (result.couchages_min != null) {
-      const n = result.couchages_min;
-      // Le nombre de personnes sert de capacité en location, de couchages en vente
-      state.filters.voyageurs = n >= 8 ? "8" : (n <= 2 ? "2" : String(n));
-      state.filters.couchages = n >= 8 ? "8" : (n <= 2 ? "2" : String(n));
-    }
-    if (Array.isArray(result.equipements) && result.equipements.length) {
-      state.filters.equipements = new Set(result.equipements);
-    }
-    // La recherche libre porte désormais sur le titre / la marque / le modèle
-    if (result.mots_cles_localisation) {
-      state.filters.location = result.mots_cles_localisation.toLowerCase();
-    }
-
-    syncFilterControlsFromState();
+  if (!query) {
+    state.filters.location = "";
     applyFilters();
-    openFiltersPanel();
-    toast("Recherche comprise par l'IA ✨");
-  } catch (err) {
-    toast("Recherche IA indisponible (" + errMsg(err) + ") — recherche simple appliquée.");
-    applyFilters();
-    openFiltersPanel();
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = originalHTML;
+    return;
   }
+
+  const q = query.toLowerCase();
+
+  // "3 chambres", "2 ch"
+  const mChambres = q.match(/(\d+)\s*(chambres?|ch\b)/);
+  if (mChambres) {
+    const n = Number(mChambres[1]);
+    state.filters.chambres = n >= 4 ? "4" : String(n);
+  }
+
+  // "6 personnes", "couchage 6"
+  const mPers = q.match(/(\d+)\s*(personnes?|couchages?|pers\b)/);
+  if (mPers) {
+    const n = Number(mPers[1]);
+    state.filters.couchages = n >= 8 ? "8" : (n <= 2 ? "2" : String(n));
+  }
+
+  // "moins de 40000", "jusqu'à 35 000 €", "40000€"
+  const mBudget = q.replace(/\s/g, "").match(/(?:moinsde|jusqua|jusqu'a|max|budget)?(\d{4,7})€?/);
+  if (mBudget) state.filters.budgetMax = Number(mBudget[1]);
+
+  if (/chalet/.test(q)) state.filters.typeBien = "Chalet";
+  else if (/mobil|mobile/.test(q)) state.filters.typeBien = "Mobil-home";
+  else if (/parcelle|terrain/.test(q)) state.filters.typeBien = "Parcelle";
+
+  // Les équipements cités dans la phrase
+  const motsEquip = {
+    climatisation: /clim/, terrasse: /terrasse/, lave_vaisselle: /lave.?vaisselle/,
+    lave_linge: /lave.?linge/, parking: /parking/, animaux_acceptes: /animaux|chien|chat/,
+  };
+  Object.entries(motsEquip).forEach(([cle, motif]) => {
+    if (motif.test(q)) state.filters.equipements.add(cle);
+  });
+
+  // On retire de la phrase tout ce qui a déjà été traduit en filtre,
+  // ainsi que les mots outils : sans cela, la recherche libre cherchait
+  // la phrase entière dans les titres et ne trouvait jamais rien.
+  const outils = /\b(le|la|les|un|une|des|de|du|avec|et|ou|a|à|pour|moins|jusqu|jusqua|max|budget|chambres?|ch|personnes?|couchages?|pers|chalet|mobil|mobile|home|parcelle|terrain|clim|climatisation|terrasse|parking|animaux)\b/g;
+  const reste = q
+    .replace(/\d+\s*€?/g, " ")
+    .replace(outils, " ")
+    .replace(/[^\wàâäéèêëïîôöùûüç\s-]/g, " ")
+    .split(/\s+/)
+    .filter(m => m.length > 2);
+
+  state.filters.location = reste.join(" ");
+
+  syncFilterControlsFromState();
+  applyFilters();
+  openFiltersPanel();
+  toast("Recherche appliquée", "ok");
 }
 
 // Reflète l'état de state.filters sur les contrôles visuels du
-// panneau de filtres, pour que la recherche IA reste transparente
+// panneau de filtres, pour que la recherche reste lisible
 // (l'admin/le client voit exactement quels filtres ont été appliqués).
 function syncFilterControlsFromState() {
   const f = state.filters;
@@ -4761,8 +5117,9 @@ function renderCatalogue(params) {
   // paraît jamais vide.
   if (!state.listings.length) renderSkeletons("#grid-listings", 6);
 
-  setupFindTiles();
-  setupSearchBar();
+  setupTri();
+  setupAlerte();
+  renderVuesRecemment();
 
   // Le hero d'accueil : la vidéo prime sur la photo si elle existe —
   // c'est elle qui donne le plus de vie au premier écran. À défaut,
@@ -4903,10 +5260,10 @@ function renderCatalogue(params) {
     applyFilters();
   }, 250));
 
-  $("#btn-quick-search").addEventListener("click", () => runAISearch());
+  $("#btn-quick-search").addEventListener("click", () => runSearch());
 
   $("#quick-search-location").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") { e.preventDefault(); runAISearch(); }
+    if (e.key === "Enter") { e.preventDefault(); runSearch(); }
   });
 
   const toggleFiltersBtn = $("#btn-toggle-filters");
@@ -5026,7 +5383,7 @@ function applyFilters() {
     return true;
   });
 
-  renderListingsGrid(results, "#grid-listings");
+  renderListingsGrid(trierResultats(results), "#grid-listings");
   const count = $("#results-count");
   if (count) count.textContent = `${results.length} bien${results.length > 1 ? "s" : ""} trouvé${results.length > 1 ? "s" : ""}`;
 }
@@ -5036,7 +5393,7 @@ function applyFilters() {
 // séjour, et inversement pour les dates et le nombre de voyageurs.
 function applyFilterContext() {
   const t = state.filters.transaction;
-  const showVente = t !== "Location";
+  const showVente = true;   // le site ne traite plus que la vente
   const showLoc = t !== "Vente";
 
   $$(".filter-vente-only").forEach(el => el.hidden = !showVente);
@@ -5044,7 +5401,7 @@ function applyFilterContext() {
   $$(".vente-only").forEach(el => el.hidden = !showVente);
 
   const budgetLabel = $("#label-filter-budget");
-  if (budgetLabel) budgetLabel.textContent = t === "Location" ? "Tarif par nuit (€)" : "Budget (€)";
+  if (budgetLabel) budgetLabel.textContent = "Budget (€)";
 
   renderFilterEquipChips();
 }
@@ -5055,7 +5412,7 @@ function renderFilterEquipChips() {
   const wrap = $("#filter-equipements");
   if (!wrap) return;
   const t = state.filters.transaction;
-  const list = t === "Location" ? EQUIPEMENTS_LOCATION
+  const list = false ? EQUIPEMENTS_LOCATION
              : t === "Vente" ? EQUIPEMENTS_VENTE
              : [...new Map([...EQUIPEMENTS_VENTE, ...EQUIPEMENTS_LOCATION]).entries()];
 
@@ -5737,6 +6094,17 @@ function buildListingCard(l) {
   // Repère pour la transition partagée vers la fiche
   media.dataset.listingId = l.id;
 
+  // Une annonce publiée depuis moins de deux semaines est signalée :
+  // c'est ce qui donne l'impression d'un catalogue vivant.
+  const publieeLe = l.created_at ? new Date(l.created_at) : null;
+  const jours = publieeLe ? (Date.now() - publieeLe.getTime()) / 86400000 : 999;
+  if (jours <= 14) {
+    const neuf = document.createElement("span");
+    neuf.className = "card-new";
+    neuf.textContent = "Nouveau";
+    $(".card-media", node).appendChild(neuf);
+  }
+
   const badge = $(".card-badge", node);
   if (l.status === "vendu") {
     badge.textContent = "Vendu";
@@ -5745,7 +6113,7 @@ function buildListingCard(l) {
     badge.textContent = "Sélection Club";
     badge.classList.add("badge-club");
   } else {
-    badge.textContent = l.transaction === "Location" ? "À louer" : "À vendre";
+    badge.textContent = "À vendre";
   }
 
   // Le titre libre saisi par l'admin prime ; sinon on reconstruit
@@ -5783,8 +6151,8 @@ function buildListingCard(l) {
     const zone = $(".card-admin", node);
     zone.hidden = false;
     zone.innerHTML = `
-      <button class="ca-edit" title="Modifier cette annonce">✏️ <span>Modifier</span></button>
-      <button class="ca-del" title="Supprimer cette annonce">🗑️ <span>Supprimer</span></button>`;
+      <button class="ca-edit" title="Modifier cette annonce">${ic("crayon", 16)}<span>Modifier</span></button>
+      <button class="ca-del" title="Supprimer cette annonce">${ic("corbeille", 16)}<span>Supprimer</span></button>`;
     $(".ca-edit", zone).addEventListener("click", (e) => {
       e.stopPropagation();
       openListingEditor(l, false);
@@ -5809,7 +6177,7 @@ function askConfirm({ titre, texte, valider, danger, icone, variante }) {
     fond.className = "confirm-backdrop";
     fond.innerHTML = `
       <div class="confirm-box ${variante || ""}" role="dialog" aria-modal="true" aria-label="${titre}">
-        <div class="confirm-ic" aria-hidden="true">${icone || "⚠️"}</div>
+        <div class="confirm-ic" aria-hidden="true">${icone || ic("alerte", 22)}</div>
         <h3>${titre}</h3>
         <p>${texte}</p>
         <div class="confirm-actions">
@@ -5846,7 +6214,7 @@ async function confirmDeleteListing(l) {
     texte: `« ${l.title || l.type_bien} » sera définitivement supprimée et ne sera plus visible par les clients.`,
     valider: "Supprimer définitivement",
     danger: true,
-    icone: "🗑️",
+    icone: ic("corbeille", 22),
   });
   if (!ok) return;
 
@@ -5869,7 +6237,7 @@ async function inviteToSignIn() {
     titre: "Connectez-vous pour enregistrer",
     texte: "Créez un compte ou connectez-vous pour ajouter cette annonce à vos favoris et la retrouver ensuite.",
     valider: "Se connecter",
-    icone: "♥",
+    icone: ic("coeur", 22),
     variante: "is-invite",
   });
   navigate(ok ? "login" : "signup");
@@ -6124,7 +6492,9 @@ async function renderListingDetail(id) {
   countListingView(l);
 
   // Barre d'action toujours accessible, et suggestions en bas de page
+  noterVue(l.id);
   setupStickyBuy(l);
+  setupFinance(l);
   renderSimilar(l);
 }
 
@@ -6138,6 +6508,191 @@ async function notifierAdmin(demande) {
   } catch (err) {
     console.warn("Alerte e-mail non envoyée :", err);
   }
+}
+
+// ===========================================================
+// ALERTE SUR LES NOUVEAUX BIENS
+// ===========================================================
+function setupAlerte() {
+  const form = $("#form-alerte");
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const email = String(fd.get("email") || "").trim();
+    if (!email) return;
+
+    const { error } = await sb.from("alertes").insert({
+      email,
+      type_bien: fd.get("type_bien") || null,
+      budget_max: fd.get("budget_max") ? Number(fd.get("budget_max")) : null,
+    });
+    if (error) return toast("Enregistrement impossible : " + errMsg(error));
+
+    form.reset();
+    toast("C'est noté, vous serez prévenu", "ok");
+  });
+}
+
+// ===========================================================
+// TRI DES RÉSULTATS
+// ===========================================================
+function trierResultats(liste) {
+  const mode = $("#sort-select")?.value || state.tri || "recent";
+  const copie = [...liste];
+
+  // Les biens sans prix partent en fin de liste plutôt que d'être
+  // traités comme gratuits.
+  const prix = (l) => (l.price == null ? Infinity : Number(l.price));
+
+  switch (mode) {
+    case "prix-asc":     copie.sort((a, b) => prix(a) - prix(b)); break;
+    case "prix-desc":    copie.sort((a, b) => (prix(b) === Infinity ? -1 : prix(b)) - (prix(a) === Infinity ? -1 : prix(a))); break;
+    case "surface-desc": copie.sort((a, b) => (b.surface || 0) - (a.surface || 0)); break;
+    default:             copie.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+  }
+  return copie;
+}
+
+function setupTri() {
+  const sel = $("#sort-select");
+  if (!sel) return;
+  if (state.tri) sel.value = state.tri;
+  sel.addEventListener("change", () => {
+    state.tri = sel.value;          // conservé d'une page à l'autre
+    try { localStorage.setItem("ccv-tri", sel.value); } catch (_) {}
+    applyFilters();
+  });
+}
+
+// ===========================================================
+// ANNONCES VUES RÉCEMMENT
+// Gardées dans le navigateur, sans rien enregistrer côté serveur.
+// ===========================================================
+const VUES_MAX = 8;
+
+function noterVue(id) {
+  try {
+    let vues = JSON.parse(localStorage.getItem("ccv-vues") || "[]");
+    vues = [id, ...vues.filter(x => x !== id)].slice(0, VUES_MAX);
+    localStorage.setItem("ccv-vues", JSON.stringify(vues));
+  } catch (_) { /* stockage indisponible : sans conséquence */ }
+}
+
+function listerVues() {
+  try {
+    const ids = JSON.parse(localStorage.getItem("ccv-vues") || "[]");
+    return ids
+      .map(id => state.listings.find(l => l.id === id && l.status === "publie"))
+      .filter(Boolean);
+  } catch (_) { return []; }
+}
+
+function renderVuesRecemment() {
+  const bloc = $("#recent-block");
+  if (!bloc) return;
+
+  // On n'affiche pas le bien qu'on est en train de consulter
+  const courant = location.hash.match(/#\/listing\/([\w-]+)/)?.[1];
+  const vues = listerVues().filter(l => l.id !== courant);
+
+  if (vues.length < 2) { bloc.hidden = true; return; }
+  bloc.hidden = false;
+
+  const grille = $("#recent-grid", bloc);
+  grille.innerHTML = "";
+  vues.slice(0, 4).forEach(l => grille.appendChild(buildListingCard(l)));
+  observeReveals(bloc);
+}
+
+// ===========================================================
+// SIMULATION DE FINANCEMENT
+// Calcul d'un prêt à mensualités constantes, la formule employée
+// par les banques. Tout se fait dans le navigateur : aucune donnée
+// n'est transmise, et le résultat est indicatif — hors assurance
+// et frais de dossier.
+// ===========================================================
+function mensualitePret(capital, tauxAnnuel, annees) {
+  const n = annees * 12;
+  const t = tauxAnnuel / 100 / 12;
+  if (!capital || n <= 0) return 0;
+  if (t === 0) return capital / n;            // évite une division par zéro
+  return capital * t / (1 - Math.pow(1 + t, -n));
+}
+
+function capitalEmpruntable(mensualite, tauxAnnuel, annees) {
+  const n = annees * 12;
+  const t = tauxAnnuel / 100 / 12;
+  if (!mensualite || n <= 0) return 0;
+  if (t === 0) return mensualite * n;
+  return mensualite * (1 - Math.pow(1 + t, -n)) / t;
+}
+
+function setupFinance(listing) {
+  const bloc = $("#finance-block");
+  if (!bloc) return;
+
+  const prix = Number(listing.price) || 0;
+  if (!prix) { bloc.remove(); return; }        // sans prix, pas de simulation
+
+  const el = (id) => $("#" + id);
+  const taux = () => Number(el("fin-taux").value) || 0;
+
+  // ---- Sens 1 : du prix vers la mensualité ----
+  const calculerMensualite = () => {
+    const partApport = Number(el("fin-apport").value);
+    const annees = Number(el("fin-duree").value);
+    const apport = Math.round(prix * partApport / 100);
+    const emprunte = prix - apport;
+    const m = mensualitePret(emprunte, taux(), annees);
+    const total = m * annees * 12;
+
+    el("fin-apport-val").textContent = `${fmtEUR(apport)} (${partApport} %)`;
+    el("fin-duree-val").textContent = `${annees} ans`;
+    el("fin-mensualite").textContent = m ? `${Math.round(m)} € / mois` : "—";
+    el("fin-detail").textContent = emprunte
+      ? `${fmtEUR(emprunte)} empruntés · coût total du crédit ${fmtEUR(Math.round(total - emprunte))}`
+      : "Aucun financement nécessaire";
+  };
+
+  // ---- Sens 2 : de la mensualité vers le budget ----
+  const calculerBudget = () => {
+    const mens = Number(el("fin-budget").value);
+    const annees = Number(el("fin-duree2").value);
+    const cap = capitalEmpruntable(mens, taux(), annees);
+
+    el("fin-budget-val").textContent = `${mens} € / mois`;
+    el("fin-duree2-val").textContent = `${annees} ans`;
+    el("fin-capacite").textContent = fmtEUR(Math.round(cap));
+
+    // On situe le bien consulté par rapport à cette capacité
+    const ecart = prix - cap;
+    el("fin-detail2").textContent = ecart <= 0
+      ? `Ce bien à ${fmtEUR(prix)} entre dans ce budget.`
+      : `Il manquerait ${fmtEUR(Math.round(ecart))} pour ce bien, à couvrir par un apport.`;
+  };
+
+  const tout = () => { calculerMensualite(); calculerBudget(); };
+
+  ["fin-apport", "fin-duree", "fin-budget", "fin-duree2", "fin-taux"]
+    .forEach(id => el(id).addEventListener("input", tout));
+
+  // Bascule entre les deux sens
+  $$(".fin-tab", bloc).forEach(tab => {
+    tab.addEventListener("click", () => {
+      $$(".fin-tab", bloc).forEach(t => t.classList.remove("active"));
+      $$(".fin-panel", bloc).forEach(p => p.classList.remove("active"));
+      tab.classList.add("active");
+      $(`[data-fin-panel="${tab.dataset.fin}"]`, bloc).classList.add("active");
+    });
+  });
+
+  // Point de départ raisonnable : une mensualité proche de ce bien
+  const depart = Math.round(mensualitePret(prix * 0.8, taux(), 12) / 25) * 25;
+  el("fin-budget").value = Math.min(1200, Math.max(50, depart));
+
+  tout();
 }
 
 // ===========================================================
@@ -6363,26 +6918,92 @@ async function renderMessages() {
   if (!requireAuth()) return;
   app.innerHTML = "";
   app.appendChild($("#tpl-messages").content.cloneNode(true));
-  const { data, error } = await sb.from("messages").select("*, listings(type_bien, brand, model)")
-    .eq("user_id", state.user.id).order("created_at", { ascending: false });
+
+  const { data, error } = await sb.from("messages")
+    .select("*, listings(id, title, type_bien, brand, model, photos, photo_exterieur)")
+    .eq("user_id", state.user.id)
+    .order("created_at", { ascending: true });
+
   const list = $("#messages-list");
   if (error || !data?.length) {
-    list.innerHTML = `<div class="empty-state"><h3>Aucune demande envoyée</h3><p>Vos demandes de visite ou d'infos apparaîtront ici.</p></div>`;
+    list.innerHTML = `<div class="empty-state"><h3>Aucun échange</h3>
+      <p>Vos conversations avec le vendeur apparaîtront ici.</p></div>`;
     return;
   }
+
+  // Les messages sont regroupés par bien : un fil par annonce.
+  const fils = new Map();
   data.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "message-item";
-    div.innerHTML = `
-      <div class="msg-top">
-        <span>${new Date(m.created_at).toLocaleDateString("fr-FR")}</span>
-        <span class="msg-status status-${m.status}">${m.status === "nouveau" ? "En attente" : "Traité"}</span>
-      </div>
-      <strong>${requestTypeLabel(m.request_type)} — ${m.listings?.type_bien || ""} ${m.listings?.brand || ""} ${m.listings?.model || ""}</strong>
-      <p class="muted">${m.message || ""}</p>
-    `;
-    list.appendChild(div);
+    const cle = m.listing_id || "sans-bien";
+    if (!fils.has(cle)) fils.set(cle, []);
+    fils.get(cle).push(m);
   });
+
+  list.innerHTML = "";
+  [...fils.entries()]
+    .sort((a, b) => new Date(b[1].at(-1).created_at) - new Date(a[1].at(-1).created_at))
+    .forEach(([cle, msgs]) => list.appendChild(construireFil(cle, msgs)));
+}
+
+// Construit un fil : l'en-tête du bien, les messages échangés, et
+// le champ pour répondre.
+function construireFil(listingId, msgs) {
+  const bien = msgs[0].listings;
+  const el = document.createElement("article");
+  el.className = "thread reveal";
+
+  const photo = bien?.photos?.[0] || bien?.photo_exterieur || placeholderImg();
+  const titre = bien?.title || `${bien?.type_bien || "Bien"} ${bien?.brand || ""}`.trim();
+
+  el.innerHTML = `
+    <header class="th-head">
+      <img src="${photo}" alt="">
+      <div>
+        <strong>${titre}</strong>
+        <span>${msgs.length} message${msgs.length > 1 ? "s" : ""}</span>
+      </div>
+      ${listingId !== "sans-bien" ? `<a class="link-btn" href="#/listing/${listingId}">Voir</a>` : ""}
+    </header>
+
+    <div class="th-body">
+      ${msgs.map(m => `
+        <div class="bulle ${m.sender === "vendeur" ? "de-vendeur" : "de-moi"}">
+          <p>${(m.message || "").replace(/</g, "&lt;")}</p>
+          <time>${new Date(m.created_at).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</time>
+        </div>`).join("")}
+    </div>
+
+    <form class="th-reply">
+      <input type="text" placeholder="Écrire un message…" aria-label="Votre message" required>
+      <button type="submit" class="btn btn-cta btn-sm">Envoyer</button>
+    </form>
+
+    <p class="th-note">Les échanges sont effacés automatiquement au bout de trois jours.</p>
+  `;
+
+  $(".th-reply", el).addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const champ = $("input", e.target);
+    const texte = champ.value.trim();
+    if (!texte) return;
+
+    const { error } = await sb.from("messages").insert({
+      listing_id: listingId === "sans-bien" ? null : listingId,
+      user_id: state.user.id,
+      name: state.user.full_name || state.user.email,
+      email: state.user.email,
+      request_type: "info",
+      message: texte,
+      sender: "client",
+    });
+    if (error) return toast("Envoi impossible : " + errMsg(error));
+
+    champ.value = "";
+    toast("Message envoyé", "ok");
+    renderMessages();
+  });
+
+  return el;
 }
 
 // Page publique présentant le Parc de la Chesnaie, accessible depuis
@@ -6463,12 +7084,8 @@ function renderParkProfile() {
   ].filter(Boolean);
   conditions.innerHTML = condDefs.map(t => `<span>${t}</span>`).join("");
 
-  // 05 & 06 — les deux issues, avec le nombre réel de biens disponibles
-  const dispoLoc = state.listings.filter(l => l.status === "publie" && l.transaction === "Location").length;
-  const dispoVente = state.listings.filter(l => l.status === "publie" && l.transaction !== "Location").length;
-  $("#count-locations").textContent = dispoLoc
-    ? `${dispoLoc} logement${dispoLoc > 1 ? "s" : ""} disponible${dispoLoc > 1 ? "s" : ""}`
-    : "Bientôt disponible";
+  // 05 — l'issue du parcours, avec le nombre réel de biens disponibles
+  const dispoVente = state.listings.filter(l => l.status === "publie").length;
   $("#count-ventes").textContent = dispoVente
     ? `${dispoVente} bien${dispoVente > 1 ? "s" : ""} à vendre`
     : "Bientôt disponible";
@@ -6907,33 +7524,87 @@ async function uploadParkVideo(file, parkId) {
 async function renderAdminInbox(panel) {
   if (!requireAdmin()) return;
   panel.appendChild($("#tpl-admin-inbox").content.cloneNode(true));
+
   const { data, error } = await sb.from("messages")
-    .select("*, listings(type_bien, brand, model)")
-    .order("created_at", { ascending: false });
+    .select("*, listings(id, title, type_bien, brand, model)")
+    .order("created_at", { ascending: true });
+
   const list = $("#admin-inbox-list", panel);
   if (error || !data?.length) {
     list.innerHTML = `<div class="empty-state"><h3>Aucun message reçu</h3></div>`;
     return;
   }
+
+  // Un fil par client et par bien : on répond dans la conversation
+  // plutôt que message par message.
+  const fils = new Map();
   data.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "message-item";
-    div.innerHTML = `
-      <div class="msg-top">
-        <span>${new Date(m.created_at).toLocaleDateString("fr-FR")} — ${m.name} (${m.email}${m.phone ? ", " + m.phone : ""})</span>
-        <span class="msg-status status-${m.status}">${m.status === "nouveau" ? "Nouveau" : "Traité"}</span>
-      </div>
-      <strong>${requestTypeLabel(m.request_type)} — ${m.listings?.type_bien || ""} ${m.listings?.brand || ""} ${m.listings?.model || ""}</strong>
-      <p class="muted">${m.message || ""}</p>
-      ${m.status === "nouveau" ? `<button class="link-btn" data-action="treat">Marquer comme traité</button>` : ""}
-    `;
-    const btn = $('[data-action="treat"]', div);
-    if (btn) btn.addEventListener("click", async () => {
-      await sb.from("messages").update({ status: "traite" }).eq("id", m.id);
-      renderAdminTab("inbox");
-    });
-    list.appendChild(div);
+    const cle = `${m.listing_id || "x"}|${m.user_id || m.email}`;
+    if (!fils.has(cle)) fils.set(cle, []);
+    fils.get(cle).push(m);
   });
+
+  list.innerHTML = "";
+  [...fils.values()]
+    .sort((a, b) => new Date(b.at(-1).created_at) - new Date(a.at(-1).created_at))
+    .forEach(msgs => {
+      const dernier = msgs.at(-1);
+      const premier = msgs[0];
+      const bien = premier.listings;
+      const enAttente = dernier.sender === "client";
+
+      const div = document.createElement("div");
+      div.className = "thread admin-thread";
+      div.innerHTML = `
+        <header class="th-head">
+          <div>
+            <strong>${premier.name} — ${bien?.title || bien?.type_bien || "Sans bien"}</strong>
+            <span>${premier.email}${premier.phone ? " · " + premier.phone : ""}</span>
+          </div>
+          <span class="msg-status ${enAttente ? "status-nouveau" : "status-traite"}">
+            ${enAttente ? "À répondre" : "Répondu"}
+          </span>
+        </header>
+
+        <div class="th-body">
+          ${msgs.map(m => `
+            <div class="bulle ${m.sender === "vendeur" ? "de-moi" : "de-client"}">
+              <p>${(m.message || "").replace(/</g, "&lt;")}</p>
+              <time>${new Date(m.created_at).toLocaleString("fr-FR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</time>
+            </div>`).join("")}
+        </div>
+
+        <form class="th-reply">
+          <input type="text" placeholder="Votre réponse…" aria-label="Votre réponse" required>
+          <button type="submit" class="btn btn-cta btn-sm">Répondre</button>
+        </form>
+      `;
+
+      $(".th-reply", div).addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const champ = $("input", e.target);
+        const texte = champ.value.trim();
+        if (!texte) return;
+
+        const { error } = await sb.from("messages").insert({
+          listing_id: premier.listing_id,
+          user_id: premier.user_id,
+          name: "Club Country Village",
+          email: premier.email,
+          request_type: premier.request_type,
+          message: texte,
+          sender: "vendeur",
+          status: "traite",
+        });
+        if (error) return toast("Envoi impossible : " + errMsg(error));
+
+        champ.value = "";
+        toast("Réponse envoyée", "ok");
+        renderAdminTab("inbox");
+      });
+
+      list.appendChild(div);
+    });
 }
 
 // ===========================================================
@@ -6977,12 +7648,12 @@ const EQUIP_LABELS = Object.fromEntries([...EQUIPEMENTS_VENTE, ...EQUIPEMENTS_LO
 
 // Étapes du tunnel, nommées en langage courant.
 const WIZ_STEPS = [
-  [1, "Le bien"],
-  [2, "Caractéristiques"],
-  [3, "Équipements"],
-  [4, "Description"],
-  [5, "Photos"],
-  [6, "Disponibilité"],
+  [1, "Photos"],
+  [2, "Le bien"],
+  [3, "Caractéristiques"],
+  [4, "Équipements"],
+  [5, "Description"],
+  [6, "Visites"],
   [7, "Récapitulatif"],
 ];
 
@@ -7008,32 +7679,22 @@ function renderAdminNewListing(panel, existingListing) {
     choice.hidden = true;
     body.hidden = false;
 
-    // Les questions changent de formulation selon ce qu'on publie.
-    const bien = isVente ? "ce bien" : "ce logement";
-    $("#q-type", panel).textContent = isVente
-      ? "Quel type de bien souhaitez-vous mettre en vente ?"
-      : "Quel type d'hébergement souhaitez-vous louer ?";
-    $("#q-title", panel).textContent = isVente
-      ? "Quel titre souhaitez-vous donner à l'annonce ?"
-      : "Quel nom souhaitez-vous donner à cette location ?";
-    $("#q-title-hint", panel).textContent = isVente
-      ? "Exemple : Mobil-home 3 chambres avec grande terrasse"
-      : "Exemple : Mobil-home Premium 3 chambres";
-    $("#q-price", panel).textContent = isVente
-      ? "Quel est son prix de vente ?"
-      : "Quel est le prix par nuit ?";
-    $("#q-price-unit", panel).textContent = isVente ? "€" : "€ / nuit";
-    $("#q-chambres", panel).textContent = `Combien ${bien} possède-t-il de chambres ?`;
-    $("#q-capacite", panel).textContent = isVente
-      ? "Combien de personnes peuvent y dormir ?"
-      : "Quelle est sa capacité maximale ?";
-    $("#q-desc", panel).textContent = isVente ? "Décrivez votre bien" : "Décrivez ce logement";
-    $("#q-desc-hint", panel).textContent = isVente
-      ? "État général, rénovations, agencement, terrasse, parcelle, charges, avantages, raison de la vente… écrivez librement."
-      : "Chambres et couchages, terrasse, équipements, environnement, arrivée et départ, ménage, linge, caution… écrivez librement.";
-    $("#w-description", panel).setAttribute("data-placeholder", "Écrivez ici…");
+    // Le site ne traite que la vente : une seule formulation possible.
+    // Chaque question est renseignée seulement si elle existe encore
+    // dans le formulaire — certaines ont été déplacées à l'étape 1.
+    const dire = (sel, texte) => { const el = $(sel, panel); if (el) el.textContent = texte; };
+    dire("#q-type", "Quel type de bien souhaitez-vous mettre en vente ?");
+    dire("#q-title", "Quel titre souhaitez-vous donner à l'annonce ?");
+    dire("#q-title-hint", "Exemple : Mobil-home 3 chambres avec grande terrasse");
+    dire("#q-price", "Quel est son prix de vente ?");
+    dire("#q-price-unit", "€");
+    dire("#q-chambres", "Combien de chambres ?");
+    dire("#q-capacite", "Combien de personnes peuvent y dormir ?");
+    dire("#q-desc", "Décrivez votre bien");
+    dire("#q-desc-hint", "État général, rénovations, agencement, terrasse, parcelle, charges, avantages, raison de la vente… écrivez librement.");
+    $("#w-description", panel)?.setAttribute("data-placeholder", "Écrivez ici…");
 
-    renderEquipChips(panel, isVente ? EQUIPEMENTS_VENTE : EQUIPEMENTS_LOCATION);
+    renderEquipChips(panel, EQUIPEMENTS_VENTE);
     renderWizardProgress(panel);
     if (existingListing) fillWizardFrom(panel, existingListing);
   };
@@ -7066,7 +7727,6 @@ function renderAdminNewListing(panel, existingListing) {
 
   setupPhotoStep(panel);
   setupRichText(panel);
-  setupAILookup(panel);
   setupCalendar(panel);
 
   $("#btn-suggest-desc", panel).addEventListener("click", () => {
@@ -7076,7 +7736,9 @@ function renderAdminNewListing(panel, existingListing) {
   $("#btn-save-draft", panel).addEventListener("click", () => saveListing(panel, "brouillon"));
   $("#btn-publish", panel).addEventListener("click", () => saveListing(panel, "publie"));
 
-  if (existingListing) setMode(existingListing.transaction || "Vente");
+  // Le site ne traite que la vente : on entre directement dans le
+  // formulaire, sans demander le type de publication.
+  setMode("Vente");
 }
 
 // Fil d'étapes cliquable : on peut revenir en arrière librement.
@@ -7110,17 +7772,22 @@ function goToStep(step, panel) {
 // et le message dit quoi faire.
 function validateStep(panel, step) {
   const isVente = state.wizard.mode === "Vente";
-  if (step === 1) {
+  // Étape 1 : au moins une photo, c'est ce qui permet l'analyse
+  if (step === 1 && !state.wizard.photos.length) {
+    toast("Ajoutez au moins une photo pour continuer");
+    return false;
+  }
+  if (step === 2) {
     if (!$("#w-title", panel).value.trim()) {
       toast("Donnez un titre à l'annonce pour continuer");
       $("#w-title", panel).focus(); return false;
     }
     if (!$("#w-price", panel).value) {
-      toast(isVente ? "Indiquez le prix de vente" : "Indiquez le prix par nuit");
+      toast("Indiquez le prix de vente");
       $("#w-price", panel).focus(); return false;
     }
   }
-  if (step === 2 && !$('[data-field="capacite"] button.active', panel)) {
+  if (step === 3 && !$('[data-field="capacite"] button.active', panel)) {
     toast("Indiquez combien de personnes peuvent y dormir"); return false;
   }
   return true;
@@ -7247,69 +7914,18 @@ function suggestDescriptionHtml(d) {
   return parts.join("");
 }
 
+// ===========================================================
+// ANALYSE DES PHOTOS
+// L'assistant regarde les photos et propose une marque, un modèle
+// et une année. Point important : l'identification visuelle d'un
+// mobil-home est peu fiable — beaucoup de modèles sont presque
+// identiques de l'extérieur. Le résultat est donc présenté comme
+// une PROPOSITION à valider, jamais comme un fait établi, et rien
+// n'est écrit dans le formulaire sans un geste de l'administrateur.
+// ===========================================================
+
+
 // ---------- Assistant marque / modèle ----------
-function setupAILookup(panel) {
-  const btn = $("#btn-ai-lookup", panel);
-  if (!btn) return;
-  btn.addEventListener("click", async () => {
-    const brand = $("#w-brand", panel).value.trim();
-    const model = $("#w-model", panel).value.trim();
-    const statusEl = $("#ai-lookup-status", panel);
-    const pickerEl = $("#ai-variant-picker", panel);
-
-    if (!brand || !model) {
-      statusEl.hidden = false;
-      statusEl.className = "ai-status is-error";
-      statusEl.textContent = "Renseignez d'abord la marque et le modèle.";
-      return;
-    }
-
-    pickerEl.hidden = true; pickerEl.innerHTML = "";
-    statusEl.hidden = false;
-    statusEl.className = "ai-status is-loading";
-    statusEl.textContent = "Recherche des caractéristiques de ce modèle…";
-    btn.disabled = true;
-
-    try {
-      const result = await callAIAssist("lookup", { brand, model });
-      const variants = Array.isArray(result.variants) ? result.variants : [];
-
-      if (!variants.length) {
-        statusEl.className = "ai-status is-error";
-        statusEl.textContent = result.avertissement || "Modèle inconnu — renseignez les réponses vous-même.";
-        return;
-      }
-      if (variants.length === 1) {
-        applyAIVariant(panel, variants[0]);
-        statusEl.className = "ai-status";
-        statusEl.textContent = "Réponses complétées — vérifiez et corrigez si besoin.";
-        return;
-      }
-
-      statusEl.className = "ai-status";
-      statusEl.textContent = `${variants.length} versions trouvées — choisissez la bonne :`;
-      pickerEl.hidden = false;
-      variants.forEach(v => {
-        const years = v.year_min === v.year_max ? `${v.year_min || "?"}` : `${v.year_min || "?"}–${v.year_max || "?"}`;
-        const card = document.createElement("div");
-        card.className = "ai-variant-card";
-        card.innerHTML = `<strong>${v.label || years}</strong>
-          <span>${years} · ${v.chambres ?? "?"} chambres · ${v.couchages ?? "?"} couchages · ${v.surface_m2 ?? "?"} m²</span>`;
-        card.addEventListener("click", () => {
-          applyAIVariant(panel, v);
-          statusEl.textContent = `Version « ${v.label || years} » appliquée — vérifiez et corrigez si besoin.`;
-          pickerEl.hidden = true;
-        });
-        pickerEl.appendChild(card);
-      });
-    } catch (err) {
-      statusEl.className = "ai-status is-error";
-      statusEl.textContent = "Assistant indisponible : " + errMsg(err);
-    } finally {
-      btn.disabled = false;
-    }
-  });
-}
 
 // Sélectionne la réponse la plus proche dans un groupe de boutons
 // (les choix sont des paliers : 1,2,3,4,5+ — on retient le bon palier).
@@ -7328,18 +7944,6 @@ function pickChoice(panel, field, value) {
   best.classList.add("active");
 }
 
-function applyAIVariant(panel, v) {
-  const set = (sel, val) => { if (val != null && val !== "") $(sel, panel).value = val; };
-  set("#w-year", v.year_min);
-  set("#w-surface", v.surface_m2);
-  pickChoice(panel, "chambres", v.chambres);
-  pickChoice(panel, "capacite", v.couchages);
-
-  const equipSet = new Set(v.equipements_origine || []);
-  $$("#w-equipements button", panel).forEach(btn => {
-    if (equipSet.has(btn.dataset.value)) btn.classList.add("active");
-  });
-}
 
 // ---------- Calendrier de disponibilités ----------
 function setupCalendar(panel) {
@@ -7571,12 +8175,12 @@ async function saveListing(panel, status) {
   const d = collectWizardData(panel);
   const publishing = status === "publie";
 
-  if (!d.title) { toast("Donnez un titre à l'annonce"); return goToStep(1, panel); }
+  if (!d.title) { toast("Donnez un titre à l'annonce"); return goToStep(2, panel); }
   if (publishing) {
-    if (!d.price) { toast("Indiquez un prix"); return goToStep(1, panel); }
-    if (!state.wizard.photos.length) { toast("Ajoutez au moins une photo"); return goToStep(5, panel); }
+    if (!d.price) { toast("Indiquez un prix"); return goToStep(2, panel); }
+    if (!state.wizard.photos.length) { toast("Ajoutez au moins une photo"); return goToStep(1, panel); }
     if (!($("#w-description", panel).textContent || "").trim()) {
-      toast("Rédigez une description"); return goToStep(4, panel);
+      toast("Rédigez une description"); return goToStep(5, panel);
     }
   }
 
@@ -7698,9 +8302,9 @@ document.addEventListener("keydown", (e) => {
   }
 
   if (supabaseUnavailable) {
-    toast("⚠️ Connexion au serveur impossible — vérifie ta connexion internet");
+    toast("Connexion au serveur impossible — vérifie ta connexion internet");
   } else if (SUPABASE_URL.includes("VOTRE-PROJET") || SUPABASE_ANON_KEY.includes("VOTRE_CLE")) {
-    toast("⚠️ Configure tes clés Supabase en haut du script pour activer le site");
+    toast("Configure tes clés Supabase en haut du script pour activer le site");
   }
 
   // Effets globaux, mis en place une fois pour toute la visite
