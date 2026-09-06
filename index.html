@@ -1979,6 +1979,23 @@ html{scroll-behavior:smooth}
   .grid-listings > *{transition-delay:0ms !important}
 }
 
+/* ===========================================================
+   DIAPORAMA DU PARC
+   Deux images superposées ; celle du dessus s'efface pendant que
+   l'autre est déjà en place. Le fondu est long pour rester calme.
+   =========================================================== */
+.story-open-media img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  opacity:0; transition:opacity 1.4s var(--ease-in-out);
+}
+.story-open-media img.diapo-active{opacity:1}
+/* Sans diaporama (une seule photo), l'image reste simplement visible */
+.story-open-media img:only-of-type{opacity:1}
+
+@media (prefers-reduced-motion: reduce){
+  .story-open-media img{transition:none}
+}
+
 /* ============ HERO ============
    Plein écran, texte centré, deux actions. Aucun cadre, aucun aplat
    de couleur — juste un voile sombre très léger pour garantir la
@@ -3666,30 +3683,18 @@ html{scroll-behavior:smooth}
 
 <span class="filter-label" style="display:block; margin-top:22px">Photos du parc</span>
 <p class="muted" style="font-size:.84rem; margin:2px 0 10px">
-  Elles illustrent la page « Découvrir le parc », dans l'ordre.
+  Autant de photos que vous voulez. Elles défilent automatiquement
+  sur la page « Découvrir le parc ». Glissez les vignettes pour
+  changer l'ordre.
 </p>
-<div class="photo-upload-grid" id="park-photo-grid">
-  <label class="photo-slot" data-slot="1">
-    <input type="file" accept="image/*" data-park-photo-input="1">
-    <span>Photo principale</span>
-    <button type="button" class="photo-slot-remove" data-remove-slot="1" title="Supprimer cette photo">✕</button>
-  </label>
-  <label class="photo-slot" data-slot="2">
-    <input type="file" accept="image/*" data-park-photo-input="2">
-    <span>Photo 2</span>
-    <button type="button" class="photo-slot-remove" data-remove-slot="2" title="Supprimer cette photo">✕</button>
-  </label>
-  <label class="photo-slot" data-slot="3">
-    <input type="file" accept="image/*" data-park-photo-input="3">
-    <span>Photo 3</span>
-    <button type="button" class="photo-slot-remove" data-remove-slot="3" title="Supprimer cette photo">✕</button>
-  </label>
-  <label class="photo-slot" data-slot="4">
-    <input type="file" accept="image/*" data-park-photo-input="4">
-    <span>Photo 4</span>
-    <button type="button" class="photo-slot-remove" data-remove-slot="4" title="Supprimer cette photo">✕</button>
-  </label>
-</div>
+
+<label class="photo-dropzone" id="park-dropzone">
+  <input type="file" id="park-photos-input" accept="image/*" multiple>
+  <span class="dz-icon" data-ic="photo"></span>
+  <strong>Ajouter des photos</strong>
+  <span class="muted">Sélection multiple possible</span>
+</label>
+<div class="photo-sortable" id="park-photo-sortable"></div>
 
 <span class="filter-label" style="display:block; margin-top:18px">Vidéo de couverture (en boucle, optionnelle)</span>
 <p class="muted" style="font-size:.82rem; margin:2px 0 10px">Remplace la photo principale par une courte vidéo qui tourne en boucle en haut de la page "Le camping" — idéal pour une vidéo aérienne ou d'ambiance de quelques secondes.</p>
@@ -3771,16 +3776,21 @@ html{scroll-behavior:smooth}
         <button type="button" data-value="2">2</button>
         <button type="button" data-value="3">3</button>
         <button type="button" data-value="4">4</button>
-        <button type="button" data-value="5">5 et plus</button>
+        <button type="button" data-value="5">5</button>
+        <button type="button" data-value="6">6</button>
+        <button type="button" data-value="7">7</button>
+        <button type="button" data-value="8">8</button>
       </div>
     </div>
 
     <div class="q">
       <label class="q-label">Combien de salles de bain ?</label>
       <div class="q-choices" data-field="sdb">
+        <button type="button" data-value="0">Aucune</button>
         <button type="button" data-value="1">1</button>
         <button type="button" data-value="2">2</button>
-        <button type="button" data-value="3">3 et plus</button>
+        <button type="button" data-value="3">3</button>
+        <button type="button" data-value="4">4</button>
       </div>
     </div>
 
@@ -3841,11 +3851,17 @@ html{scroll-behavior:smooth}
     <div class="q">
       <label class="q-label" id="q-capacite">Combien de personnes peuvent y dormir ?</label>
       <div class="q-choices" data-field="capacite">
+        <button type="button" data-value="1">1</button>
         <button type="button" data-value="2">2</button>
+        <button type="button" data-value="3">3</button>
         <button type="button" data-value="4">4</button>
+        <button type="button" data-value="5">5</button>
         <button type="button" data-value="6">6</button>
+        <button type="button" data-value="7">7</button>
         <button type="button" data-value="8">8</button>
-        <button type="button" data-value="10">10 et plus</button>
+        <button type="button" data-value="9">9</button>
+        <button type="button" data-value="10">10</button>
+        <button type="button" data-value="12">12</button>
       </div>
     </div>
 
@@ -3865,7 +3881,8 @@ html{scroll-behavior:smooth}
       <div class="q-choices" data-field="wc">
         <button type="button" data-value="0">Aucun</button>
         <button type="button" data-value="1">1</button>
-        <button type="button" data-value="2">2 et plus</button>
+        <button type="button" data-value="2">2</button>
+        <button type="button" data-value="3">3</button>
       </div>
     </div>
 
@@ -3924,7 +3941,7 @@ html{scroll-behavior:smooth}
 
     <div class="wizard-nav">
       <button type="button" class="btn btn-ghost" data-next="4">← Retour</button>
-      <button type="button" class="btn btn-primary" data-next="5">Continuer →</button>
+      <button type="button" class="btn btn-primary" data-next="6">Continuer →</button>
     </div>
   </section>
 
@@ -5749,6 +5766,52 @@ function renderSimilar(listing) {
 }
 
 // ===========================================================
+// DIAPORAMA DU PARC
+// Les photos se succèdent toutes les cinq secondes en fondu.
+// Deux images superposées suffisent : pendant que l'une s'efface,
+// l'autre est déjà en place — la transition ne montre jamais de vide.
+// ===========================================================
+const DIAPO_DELAI = 5000;
+
+function demarrerDiaporama(imgEl, photos) {
+  if (!imgEl) return;
+  const liste = (photos || []).filter(Boolean);
+  imgEl.src = liste[0] || heroFallbackImg();
+
+  // Une seule photo, ou animations réduites : rien ne défile.
+  if (liste.length < 2 || REDUCED_MOTION) return;
+
+  // Seconde image, posée derrière, qui prend le relais à chaque fondu
+  const suivante = imgEl.cloneNode();
+  suivante.removeAttribute("id");
+  suivante.classList.add("diapo-suivante");
+  imgEl.parentElement.insertBefore(suivante, imgEl);
+  imgEl.classList.add("diapo-active");
+
+  // On précharge pour que le fondu ne révèle jamais une image vide
+  liste.forEach(src => { const p = new Image(); p.src = src; });
+
+  let index = 0, devant = imgEl, derriere = suivante;
+
+  const tourner = () => {
+    index = (index + 1) % liste.length;
+    derriere.src = liste[index];
+    derriere.classList.add("diapo-active");
+    devant.classList.remove("diapo-active");
+    [devant, derriere] = [derriere, devant];
+  };
+
+  const minuteur = setInterval(tourner, DIAPO_DELAI);
+
+  // On arrête le défilement quand la page du parc n'est plus affichée,
+  // sinon il continuerait de tourner dans le vide.
+  const veille = new MutationObserver(() => {
+    if (!document.contains(imgEl)) { clearInterval(minuteur); veille.disconnect(); }
+  });
+  veille.observe(document.body, { childList: true, subtree: true });
+}
+
+// ===========================================================
 // GALERIE HORIZONTALE AVEC ACCROCHE
 // ===========================================================
 function setupHorizontalGallery() {
@@ -6911,7 +6974,11 @@ function renderParkProfile() {
     return;
   }
 
-  const photos = [park.photo_1, park.photo_2, park.photo_3, park.photo_4].filter(Boolean);
+  // La galerie du parc prime ; les anciens emplacements servent de
+  // repli pour une fiche qui n'aurait pas encore été mise à jour.
+  const photos = (Array.isArray(park.photos) && park.photos.length)
+    ? park.photos
+    : [park.photo_1, park.photo_2, park.photo_3, park.photo_4].filter(Boolean);
   const pick = (i) => photos[i] || photos[0] || heroFallbackImg();
 
   // 01 — Découvrir : la vidéo prend la place de l'image si elle existe
@@ -6932,7 +6999,7 @@ function renderParkProfile() {
       if (p?.catch) p.catch(backToPhoto);
     } catch (_) { backToPhoto(); }
   } else {
-    $("#park-hero-img").src = pick(0);
+    demarrerDiaporama($("#park-hero-img"), photos);
   }
   $("#park-hero-name").textContent = park.name || "Le parc";
   $("#park-hero-address").textContent =
@@ -7242,6 +7309,85 @@ function renderAdminParks(panel) {
     }
   }
 
+  // ---- Galerie du parc : autant de photos que souhaité ----
+  // parkPhotos : [{ id, url, file }]. Une photo déjà en ligne n'a pas
+  // de "file" ; une photo tout juste ajoutée n'a pas encore d'adresse
+  // définitive.
+  const parkPhotos = (existing?.photos || []).map(url => ({
+    id: "g" + Math.random().toString(36).slice(2), url, uploaded: true
+  }));
+
+  const dessinerGalerie = () => {
+    const wrap = $("#park-photo-sortable", panel);
+    wrap.innerHTML = "";
+    parkPhotos.forEach((photo, index) => {
+      const el = document.createElement("div");
+      el.className = "photo-thumb";
+      el.draggable = true;
+      el.innerHTML = `
+        <img src="${photo.url}" alt="">
+        ${index === 0 ? '<span class="thumb-main">1re vue</span>' : ""}
+        <button type="button" class="thumb-remove" title="Retirer">✕</button>`;
+
+      $(".thumb-remove", el).addEventListener("click", (e) => {
+        e.preventDefault(); e.stopPropagation();
+        const i = parkPhotos.indexOf(photo);
+        if (i >= 0) parkPhotos.splice(i, 1);
+        dessinerGalerie();
+      });
+
+      // Glisser-déposer pour changer l'ordre du défilement
+      el.addEventListener("dragstart", () => { el.classList.add("dragging"); panel.__drag = photo.id; });
+      el.addEventListener("dragend", () => {
+        el.classList.remove("dragging"); panel.__drag = null;
+        $$(".photo-thumb", wrap).forEach(t => t.classList.remove("drag-over"));
+      });
+      el.addEventListener("dragover", (e) => { e.preventDefault(); el.classList.add("drag-over"); });
+      el.addEventListener("dragleave", () => el.classList.remove("drag-over"));
+      el.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const fromId = panel.__drag;
+        if (!fromId || fromId === photo.id) return;
+        const from = parkPhotos.findIndex(p => p.id === fromId);
+        const to = parkPhotos.findIndex(p => p.id === photo.id);
+        parkPhotos.splice(to, 0, parkPhotos.splice(from, 1)[0]);
+        dessinerGalerie();
+      });
+
+      wrap.appendChild(el);
+    });
+  };
+  dessinerGalerie();
+
+  const parkInput = $("#park-photos-input", panel);
+  parkInput?.addEventListener("change", () => {
+    [...parkInput.files].filter(f => f.type.startsWith("image/")).forEach(file => {
+      parkPhotos.push({
+        id: "g" + Math.random().toString(36).slice(2),
+        file, url: URL.createObjectURL(file), uploaded: false
+      });
+    });
+    parkInput.value = "";
+    dessinerGalerie();
+  });
+
+  const dropzone = $("#park-dropzone", panel);
+  ["dragenter", "dragover"].forEach(ev =>
+    dropzone?.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add("is-dragover"); }));
+  ["dragleave", "drop"].forEach(ev =>
+    dropzone?.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove("is-dragover"); }));
+  dropzone?.addEventListener("drop", e => {
+    [...(e.dataTransfer?.files || [])].filter(f => f.type.startsWith("image/")).forEach(file => {
+      parkPhotos.push({
+        id: "g" + Math.random().toString(36).slice(2),
+        file, url: URL.createObjectURL(file), uploaded: false
+      });
+    });
+    dessinerGalerie();
+  });
+
+  panel.__parkPhotos = parkPhotos;
+
   // Prévisualisation immédiate au choix d'un fichier, upload différé au submit
   $$('[data-park-photo-input]', panel).forEach(input => {
     input.addEventListener("change", () => {
@@ -7359,6 +7505,22 @@ function renderAdminParks(panel) {
         Object.assign(state.parks[0], photoUpdates);
       }
 
+      // Enregistrement de la galerie du parc, dans l'ordre affiché
+      const galerie = panel.__parkPhotos || [];
+      const urlsGalerie = [];
+      for (let i = 0; i < galerie.length; i++) {
+        const photo = galerie[i];
+        if (photo.uploaded) { urlsGalerie.push(photo.url); continue; }
+        submitBtn.textContent = `Envoi photo ${i + 1}/${galerie.length}…`;
+        const url = await uploadParkPhoto(photo.file, parkId, "g" + i);
+        if (url) urlsGalerie.push(url);
+      }
+      {
+        const { error } = await sb.from("parks")
+          .update({ photos: urlsGalerie }).eq("id", parkId);
+        if (error) return toast("Galerie non enregistrée : " + errMsg(error));
+      }
+
       // Upload de la vidéo de couverture, si une nouvelle a été choisie
       if (pendingVideo) {
         const videoUrl = await uploadParkVideo(pendingVideo, parkId);
@@ -7373,7 +7535,15 @@ function renderAdminParks(panel) {
       // copie en mémoire : ce qui s'affichera ensuite est exactement
       // ce qui est réellement enregistré.
       await loadParks();
-      toast("Informations du parc enregistrées");
+      toast("Informations du parc enregistrées", "ok");
+
+      // On redessine le formulaire à partir des données relues : les
+      // vignettes affichent alors les nouvelles photos, et non celles
+      // qui étaient à l'écran avant l'enregistrement.
+      if ((photoUpdates && Object.keys(photoUpdates).length) || pendingVideo || galerie.length) {
+        panel.innerHTML = "";
+        renderAdminParks(panel);
+      }
     } finally {
       submitBtn.disabled = false;
       submitBtn.textContent = "Enregistrer";
@@ -7384,7 +7554,11 @@ function renderAdminParks(panel) {
 async function uploadParkPhoto(file, parkId, slot) {
   file = await compressImage(file);
   const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-  const path = `park/${parkId}/photo-${slot}.${ext}`;
+  // Le nom du fichier change à chaque enregistrement. Auparavant il
+  // était fixe ("photo-1.jpg") : l'adresse de l'image restait donc
+  // identique, et le navigateur réaffichait l'ancienne version gardée
+  // en mémoire — la modification semblait ne pas s'appliquer.
+  const path = `park/${parkId}/photo-${slot}-${Date.now()}.${ext}`;
   const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
   if (error) { console.error("Envoi du fichier impossible (" + path + ") :", errMsg(error)); return null; }
   const { data } = sb.storage.from("listing-media").getPublicUrl(path);
@@ -7392,8 +7566,8 @@ async function uploadParkPhoto(file, parkId, slot) {
 }
 
 async function uploadParkVideo(file, parkId) {
-  const ext = file.name.split(".").pop();
-  const path = `park/${parkId}/video.${ext}`;
+  const ext = (file.name.split(".").pop() || "mp4").toLowerCase();
+  const path = `park/${parkId}/video-${Date.now()}.${ext}`;
   const { error } = await sb.storage.from("listing-media").upload(path, file, { upsert: true });
   if (error) { console.error("Envoi du fichier impossible (" + path + ") :", errMsg(error)); return null; }
   const { data } = sb.storage.from("listing-media").getPublicUrl(path);
@@ -7502,14 +7676,23 @@ async function renderAdminInbox(panel) {
 // mêmes valeurs que les filtres du catalogue — pas de case qui ne serve
 // à rien côté visiteur.
 const EQUIPEMENTS_VENTE = [
+  // Confort
   ["climatisation", "Climatisation"],
   ["terrasse", "Terrasse"],
   ["terrasse_couverte", "Terrasse couverte"],
+  // Cuisine
+  ["four", "Four"],
+  ["micro_ondes", "Micro-ondes"],
+  ["refrigerateur", "Réfrigérateur"],
+  ["hotte", "Hotte aspirante"],
   ["lave_vaisselle", "Lave-vaisselle"],
+  // Buanderie et extérieur
   ["lave_linge", "Lave-linge"],
-  ["deux_salles_bain", "2 salles de bain"],
+  ["abri_jardin", "Abri de jardin"],
   ["parcelle_cloturee", "Parcelle clôturée"],
   ["parking", "Parking"],
+  // Autres
+  ["deux_salles_bain", "2 salles de bain"],
   ["animaux_acceptes", "Animaux acceptés"],
 ];
 
@@ -7814,12 +7997,21 @@ function pickChoice(panel, field, value) {
   const group = $(`[data-field="${field}"]`, panel);
   if (!group) return;
   const buttons = $$("button", group);
-  let best = null;
-  buttons.forEach(b => {
-    const v = Number(b.dataset.value);
-    if (v <= Number(value) && (best === null || v > Number(best.dataset.value))) best = b;
-  });
-  if (!best) best = buttons[0];
+  const cible = Number(value);
+
+  // Les choix sont désormais des nombres exacts : on cherche d'abord
+  // la valeur identique. Ce n'est que si elle n'existe pas (une
+  // ancienne annonce hors des choix proposés) qu'on retient la plus
+  // proche en dessous.
+  let best = buttons.find(b => Number(b.dataset.value) === cible) || null;
+  if (!best) {
+    buttons.forEach(b => {
+      const v = Number(b.dataset.value);
+      if (v <= cible && (best === null || v > Number(best.dataset.value))) best = b;
+    });
+  }
+  if (!best) best = buttons[buttons.length - 1];
+
   buttons.forEach(b => b.classList.remove("active"));
   best.classList.add("active");
 }
