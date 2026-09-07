@@ -93,14 +93,18 @@
   --brick-100:var(--aqua-100);
 
   /* Papier et encres, entièrement neutres */
-  --paper:#FAFAFB;
-  --paper-warm:#F2F3F4;
+  /* Le rosé chaud n'est plus réservé à quelques blocs : c'est le fond
+     de tout le site. Il est très légèrement plus clair que la teinte
+     d'origine (#FFF0E6), sans quoi le texte secondaire passait sous le
+     seuil de lisibilité. */
+  --paper:#FFF6EF;
+  --paper-warm:#FDEBDF;
   --ink-900:#121417;
   --ink-800:#22262A;
   --ink-700:#3F454B;
-  --ink-500:#6A7076;
-  --ink-300:#AAAFB5;
-  --line:#E4E6E8;
+  --ink-500:#5E6962;   /* lisible sur les trois nuances de rosé */
+  --ink-300:#A79B92;
+  --line:#F0DFD2;   /* filets teintés chaud plutôt que gris */
 
   /* Rétro-compatibilité : d'anciens composants utilisent encore ces noms.
      Ils pointent désormais vers la nouvelle palette. */
@@ -115,7 +119,7 @@
   --sand-200:var(--brick-100);
   --sand-100:var(--brick-100);
   --bg:var(--paper);
-  --bg-card:#ffffff;
+  --bg-card:#FFFDFB;
   --pink-500:var(--brick-600);
   --gradient-primary:linear-gradient(135deg, var(--aqua-500), var(--aqua-700));
   --gradient-primary-hover:linear-gradient(135deg, var(--aqua-600), var(--aqua-900));
@@ -451,7 +455,7 @@ input,select,textarea{font-family:inherit}
 .story-choice-single{grid-template-columns:1fr}
 .story-choice{
   position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
-  display:grid; grid-template-columns:1fr 1fr; background:var(--aqua-100); min-height:52svh;
+  display:grid; grid-template-columns:1fr 1fr; background:var(--paper-warm); min-height:52svh;
   border-top:1px solid var(--line);
 }
 .story-door{
@@ -570,7 +574,7 @@ input,select,textarea{font-family:inherit}
 /* Bandeau défilant en continu */
 .marquee{
   position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
-  background:var(--aqua-100); color:var(--ink-900);
+  background:var(--paper-warm); color:var(--ink-900);
   border-top:1px solid var(--line); border-bottom:1px solid var(--line);
   padding:18px 0; overflow:hidden; white-space:nowrap;
 }
@@ -1489,12 +1493,21 @@ input,select,textarea{font-family:inherit}
   background:var(--paper-warm); cursor:zoom-in; position:relative;
 }
 .dgal .detail-media-main img{width:100%; height:100%; object-fit:cover; display:block}
-.dgal-side{display:grid; grid-template-rows:1fr 1fr; gap:10px}
+.dgal-side{
+  display:grid; grid-template-rows:1fr 1fr; gap:10px;
+  /* Sans cette ligne, chaque photo supplémentaire créait une rangée de
+     plus : la colonne s'allongeait sans fin et les images paraissaient
+     étirées. On garde deux rangées, les autres photos sont accessibles
+     par le bouton "Voir les photos". */
+  grid-auto-rows:0; overflow:hidden;
+}
 .dgal-side img{
   width:100%; height:100%; object-fit:cover; display:block;
   border-radius:var(--radius-lg); background:var(--paper-warm); cursor:zoom-in;
   transition:opacity var(--t-base) var(--ease-out);
 }
+/* Au-delà de deux vues, on n'affiche rien de plus sur grand écran */
+.dgal-side img:nth-child(n+3){display:none}
 .dgal-side img:hover{opacity:.88}
 .dgal-side:empty{display:none}
 .dgal:has(.dgal-side:empty){grid-template-columns:1fr}
@@ -1522,8 +1535,9 @@ input,select,textarea{font-family:inherit}
   .dgal-side{
     flex:0 0 88%; scroll-snap-align:center; aspect-ratio:4/3; height:auto;
   }
-  .dgal-side{display:flex; gap:8px; grid-template-rows:none}
-  .dgal-side img{flex:0 0 88vw; aspect-ratio:4/3; scroll-snap-align:center}
+  .dgal-side{display:flex; gap:8px; grid-template-rows:none; grid-auto-rows:auto; overflow-x:auto}
+  .dgal-side img{flex:0 0 88vw; aspect-ratio:4/3; scroll-snap-align:center; height:auto}
+  .dgal-side img:nth-child(n+3){display:block}
 
   /* Pagination sous la galerie */
   .dgal-dots{
@@ -1801,7 +1815,7 @@ p, h1, h2, h3, td, .card-title, .detail-title, .sb-value{
    =========================================================== */
 .alerte{
   position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
-  background:var(--aqua-100); color:var(--ink-900);
+  background:var(--paper-warm); color:var(--ink-900);
   border-top:1px solid var(--line); border-bottom:1px solid var(--line);
   padding:clamp(46px,7vh,80px) 24px; margin-top:clamp(50px,7vh,90px);
 }
@@ -1997,7 +2011,7 @@ html{scroll-behavior:smooth}
    lisibilité par-dessus la photographie. */
 .hero{
   position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; width:100vw;
-  min-height:100svh; margin-top:-40px;
+  min-height:clamp(380px, 58svh, 560px); margin-top:-40px;
   display:flex; align-items:center; justify-content:center;
   background:var(--forest-950); overflow:hidden; isolation:isolate;
 }
@@ -2022,13 +2036,13 @@ html{scroll-behavior:smooth}
 }
 .hero-title{
   font-family:var(--font-display); font-weight:500;
-  font-size:clamp(2.4rem, 6.5vw, 4.4rem); line-height:1.04; letter-spacing:-.03em;
-  color:#fff; margin:0 0 14px; text-shadow:0 1px 24px rgba(0,0,0,.28);
+  font-size:clamp(1.9rem, 5vw, 3.4rem); line-height:1.06; letter-spacing:-.03em;
+  color:#fff; margin:0 0 12px; text-shadow:0 1px 24px rgba(0,0,0,.28);
 }
 .hero-claim{
   font-family:var(--font-body); font-weight:400;
   font-size:clamp(.98rem, 1.6vw, 1.15rem); line-height:1.5;
-  color:rgba(255,255,255,.92); margin:0 0 40px; text-shadow:0 1px 14px rgba(0,0,0,.3);
+  color:rgba(255,255,255,.92); margin:0 0 28px; text-shadow:0 1px 14px rgba(0,0,0,.3);
 }
 .hero-actions{display:flex; gap:14px; flex-wrap:wrap; justify-content:center; width:100%; max-width:480px}
 .hero-actions .btn{flex:1; min-width:180px}
@@ -2049,7 +2063,7 @@ html{scroll-behavior:smooth}
 .hero-scroll:hover{color:#fff}
 
 @media (max-width:640px){
-  .hero{min-height:92svh; margin-top:-24px}
+  .hero{min-height:clamp(340px, 52svh, 460px); margin-top:-24px}
   .hero-actions{flex-direction:column; max-width:320px}
   .hero-actions .btn{width:100%}
 }
@@ -5077,7 +5091,7 @@ function renderCatalogue(params) {
       if (heroEl) {
         heroEl.hidden = false;
         heroEl.style.backgroundImage =
-          `url("${park?.photo_accueil || park?.photo_1 || heroFallbackImg()}")`;
+          `url("${park?.photo_accueil || photosDuParc(park)[0] || heroFallbackImg()}")`;
       }
     };
     heroVideo.addEventListener("error", fallbackToPhoto, { once: true });
@@ -5088,14 +5102,14 @@ function renderCatalogue(params) {
       fallbackToPhoto();
     }
   } else if (heroEl) {
-    const heroSrc = park?.photo_accueil || park?.photo_1 || park?.photo_2 || heroFallbackImg();
+    // Photo d'accueil dédiée en priorité, sinon la première de la galerie
+    const heroSrc = park?.photo_accueil || photosDuParc(park)[0] || heroFallbackImg();
     heroEl.style.backgroundImage = `url("${heroSrc}")`;
   }
 
   // Chaque grande section reçoit une vue différente du parc, pour
   // éviter de répéter la même photo tout au long de la page.
-  const vues = [park?.photo_1, park?.photo_2, park?.photo_3, park?.photo_4,
-                park?.photo_accueil].filter(Boolean);
+  const vues = photosDuParc(park);
   const vue = (i) => vues[i % (vues.length || 1)] || heroFallbackImg();
 
   const pt = $("#pt-img");
@@ -5815,8 +5829,9 @@ function setupHorizontalGallery() {
   if (!gal) return;
 
   const park = state.parks[0];
-  const photos = [park?.photo_1, park?.photo_2, park?.photo_3, park?.photo_4, park?.photo_accueil]
-    .filter(Boolean);
+  // La galerie du parc est la source ; les anciens emplacements ne
+  // servent plus que de repli pour une fiche pas encore migrée.
+  const photos = photosDuParc(park);
   if (!photos.length) { gal.closest(".hgal-section")?.remove(); return; }
 
   gal.innerHTML = photos.map((src, i) =>
@@ -5920,8 +5935,7 @@ function setupPinned() {
 
   // Les visuels reprennent les photos du parc déjà enregistrées
   const park = state.parks[0];
-  const photos = [park?.photo_1, park?.photo_2, park?.photo_3, park?.photo_4,
-                  park?.photo_accueil].filter(Boolean);
+  const photos = photosDuParc(park);
   $$(".pin-img", section).forEach((el, i) => {
     el.style.backgroundImage = `url("${photos[i % (photos.length || 1)] || heroFallbackImg()}")`;
   });
@@ -6238,6 +6252,15 @@ function placeholderImg() {
 // Visuel de repli du hero : silhouette de sous-bois au crépuscule,
 // dessinée aux couleurs du domaine. À remplacer par une vraie
 // photographie du parc dès qu'elle est ajoutée dans "Profil du parc".
+// Toutes les photos du parc, quelle que soit la façon dont elles ont
+// été enregistrées : la galerie d'abord, les anciens emplacements en
+// repli pour une fiche pas encore migrée.
+function photosDuParc(park) {
+  if (Array.isArray(park?.photos) && park.photos.length) return park.photos;
+  return [park?.photo_1, park?.photo_2, park?.photo_3, park?.photo_4,
+          park?.photo_accueil].filter(Boolean);
+}
+
 function heroFallbackImg() {
   return "data:image/svg+xml;utf8," + encodeURIComponent(
     `<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='900' viewBox='0 0 1600 900'>
@@ -6971,9 +6994,7 @@ function renderParkProfile() {
 
   // La galerie du parc prime ; les anciens emplacements servent de
   // repli pour une fiche qui n'aurait pas encore été mise à jour.
-  const photos = (Array.isArray(park.photos) && park.photos.length)
-    ? park.photos
-    : [park.photo_1, park.photo_2, park.photo_3, park.photo_4].filter(Boolean);
+  const photos = photosDuParc(park);
   const pick = (i) => photos[i] || photos[0] || heroFallbackImg();
 
   // 01 — Découvrir : la vidéo prend la place de l'image si elle existe
@@ -7354,16 +7375,44 @@ function renderAdminParks(panel) {
   };
   dessinerGalerie();
 
-  const parkInput = $("#park-photos-input", panel);
-  parkInput?.addEventListener("change", () => {
-    [...parkInput.files].filter(f => f.type.startsWith("image/")).forEach(file => {
-      parkPhotos.push({
+  // Ajout de photos, quel que soit leur format.
+  // Les iPhone et iPad enregistrent en HEIC, que Safari ne sait pas
+  // toujours afficher directement : l'aperçu restait alors vide. On
+  // fabrique donc l'aperçu en repassant l'image par un canevas, ce qui
+  // produit un JPEG affichable partout. Si cette conversion échoue, on
+  // retombe sur l'aperçu direct.
+  const ajouterPhotos = async (fichiers) => {
+    const images = [...fichiers].filter(f =>
+      f.type.startsWith("image/") || /\.(jpe?g|png|heic|heif|webp|gif)$/i.test(f.name));
+
+    if (!images.length) {
+      if (fichiers.length) toast("Aucune image reconnue dans votre sélection");
+      return;
+    }
+
+    for (const file of images) {
+      const entree = {
         id: "g" + Math.random().toString(36).slice(2),
-        file, url: URL.createObjectURL(file), uploaded: false
-      });
-    });
+        file, url: "", uploaded: false
+      };
+      parkPhotos.push(entree);
+      try {
+        const apercu = await compressImage(file);
+        entree.url = URL.createObjectURL(apercu);
+        entree.file = apercu;          // on enverra la version convertie
+      } catch (_) {
+        entree.url = URL.createObjectURL(file);
+      }
+      dessinerGalerie();               // la vignette apparaît dès qu'elle est prête
+    }
+    toast(`${images.length} photo${images.length > 1 ? "s" : ""} ajoutée${images.length > 1 ? "s" : ""}`, "ok");
+  };
+
+  const parkInput = $("#park-photos-input", panel);
+  parkInput?.addEventListener("change", async () => {
+    const fichiers = [...parkInput.files];
     parkInput.value = "";
-    dessinerGalerie();
+    await ajouterPhotos(fichiers);
   });
 
   const dropzone = $("#park-dropzone", panel);
@@ -7371,15 +7420,7 @@ function renderAdminParks(panel) {
     dropzone?.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add("is-dragover"); }));
   ["dragleave", "drop"].forEach(ev =>
     dropzone?.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove("is-dragover"); }));
-  dropzone?.addEventListener("drop", e => {
-    [...(e.dataTransfer?.files || [])].filter(f => f.type.startsWith("image/")).forEach(file => {
-      parkPhotos.push({
-        id: "g" + Math.random().toString(36).slice(2),
-        file, url: URL.createObjectURL(file), uploaded: false
-      });
-    });
-    dessinerGalerie();
-  });
+  dropzone?.addEventListener("drop", e => ajouterPhotos(e.dataTransfer?.files || []));
 
   panel.__parkPhotos = parkPhotos;
 
